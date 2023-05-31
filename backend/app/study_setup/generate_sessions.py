@@ -213,12 +213,8 @@ async def create_generation(config_id: PydanticObjectId,
 
     # if there are AI players, create sessions for them
     if n_ai_players > 0:
-        solution_type = 'loss'
+        solution_type = 'myopic'
         for session_idx in range(n_sessions_per_generation - n_ai_players, n_sessions_per_generation):
-            # TODO: remove after Pilot 3B
-            # Select AI solution type
-            if session_idx >= 3:
-                solution_type = 'myopic'
             session = create_ai_trials(
                 config_id=config_id,
                 experiment_num=experiment_num,
