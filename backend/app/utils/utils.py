@@ -16,8 +16,8 @@ def estimate_solution_score(network: Network, moves: List[int],
             return -100_000  # invalid move sequence
     # penalize for missing steps
     # NOTE: move 0 is always the start node, so we need to add 1
-    # Penalty is the minimum reward of the network (i.e., -100)
-    score -= (n_steps - (len(moves) - 1)) * 100
+    # Penalty is -50 (updated 20/06/2023)
+    score -= (n_steps - (len(moves) - 1)) * 50
 
     return score
 
