@@ -19,3 +19,7 @@ init:
   artifacts:
     paths:
       - ./
+
+docker:
+  tags:
+    - aws-autoscaling
