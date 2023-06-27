@@ -22,4 +22,4 @@ init:
 
 docker:
   tags:
-    - aws-autoscaling
+    - aws-clickops-levin
