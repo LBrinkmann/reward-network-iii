@@ -24,4 +24,5 @@ docker:
   tags:
     - aws-clickops-levin
   before_script:
+    - sudo systemctl status docker
     - docker info
