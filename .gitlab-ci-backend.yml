@@ -23,3 +23,5 @@ init:
 docker:
   tags:
     - aws-clickops-levin
+  before_script:
+    - docker info
