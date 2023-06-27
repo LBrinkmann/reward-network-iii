@@ -24,5 +24,7 @@ docker:
   tags:
     - aws-clickops-levin
   before_script:
+    - whoami
+    - hostname
     - systemctl status docker
     - docker info
