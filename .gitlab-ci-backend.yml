@@ -26,5 +26,5 @@ docker:
   before_script:
     - whoami
     - hostname
-    - systemctl status docker
-    - docker info
+    # - systemctl status docker
+    # - docker info
