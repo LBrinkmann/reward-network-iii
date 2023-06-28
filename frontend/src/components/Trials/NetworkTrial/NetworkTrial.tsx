@@ -94,7 +94,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                 </Grid>
             </Grid>
             <Grid item xs={6}>
-                <Grid container direction="row" justifyContent="space-around">
+                <Grid container direction="column" justifyContent="space-around">
                     <Grid item style={{position: 'relative'}}>
                         <FlashingReward/>
                         <StaticNetwork
