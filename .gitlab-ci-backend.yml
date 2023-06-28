@@ -22,7 +22,7 @@ init:
 
 docker:
   tags:
-    - aws-clickops-levin
+    - chm
   before_script:
     - whoami
     - hostname
