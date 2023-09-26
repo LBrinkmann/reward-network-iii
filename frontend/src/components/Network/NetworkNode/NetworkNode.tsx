@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-
+import useNetworkContext from "../../../contexts/NetworkContext";
 import NetworkNodeStyled from "./NetworkNode.styled";
 import TutorialTip from "../../Tutorial/TutorialTip";
 
@@ -48,9 +48,12 @@ const NetworkNode: React.FC<NetworkNodeInterface> = props => {
         }
     }
 
-    return (
-        <TutorialTip
-            tutorialId={"practice_node"}
+    const {networkState} = useNetworkContext();
+    const tutorialId = networkState.moves.length === 7 ? "practice_multi_edge" : "practice_node";
+    
+        return (
+            <TutorialTip
+            tutorialId={tutorialId}
             isTutorial={showTutorial}
             isShowTip={false}
             onTutorialClose={props.onTutorialClose}
@@ -68,8 +71,8 @@ const NetworkNode: React.FC<NetworkNodeInterface> = props => {
                 </text>
             </NetworkNodeStyled>
         </TutorialTip>
-    );
-};
+        );
+    };
 
 
 export default NetworkNode;

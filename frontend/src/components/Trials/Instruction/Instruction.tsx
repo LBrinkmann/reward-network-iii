@@ -76,6 +76,7 @@ const Welcome: FC = () => {
                                 Importantly, there is an ideal pattern of moves that earns the maximum number of points for all
                                 networks.
                             </span>
+                            <span>&nbsp;</span>
                             Figuring out that ideal pattern of moves will help you maximise your bonus payment during the main task.
                         </Typography>
                     </Grid>
@@ -90,9 +91,7 @@ const Welcome: FC = () => {
                 </Grid>
 
                 <Typography variant="body1" align='justify' paragraph>
-                    To prepare you for the main task, we will now explain the network in more detail and let you
-                    practice
-                    some examples.
+                    To prepare you for the main task, we will now explain the network in more detail.
                 </Typography>
             </Grid>
 

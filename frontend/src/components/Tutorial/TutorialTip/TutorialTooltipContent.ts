@@ -3,25 +3,25 @@ export const tutorialTooltipContent = [
     {
         id: "start",
         title: "Start",
-        text: "Each network consists of circles that are connected by arrows of different colour.",
+        text: "Each network consists of circles that will be connected by arrows of different colour.",
         tip: "Click OK",
     },
     {
         id: "practice_node",
         title: "Circle",
-        text: "You start at the highlighted circle.",
+        text: "You start at the grey circle.",
         tip: "Click a node",
     },
     {
         id: "general_edge",
         title: "ArrowGeneral",
-        text: "From there, you can follow any outgoing arrow. The arrow colour indicates how many points you will lose or gain on the path along the arrow.",
+        text: "From there, you can follow any outgoing arrow. The arrow colours indicate how many points you will lose or gain with a move.",
         tip: "Click OK",
     },
     {
         id: "practice_edge",
         title: "Arrow",
-        text: "Your goal is to select a path along the arrows to earn points. Now click on the next node.",
+        text: "Your goal is to move along the arrows to earn points. Now click on the next node.",
         tip: "Click a node",
     },
     {
@@ -33,8 +33,14 @@ export const tutorialTooltipContent = [
     {
         id: "practice_linear_solution",
         title: "Your Solution",
-        text: "As you proceed in the network, your progress is noted here. Now finish the round by making your 8 moves.",
+        text: "As you proceed in the network, your progress is noted here. Now continue to move through the network.",
         tip: "Your Solution",
+    },
+    {
+        id: "practice_multi_edge",
+        title: "Your Choice",
+        text: "Like here, there will be two possible moves per circle in the later networks. Please continue by selecting one of the possibilities and making the final two moves.",
+        tip: "Click a node", 
     },
     {
         id: "practice_timer",
