@@ -116,11 +116,17 @@ const networkReducer = (state: NetworkState, action: any) => {
                 }
             }
 
-            if (state.tutorialOptions.node) {
+            if (state.tutorialOptions.node && (state.moves.length < 7)) {
                 return {
                     ...state,
                     tutorialStep: state.tutorialStep + 1,
                     tutorialOptions: {...networkInitialState.tutorialOptions, general_edge: true},
+                }
+            }
+            else if (state.tutorialOptions.node && (state.moves.length >= 7)) {
+                return {
+                    ...state,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, linearSolution: true},
                 }
             }
 
@@ -153,6 +159,12 @@ const networkReducer = (state: NetworkState, action: any) => {
                     ...state,
                     tutorialStep: state.tutorialStep + 1,
                     tutorialOptions: {...networkInitialState.tutorialOptions, time: true},
+                }
+            } else if (state.tutorialOptions.linearSolution && (state.moves.length === 7)) {
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, node: true},
                 }
             } else if (state.tutorialOptions.linearSolution && (state.moves.length < 9)) {
                 return {
