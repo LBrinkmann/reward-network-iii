@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import useNetworkContext from "../../../contexts/NetworkContext";
+
 import NetworkNodeStyled from "./NetworkNode.styled";
 import TutorialTip from "../../Tutorial/TutorialTip";
 
@@ -48,8 +48,7 @@ const NetworkNode: React.FC<NetworkNodeInterface> = props => {
         }
     }
 
-    const {networkState} = useNetworkContext();
-    const tutorialId = networkState.moves.length === 7 ? "practice_multi_edge" : "practice_node";
+    const tutorialId = props.nodeInx === 4 ? "practice_multi_edge" : "practice_node";
     
         return (
             <TutorialTip
