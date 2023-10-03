@@ -304,7 +304,7 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
         n_individual_trials += n_social_learning_trials * n_demonstration_trials * 3
 
     # Individual trials
-    Trial.instruction_type = 'individual_gen0' if generation == 0 else 'individual'
+    Trial.instruction_type = 'individual' if generation > 0 else 'individual_gen0'
     trials.append(Trial(id=trial_n, trial_type='instruction'))
     trial_n += 1
 
