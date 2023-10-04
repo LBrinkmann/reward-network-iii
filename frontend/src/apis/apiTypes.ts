@@ -79,6 +79,7 @@ export interface Trial {
     | "learning_selection"
     | "learning"
     | "individual"
+    | "individual_gen0"
     | "individual_start"
     | "demonstration"
     | "written_strategy"
