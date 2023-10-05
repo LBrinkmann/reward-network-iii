@@ -92,16 +92,16 @@ def draw_db_diagram():
     # draw database diagram (for development and documentation)
     # environment variables are set in the docker-compose.yml
     if os.getenv('DRAW_DB_DIAGRAM', default='false') == 'true':
-        import erdantic as erd
+        # import erdantic as erd
         from models.subject import Subject
         from models.session import Session
         from models.config import ExperimentSettings
 
-        diagram = erd.create(Subject)
-        diagram.draw("models/subject.png", args='-Gdpi=300')
+        # diagram = erd.create(Subject)
+        # diagram.draw("models/subject.png", args='-Gdpi=300')
 
-        diagram = erd.create(Session)
-        diagram.draw("models/session.png", args='-Gdpi=300')
+        # diagram = erd.create(Session)
+        # diagram.draw("models/session.png", args='-Gdpi=300')
 
-        diagram = erd.create(ExperimentSettings)
-        diagram.draw("models/config.png", args='-Gdpi=300')
+        # diagram = erd.create(ExperimentSettings)
+        # diagram.draw("models/config.png", args='-Gdpi=300')
