@@ -63,7 +63,7 @@ class Trial(BaseModel):
         'learning',
         'individual',
         'individual_start',
-        'individual_gen0'
+        'individual_gen0',
         'demonstration',
         'written_strategy',
         'written_strategy_start',
