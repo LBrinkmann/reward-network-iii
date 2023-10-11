@@ -20,8 +20,8 @@ class Session(Document):
     average_score: Optional[int]
     trials: List[Trial]
     current_trial_num: Optional[int] = 0
-    advise_ids: Optional[Union[List[PydanticObjectId]]] = []
-    child_ids: Optional[Union[List[PydanticObjectId]]] = []
+    advise_ids: Optional[Union[List[PydanticObjectId], None]] = None
+    child_ids: Optional[Union[List[PydanticObjectId], None]] = None
     unfinished_parents: Optional[int] = 0
     finished: Optional[bool] = False
     finished_at: Optional[datetime.datetime]
