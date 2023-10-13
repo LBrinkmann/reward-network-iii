@@ -3,7 +3,7 @@
 ## Deployment
 
 - Frontend
-  URL:  [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
+  URL: [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
 - Backend
   URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-iii-backend.eks-test-default.mpg-chm.com)
 
@@ -37,7 +37,7 @@ Set up the development environment (it can take several minutes first time):
 
 ```bash
 
-docker-compose -f docker-compose-dev.yml up
+docker compose -f docker-compose.yml up
 
 ```
 
@@ -48,7 +48,7 @@ To run only the backend containers one can use the following command:
 
 ```bash
 
-docker-compose -f docker-compose-dev.yml up -d database fastapi
+docker compose -f docker-compose.yml up -d database fastapi
 
 ```
 
@@ -69,38 +69,29 @@ docker-compose -f docker-compose-dev.yml down --volumes
 
 ### Run pytest
 
-Create the virtual environment in the backend folder:
+Run all test
 
 ```zsh
 
-# cd backend
-
-python3 -m venv venv
- 
-source venv/bin/activate
-
-python3 -m pip install --upgrade pip
-
-pip --no-cache-dir install -e .
-
-pip install -r requirements_pytest.txt
+sudo docker compose run fastapi python -m pytest -vv -s
 
 ```
 
-Run pytest:
+Or start the dev container in the interactive mode:
 
 ```zsh
-
-cd backend/app
-
-# set the environment variables
-export BACKEND_USER=admin
-export BACKEND_PASSWORD=admin
-
-# run pytest
-python -m pytest -vv -s
-
+sudo docker compose run fastapi /bin/bash
 ```
+
+and run individual tests:
+
+```zsh
+pytest -k test_session
+```
+
+````
+
+Or
 
 See [pytest docs](https://docs.pytest.org/en/7.1.x/how-to/usage.html#invoke-python)
 for more details.
@@ -118,7 +109,7 @@ docker system df # check disk usage
 docker system prune --all --force # clean up unused images and volumes
 docker system prune --volumes --force # clean up unused volumes
 
-```
+````
 
 ## Deployment notes
 
@@ -138,4 +129,3 @@ docker system prune --volumes --force # clean up unused volumes
 <p align="centre">
 <img alt="Backend-Frontend interaction" height="auto" src="docs/backend-frontend.png" width="50%"/>
 </p>
-

@@ -23,8 +23,8 @@ def event_loop():
 @pytest.fixture(scope="session")
 async def default_client():
     test_settings = DatabaseSettings()
-    test_settings.MONGO_URL = "mongodb://localhost:27017"
-    test_settings.DATABASE_NAME = 'test-reward-network-iii'
+    # test_settings.MONGO_URL = "mongodb://localhost:27017"
+    test_settings.DATABASE_NAME = "test-reward-network-iii"
 
     await test_settings.initialize_database()
 
@@ -39,8 +39,7 @@ async def default_client():
 @pytest.fixture(scope="session")
 async def e_config(default_client):
     # find an active configuration
-    config = await ExperimentSettings.find_one(
-        ExperimentSettings.active == True)
+    config = await ExperimentSettings.find_one(ExperimentSettings.active == True)
     if config is None:
         # if there are no configs in the database
         # create a new config
@@ -51,8 +50,9 @@ async def e_config(default_client):
 
 
 @pytest.fixture(scope="function")
-async def create_empty_experiment(default_client: httpx.AsyncClient,
-                                  e_config: ExperimentSettings):
+async def create_empty_experiment(
+    default_client: httpx.AsyncClient, e_config: ExperimentSettings
+):
     for replication in range(e_config.n_session_tree_replications):
         await generate_sessions(
             config_id=e_config.id,
