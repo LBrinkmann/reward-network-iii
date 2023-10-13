@@ -3,7 +3,11 @@ import pytest
 
 from models.config import ExperimentSettings
 from models.session import Session
-from study_setup.generate_sessions import generate_sessions, create_trials
+from study_setup.generate_sessions import (
+    generate_sessions,
+    create_trials,
+    reset_networks,
+)
 
 
 @pytest.mark.asyncio
@@ -14,19 +18,23 @@ from study_setup.generate_sessions import generate_sessions, create_trials
     [
         (2, 10, 0, 10, 0),  # pilot 1B (first generation only AI players)
         (1, 10, 0, 10, 0),  # pilot 1A (no AI players, one generation)
-        (3, 13, 3, 20, 5),  # full experiment; TODO: add more data!!!
-    ]
+        (3, 13, 3, 20, 5),  # full experiment
+    ],
 )
-async def test_generate_sessions(default_client: httpx.AsyncClient,
-                                 e_config: ExperimentSettings,
-                                 n_generations,
-                                 n_sessions_first_generation,
-                                 n_ai_players,
-                                 n_sessions_per_generation,
-                                 n_advise_per_session,
-                                 experiment_type='reward_network_iii'):
+async def test_generate_sessions(
+    default_client: httpx.AsyncClient,
+    e_config: ExperimentSettings,
+    n_generations,
+    n_sessions_first_generation,
+    n_ai_players,
+    n_sessions_per_generation,
+    n_advise_per_session,
+    experiment_type="reward_network_iii",
+):
     sessions = await Session.find().first_or_none()
     assert sessions is None
+
+    reset_networks()
 
     await generate_sessions(
         config_id=e_config.id,
@@ -35,7 +43,8 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
         n_generations=n_generations,
         n_sessions_first_generation=n_sessions_first_generation,
         n_ai_players=n_ai_players,
-        n_sessions_per_generation=n_sessions_per_generation)
+        n_sessions_per_generation=n_sessions_per_generation,
+    )
     sessions = await Session.find().to_list()
 
     assert sessions is not None
@@ -57,8 +66,9 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
 
 
 @pytest.mark.asyncio
-async def test_create_trials(default_client: httpx.AsyncClient,
-                             e_config: ExperimentSettings):
+async def test_create_trials(
+    default_client: httpx.AsyncClient, e_config: ExperimentSettings
+):
     n_consent = 1
     n_practice = 1
     n_soc_learning = 3
@@ -76,29 +86,43 @@ async def test_create_trials(default_client: httpx.AsyncClient,
     session = create_trials(
         config_id=e_config.id,
         experiment_num=0,
-        experiment_type='test',
+        experiment_type="test",
         generation=0,
         session_idx=0,
         n_social_learning_trials=n_soc_learning,
         n_individual_trials=n_ind,
-        n_demonstration_trials=n_demonstration)
+        n_demonstration_trials=n_demonstration,
+    )
 
     # skip testing the total number of trials
     # assert len(session.trials) == n_all_trials
     for t in session.trials:
-        assert t.trial_type not in ['social_learning_selection', 'observation', 'repeat', 'try_yourself']
-        assert t.trial_type in ['consent', 'instruction', 'demonstration', 'written_strategy',
-                                'debriefing', 'individual', 'post_survey', 'practice']
+        assert t.trial_type not in [
+            "social_learning_selection",
+            "observation",
+            "repeat",
+            "try_yourself",
+        ]
+        assert t.trial_type in [
+            "consent",
+            "instruction",
+            "demonstration",
+            "written_strategy",
+            "debriefing",
+            "individual",
+            "post_survey",
+            "practice",
+        ]
 
     session = create_trials(
         config_id=e_config.id,
         experiment_num=0,
-        experiment_type='test',
+        experiment_type="test",
         generation=1,
         session_idx=0,
         n_social_learning_trials=n_soc_learning,
         n_individual_trials=n_ind,
-        n_demonstration_trials=n_demonstration
+        n_demonstration_trials=n_demonstration,
     )
 
     # add n_all_trials because social_learning_selection counts as a trial
@@ -107,6 +131,16 @@ async def test_create_trials(default_client: httpx.AsyncClient,
     # assert len(session.trials) == n_all_trials + n_soc_learning + 3
     for t in session.trials:
         assert t.trial_type in [
-            'consent', 'instruction', 'demonstration', 'written_strategy',
-            'debriefing', 'individual', 'post_survey', 'practice',
-            'social_learning_selection', 'observation', 'repeat', 'try_yourself']
+            "consent",
+            "instruction",
+            "demonstration",
+            "written_strategy",
+            "debriefing",
+            "individual",
+            "post_survey",
+            "practice",
+            "social_learning_selection",
+            "observation",
+            "repeat",
+            "try_yourself",
+        ]

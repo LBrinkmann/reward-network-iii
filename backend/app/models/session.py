@@ -10,7 +10,7 @@ from models.trial import Trial
 class Session(Document):
     created_at: datetime.datetime = datetime.datetime.now()
     experiment_num: int
-    experiment_type: str = 'reward_network_iii'
+    experiment_type: str = "reward_network_iii"
     # id of the experiment settings (config) used for this session
     config_id: Optional[PydanticObjectId]
     generation: int
@@ -20,8 +20,8 @@ class Session(Document):
     average_score: Optional[int]
     trials: List[Trial]
     current_trial_num: Optional[int] = 0
-    advise_ids: Optional[Union[List[PydanticObjectId], None]] = None
-    child_ids: Optional[Union[List[PydanticObjectId], None]] = None
+    advise_ids: List[PydanticObjectId] = []
+    child_ids: List[PydanticObjectId] = []
     unfinished_parents: Optional[int] = 0
     finished: Optional[bool] = False
     finished_at: Optional[datetime.datetime]
@@ -34,6 +34,4 @@ class Session(Document):
 
     class Config:
         # TODO: add example
-        schema_extra = {
-            "example": {}
-        }
+        schema_extra = {"example": {}}
