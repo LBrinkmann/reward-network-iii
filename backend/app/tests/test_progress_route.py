@@ -6,12 +6,10 @@ from models.subject import Subject
 
 
 @pytest.mark.asyncio
-async def test_get_progress(default_client: httpx.AsyncClient,
-                            create_empty_experiment):
+async def test_get_progress(default_client: httpx.AsyncClient, create_empty_experiment):
+    url = f"/progress/"
 
-    url = f'/progress/'
-
-    response = await default_client.get(url, auth=('admin', 'admin'))
+    response = await default_client.get(url, auth=("admin", "admin"))
     assert response.status_code == 200
 
     # Clean up resources
