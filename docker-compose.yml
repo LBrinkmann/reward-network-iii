@@ -7,9 +7,6 @@ services:
     restart: unless-stopped
     ports:
       - "27017:27017"
-    profiles:
-      - test
-      - dev
 
   fastapi: # backend
     build:
@@ -32,8 +29,6 @@ services:
       - "5000:5000"
     depends_on:
       - database
-    profiles:
-      - dev
 
   react: # frontend
     build:
@@ -53,8 +48,6 @@ services:
     tty: true # to replicate `-it` mode in docker run
     depends_on:
       - fastapi
-    profiles:
-      - dev
 
   react-storybook: # frontend
     build:
@@ -72,8 +65,6 @@ services:
       - ./frontend/webpack.config.js:/frontend/webpack.config.js
     depends_on:
       - react
-    profiles:
-      - dev
 
 volumes:
   data:
