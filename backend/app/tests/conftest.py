@@ -10,7 +10,7 @@ from models.config import ExperimentSettings
 from models.session import Session
 from models.subject import Subject
 from server import api
-from study_setup.generate_sessions import generate_sessions
+from study_setup.generate_sessions import generate_sessions, reset_networks
 
 
 @pytest.fixture(scope="session")
@@ -53,6 +53,7 @@ async def e_config(default_client):
 async def create_empty_experiment(
     default_client: httpx.AsyncClient, e_config: ExperimentSettings
 ):
+    reset_networks()
     for replication in range(e_config.n_session_tree_replications):
         await generate_sessions(
             config_id=e_config.id,
