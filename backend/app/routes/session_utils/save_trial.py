@@ -24,15 +24,15 @@ async def save_trial(body, session, trial, trial_type):
         # TODO: simply by adding a block id to trials, and selecting here all
         # trails from block
         # TODO: move all this logic to "save_social_learning_selection"
-        sl_start = session.current_trial_num
-        sl_end = 1
-        for t in session.trials[sl_start + 1 :]:
-            if t.trial_type in ["social_learning_selection", "individual"]:
-                break
-            sl_end += 1
-        trials = session.trials[sl_start : sl_start + sl_end]
-        await save_social_learning_selection(trials, session.subject_id, body)
-        session.trials[sl_start : sl_start + sl_end] = trials
+        # sl_start = session.current_trial_num
+        # sl_end = 1
+        # for t in session.trials[sl_start + 1 :]:
+        #     if t.trial_type in ["social_learning_selection", "individual"]:
+        #         break
+        #     sl_end += 1
+        # trials = session.trials[sl_start : sl_start + sl_end]
+        session = await save_social_learning_selection(body, session, trial)
+        # session.trials[sl_start : sl_start + sl_end] = trials
     elif trial_type == "observation":
         save_individual_demonstration_trial(trial, body)
     elif trial_type == "repeat":
@@ -88,17 +88,21 @@ def save_survey_trial(trial: Trial, body: PostSurvey):
     trial.finished = True
 
 
-async def save_social_learning_selection(
-    trials: List[Trial], subject_id: PydanticObjectId, body: Advisor
-):
+async def save_social_learning_selection(body: Advisor, session: Session, trial: Trial):
     if not isinstance(body, Advisor):
         return TrialError(message="Trial results are missing")
 
-    sl_selection = trials[0]
-    sl_trials = trials[1:]
+    social_learning_block_idx = trial.social_learning_block_idx
 
-    # remove instruction trial if it is in the list of social learning trials
-    sl_trials = [t for t in sl_trials if t.trial_type != "instruction"]
+    social_learning_trails = [
+        t
+        for t in session.trials
+        if t.trial_type in ["try_yourself", "observation"]
+        and t.social_learning_block_idx == social_learning_block_idx
+    ]
+
+    # get max social_learning_idx
+    sl_idx_max = max([t.social_learning_idx for t in social_learning_trails])
 
     # get advisor session
     ad_s = await Session.get(body.advisor_id)
@@ -106,40 +110,58 @@ async def save_social_learning_selection(
     if ad_s is None:
         return TrialError(message="Advisor session is not found")
 
+    # sort by trail_id
+    ad_trials = sorted(ad_s.trials, key=lambda t: t.id)
+
     # get advisor demonstration trials
-    # TODO: It looks like we are here not taking the demonstration trails;
-    # This suggest that demonstration trails are not used anymore
-    # Consider removing demonstration trails all together
-    ad_trials = [t for t in ad_s.trials if t.trial_type == "individual"]
+    ad_demo_trials = [t for t in ad_trials if t.trial_type == "demonstration"]
+
+    assert len(ad_demo_trials) >= sl_idx_max, f"{len(ad_demo_trials)} <= {sl_idx_max}"
+
+    # select advisor's demonstration trial
+    ad_demo_trials = ad_demo_trials[-sl_idx_max - 1 :]
+
+    assert (
+        len(ad_demo_trials) == sl_idx_max + 1
+    ), f"{len(ad_demo_trials)} == {sl_idx_max}"
+
+    ad_written_strategies = [
+        t.written_strategy for t in ad_trials if t.trial_type == "written_strategy"
+    ]
 
     # select advisor's written strategy
-    wr_s = [
-        t.written_strategy for t in ad_s.trials if t.trial_type == "written_strategy"
-    ][0]
+    ad_written_strategy = ad_written_strategies[-1]
 
-    # TODO: refactor advisor trail selection; we want now to take the last x
-    # trails from the advisors demonstration trails
-    # iterate over advisor's demonstration trials
-    for n, t in enumerate(ad_trials):
+    for i, ad_demo_trail in enumerate(ad_demo_trials):
         # update `selected_by_children` field for advisor's demonstration trial
-        t.selected_by_children.append(subject_id)
+        ad_demo_trail.selected_by_children.append(session.id)
 
-        # iterate over social learning trials (observation, repeat, tryyourself)
-        for i in range(3):
-            # NOTE: trials size should be 3 x len(ad_trials)
-            sl_trials[n * 3 + i].advisor = Advisor(
-                advisor_id=body.advisor_id,
-                solution=t.solution,
-            )
-            # assign advisor's network to the trial
-            sl_trials[n * 3 + i].network = t.network
+        advisor = Advisor(
+            advisor_id=body.advisor_id,
+            solution=ad_demo_trail.solution,
+        )
+        for sl_trial in social_learning_trails:
+            if sl_trial.social_learning_idx != i:
+                continue
+            sl_trial.advisor = advisor
+            sl_trial.network = ad_demo_trail.network
+            assert session.trials[sl_trial.id].id == sl_trial.id
+            session.trials[sl_trial.id] = sl_trial
+            assert session.trials[sl_trial.id].network is not None
 
-    sl_selection.advisor = Advisor(
-        advisor_id=body.advisor_id, written_strategy=wr_s.strategy
+    trial.advisor = Advisor(
+        advisor_id=body.advisor_id, written_strategy=ad_written_strategy.strategy
     )
 
-    sl_selection.finished_at = datetime.now()
-    sl_selection.finished = True
+    trial.finished_at = datetime.now()
+    trial.finished = True
+    session.trials[trial.id] = trial
+    for t in session.trials:
+        if t.trial_type in ["individual", "try_yourself", "observation"]:
+            assert (
+                t.network is not None
+            ), f"{t.id} {t.trial_type} {t.social_learning_block_idx} {sl_idx_max}"
+    return session
 
 
 def save_empty_trial(trial: Trial):

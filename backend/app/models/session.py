@@ -11,6 +11,7 @@ class Session(Document):
     created_at: datetime.datetime = datetime.datetime.now()
     experiment_num: int
     experiment_type: str = "reward_network_iii"
+    condition: Optional[str] = None
     # id of the experiment settings (config) used for this session
     config_id: Optional[PydanticObjectId]
     generation: int
