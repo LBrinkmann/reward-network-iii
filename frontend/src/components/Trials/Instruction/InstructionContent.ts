@@ -12,7 +12,7 @@ const instructions = {
         "Now you will work on the main task, for which you are on your own again. You will navigate through four different networks.",
         "Note that, now, every point you earn in the networks will be converted into a bonus payment for you – so remember what you have learned yourself and from the other player to maximize your points!"],
     individual_gen0: [
-        "Now you will work on the main tas. You will navigate through 14 different networks.",
+        "Now you will work on the main task. You will navigate through 14 different networks.",
         "Note that, now, every point you earn in the networks will be converted into a bonus payment for you!"],
     demonstration: [
         "Well done! Now you will play two final rounds that serve as demonstrations for future players to learn from. You will not earn points directly, but the second half of your bonus payment depends on the performance of people that learn from you, so try your best!"],

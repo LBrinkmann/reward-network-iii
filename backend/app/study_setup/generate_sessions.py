@@ -20,12 +20,12 @@ solutions = json.load(open(Path("data") / "solutions_loss.json"))
 solutions_myopic = json.load(open(Path("data") / "solutions_myopic.json"))
 
 
-def reset_networks():
+def reset_networks(seed=None):
     global network_data
     # load all networks
     network_data = json.load(open(Path("data") / "networks.json"))
     # randomize the order of the networks
-    random.shuffle(network_data)
+    random.shuffle(network_data, seed=seed)
 
 
 async def generate_experiment_sessions():
@@ -48,7 +48,7 @@ async def generate_experiment_sessions():
     ).first_or_none()
 
     if sessions is None:
-        reset_networks()
+        reset_networks(config.seed)
         # if the database is empty, generate sessions
         for replication in range(config.n_session_tree_replications):
             await generate_sessions(
@@ -314,6 +314,7 @@ def create_trials(
 
             # instruction before learning
             if i == 0:
+                # TODO: add social learning id
                 trials.append(
                     Trial(
                         id=trial_n,
@@ -326,6 +327,7 @@ def create_trials(
             # show all demonstration trials
             for ii in range(n_individual_trials):
                 # Social learning
+                # TODO: add social learning id
                 trials.append(
                     Trial(
                         id=trial_n,
@@ -335,6 +337,7 @@ def create_trials(
                     )
                 )
                 trial_n += 1
+                # TODO: add social learning id
                 trials.append(
                     Trial(
                         id=trial_n,
@@ -344,6 +347,7 @@ def create_trials(
                     )
                 )
                 trial_n += 1
+                # TODO: add social learning id
                 trials.append(
                     Trial(
                         id=trial_n,
@@ -357,6 +361,8 @@ def create_trials(
     else:
         # Replace social learning trials with individual trials for the very
         # first generation
+        # TODO: use demonstration trial instead of indivdual trials for social
+        # learning, 
         n_individual_trials += n_social_learning_trials * n_demonstration_trials * 3
 
     # Individual trials
