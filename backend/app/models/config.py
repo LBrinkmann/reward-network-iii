@@ -23,8 +23,6 @@ class ExperimentSettings(Document):
     seed: Optional[int]
     # number of generations (includes the seeding / first generation)
     n_generations: int = 3
-    # number of session in seeding generation
-    n_sessions_first_generation: int = 13  # 3 (humans) + 7 (humans) + 3 (AI)
     # number of AI player in seeding generation
     n_ai_players: int = 3
     # number of session per generation (after seeding generation)
@@ -35,11 +33,16 @@ class ExperimentSettings(Document):
     n_advise_per_session: int = 5
     # number of complete independent replication of the experiment to be created
     n_session_tree_replications: int = 1
+    # conditions of the experiment
+    conditions: list = ["wo_ai", "w_ai"]
 
     # SESSION TRIALS SETTINGS
+    n_social_learning_blocks: int = 1
     # number of trails that are passed to the next generation
-    n_social_learning_trials: int = 1
-    # number of trails for individual learning
-    n_individual_trials: int = 4
-    # 
-    n_demonstration_trials: int = 0
+    n_social_learning_networks_per_block: int = 4
+    # number of practice trails
+    n_practice_trials: int = 2
+    # number of demonstration trials (these trails are used for social learning)
+    n_demonstration_trials: int = 5
+    # simulate human responses in first generation with a myopic model
+    simulate_humans: bool = False

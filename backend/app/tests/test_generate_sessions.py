@@ -13,37 +13,43 @@ from study_setup.generate_sessions import (
 @pytest.mark.asyncio
 @pytest.mark.slow
 @pytest.mark.parametrize(
-    "n_generations,n_sessions_first_generation,n_ai_players,"
-    "n_sessions_per_generation,n_advise_per_session",
+    "n_generations,n_ai_players,"
+    "n_sessions_per_generation,n_advise_per_session,conditions, simulate_humans",
     [
-        (2, 10, 0, 10, 0),  # pilot 1B (first generation only AI players)
-        (1, 10, 0, 10, 0),  # pilot 1A (no AI players, one generation)
-        (3, 13, 3, 20, 5),  # full experiment
+        (1, 0, 10, 0, ["wo_ai"], False),  # pilot 6A (gen 0)
+        (2, 3, 10, 5, ["w_ai"], True),  # pilot 6B (gen 1, w_ai)
+        (2, 0, 10, 5, ["wo_ai"], True),  # pilot 6C (gen 1, wo_ai)
+        (3, 3, 20, 5, ["wo_ai", "w_ai"], False),  # full experiment
     ],
 )
 async def test_generate_sessions(
     default_client: httpx.AsyncClient,
     e_config: ExperimentSettings,
     n_generations,
-    n_sessions_first_generation,
     n_ai_players,
     n_sessions_per_generation,
     n_advise_per_session,
+    conditions,
+    simulate_humans,
     experiment_type="reward_network_iii",
 ):
+    # Clean up resources
+    await Session.find().delete()
     sessions = await Session.find().first_or_none()
     assert sessions is None
 
     reset_networks()
+    e_config.n_generations = n_generations
+    e_config.n_ai_players = n_ai_players
+    e_config.n_sessions_per_generation = n_sessions_per_generation
+    e_config.n_advise_per_session = n_advise_per_session
+    e_config.experiment_type = experiment_type
+    e_config.conditions = conditions
+    e_config.simulate_humans = simulate_humans
 
     await generate_sessions(
-        config_id=e_config.id,
-        experiment_type=experiment_type,
-        n_advise_per_session=n_advise_per_session,
-        n_generations=n_generations,
-        n_sessions_first_generation=n_sessions_first_generation,
-        n_ai_players=n_ai_players,
-        n_sessions_per_generation=n_sessions_per_generation,
+        experiment_num=0,
+        config=e_config,
     )
     sessions = await Session.find().to_list()
 
@@ -56,46 +62,65 @@ async def test_generate_sessions(
             # check the number of parents
             assert len(s.advise_ids) == n_advise_per_session
         # collect all network ids
-        net_ids += [t.network.network_id for t in s.trials if t.network is not None]
+        net_ids += [
+            t.network.network_id
+            for t in s.trials
+            if t.network is not None and t.trial_type == "demonstration"
+        ]
 
     # check that each network is unique
     assert len(net_ids) == len(set(net_ids))
 
-    # Clean up resources
-    await Session.find().delete()
+    sessions = await Session.find({"generation": 0, "condition": "w_ai"}).to_list()
+    assert len(sessions) == n_ai_players
+
+    sessions = await Session.find({"generation": 0}).to_list()
+    if len(e_config.conditions) == 1:
+        assert len(sessions) == n_sessions_per_generation
+    elif len(e_config.conditions) == 2:
+        assert len(sessions) == (n_sessions_per_generation / 2 + n_ai_players)
+
+    if simulate_humans:
+        sessions = await Session.find({"generation": 0, "available": True}).to_list()
+        assert len(sessions) == 0
+        sessions = await Session.find({"generation": 0, "finished": False}).to_list()
+        assert len(sessions) == 0
+
+    for i in range(1, n_generations):
+        sessions = await Session.find({"generation": i}).to_list()
+        assert len(sessions) == n_sessions_per_generation
+
+        if len(e_config.conditions) == 2:
+            sessions = await Session.find(
+                {"generation": i, "condition": "w_ai"}
+            ).to_list()
+            assert len(sessions) == n_sessions_per_generation / 2
+
+            sessions = await Session.find(
+                {"generation": i, "condition": "wo_ai"}
+            ).to_list()
+            assert len(sessions) == n_sessions_per_generation / 2
+        else:
+            sessions = await Session.find(
+                {"generation": i, "condition": e_config.conditions[0]}
+            ).to_list()
+            assert len(sessions) == n_sessions_per_generation
 
 
 @pytest.mark.asyncio
 async def test_create_trials(
     default_client: httpx.AsyncClient, e_config: ExperimentSettings
 ):
-    n_consent = 1
-    n_practice = 1
-    n_soc_learning = 3
-    n_ind = 3
-    n_demonstration = 3
-    n_w_strategy = 1
-    n_post_survey = 1
-    n_debriefing = 1
-    n_all_trials = n_consent + n_demonstration + n_w_strategy + n_post_survey
-    n_all_trials += n_debriefing
-    n_all_trials += n_practice
-    n_all_trials += n_soc_learning * n_demonstration * 3 + n_ind
-    n_all_trials += 4  # basic instructions: welcome, individual, demo, w_strategy
+    reset_networks()
 
     session = create_trials(
-        config_id=e_config.id,
         experiment_num=0,
-        experiment_type="test",
-        generation=0,
         session_idx=0,
-        n_social_learning_trials=n_soc_learning,
-        n_individual_trials=n_ind,
-        n_demonstration_trials=n_demonstration,
+        condition="wo_ai",
+        generation=0,
+        config=e_config,
     )
 
-    # skip testing the total number of trials
-    # assert len(session.trials) == n_all_trials
     for t in session.trials:
         assert t.trial_type not in [
             "social_learning_selection",
@@ -115,20 +140,13 @@ async def test_create_trials(
         ]
 
     session = create_trials(
-        config_id=e_config.id,
         experiment_num=0,
-        experiment_type="test",
-        generation=1,
         session_idx=0,
-        n_social_learning_trials=n_soc_learning,
-        n_individual_trials=n_ind,
-        n_demonstration_trials=n_demonstration,
+        condition="wo_ai",
+        generation=1,
+        config=e_config,
     )
 
-    # add n_all_trials because social_learning_selection counts as a trial
-    # 3 instructions: social_learning_selection, social_learning, individual_start
-    # skip testing the total number of trials
-    # assert len(session.trials) == n_all_trials + n_soc_learning + 3
     for t in session.trials:
         assert t.trial_type in [
             "consent",

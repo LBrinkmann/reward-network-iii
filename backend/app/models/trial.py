@@ -1,5 +1,6 @@
 import datetime
 from typing import Optional, List, Dict
+
 # https://github.com/pydantic/pydantic/issues/545
 from typing_extensions import Literal
 
@@ -14,7 +15,7 @@ class Solution(BaseModel):
     score: Optional[int]  # solution score
     trial_id: Optional[int]  # trial number in session
     finished_at: Optional[datetime.datetime]
-    solution_type: Optional[Literal['myopic', 'loss']]
+    solution_type: Optional[Literal["myopic", "loss"]]
 
 
 class Advisor(BaseModel):
@@ -43,31 +44,33 @@ class PostSurvey(BaseModel):
 class Trial(BaseModel):
     id: int  # trial number in session
     trial_type: Literal[
-        'consent',
-        'instruction',
-        'practice',
-        'social_learning_selection',
-        'observation',
-        'repeat',
-        'try_yourself',
-        'individual',
-        'demonstration',
-        'written_strategy',
-        'post_survey',
-        'debriefing'
+        "consent",
+        "instruction",
+        "practice",
+        "social_learning_selection",
+        "observation",
+        "repeat",
+        "try_yourself",
+        "individual",
+        "demonstration",
+        "written_strategy",
+        "post_survey",
+        "debriefing",
     ]
     # instruction trial relevant field
-    instruction_type: Optional[Literal[
-        'welcome',
-        'learning_selection',
-        'learning',
-        'individual',
-        'individual_start',
-        'individual_gen0',
-        'demonstration',
-        'written_strategy',
-        'written_strategy_start',
-    ]]
+    instruction_type: Optional[
+        Literal[
+            "welcome",
+            "learning_selection",
+            "learning",
+            "individual",
+            "individual_start",
+            "individual_gen0",
+            "demonstration",
+            "written_strategy",
+            "written_strategy_start",
+        ]
+    ]
     finished: Optional[bool] = False
     started_at: Optional[datetime.datetime]
     finished_at: Optional[datetime.datetime]
@@ -86,23 +89,27 @@ class Trial(BaseModel):
     # redirect url with the confirmation code
     redirect_url: Optional[str]
     is_practice: Optional[bool] = False
-    practice_count: Optional[str] = ''
+    practice_count: Optional[str] = ""
     # relevant for the social learning loop to determine if the trial is the last in the example
     last_trial_for_current_example: Optional[bool] = False
+    # block idx within social learning
+    social_learning_block_idx: Optional[int] = 0
+    # unique network idx within social learning block
+    social_learning_idx: Optional[int] = 0
 
     class Config:
         orm_mode = True
 
 
 class TrialSaved(BaseModel):
-    message: Optional[Literal['Trial saved']] = 'Trial saved'
+    message: Optional[Literal["Trial saved"]] = "Trial saved"
 
 
 class TrialError(BaseModel):
     message: Literal[
-        'Trial type is not correct',
-        'Trial results are missing',
-        'Advisor session is not found'
+        "Trial type is not correct",
+        "Trial results are missing",
+        "Advisor session is not found",
     ]
 
 

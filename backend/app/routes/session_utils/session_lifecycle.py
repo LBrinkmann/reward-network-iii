@@ -13,11 +13,12 @@ from utils.utils import estimate_average_player_score
 
 
 async def get_session(prolific_id) -> Union[Session, SessionError]:
-    """ Get session for the subject """
+    """Get session for the subject"""
     # check if collection Subject exists
     if await Subject.find().count() > 0:
         subjects_with_id = await Subject.find(
-            Subject.prolific_id == prolific_id).to_list()
+            Subject.prolific_id == prolific_id
+        ).to_list()
     else:
         subjects_with_id = []
 
@@ -32,8 +33,7 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
         await initialize_session(subject)
     elif len(subjects_with_id) > 1:
         # if more than one subject with the same prolific id return error
-        return SessionError(
-            message=f'Prolific ID {prolific_id} already exists')
+        return SessionError(message=f"Prolific ID {prolific_id} already exists")
     else:
         subject = subjects_with_id[0]
 
@@ -41,7 +41,7 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
     session = await Session.find_one(Session.subject_id == subject.id)
     if session is None:
         # this happens when all available sessions are taken
-        return SessionError(message='No available sessions')
+        return SessionError(message="No available sessions")
 
     # this will happen only for a new subject
     if subject.session_id is None:
@@ -53,8 +53,7 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
 
 async def initialize_session(subject: Subject):
     # find an active configuration
-    config = await ExperimentSettings.find_one(
-        ExperimentSettings.active == True)
+    config = await ExperimentSettings.find_one(ExperimentSettings.active == True)
     # Check and remove expired sessions
     await replace_stale_session(config)
 
@@ -62,14 +61,16 @@ async def initialize_session(subject: Subject):
     await Session.find_one(
         Session.available == True,
         # select session for this experiment
-        Session.experiment_type == config.experiment_type
+        Session.experiment_type == config.experiment_type,
     ).update(
-        Set({
-            Session.available: False,
-            Session.subject_id: subject.id,
-            Session.current_trial_num: 0,
-            Session.started_at: datetime.now()  # save session start time
-        })
+        Set(
+            {
+                Session.available: False,
+                Session.subject_id: subject.id,
+                Session.current_trial_num: 0,
+                Session.started_at: datetime.now(),  # save session start time
+            }
+        )
     )
 
 
@@ -101,8 +102,7 @@ async def end_session(session):
 
     # Ensure that the expired but finished sessions are removed from the
     # session tree
-    config = await ExperimentSettings.find_one(
-        ExperimentSettings.active == True)
+    config = await ExperimentSettings.find_one(ExperimentSettings.active == True)
     # Check and remove expired sessions
     await replace_stale_session(config)
 
@@ -117,22 +117,20 @@ async def end_session(session):
 
 
 async def update_availability_status_child_sessions(session: Session):
-    """ Update child sessions availability status """
+    """Update child sessions availability status"""
 
     # update `unfinished_parents` value for child sessions
-    await Session.find(
-        In(Session.id, session.child_ids)
-    ).inc({Session.unfinished_parents: -1})
+    await Session.find(In(Session.id, session.child_ids)).inc(
+        {Session.unfinished_parents: -1}
+    )
 
     # update child sessions status if all parent sessions are finished
     await Session.find(
-        In(Session.id, session.child_ids),
-        Session.unfinished_parents == 0
+        In(Session.id, session.child_ids), Session.unfinished_parents == 0
     ).update(Set({Session.available: True}))
 
 
-async def replace_stale_session(exp_config: ExperimentSettings,
-                                time_delta: int = 30):
+async def replace_stale_session(exp_config: ExperimentSettings, time_delta: int = 30):
     """
     Replace the unfinished session so as not to break the social learning chains
 
@@ -148,26 +146,29 @@ async def replace_stale_session(exp_config: ExperimentSettings,
         Session.finished == False,  # session is not finished
         Session.subject_id != None,  # session is assigned to subject
         # there can be old expired and already replaces sessions
-        Session.expired == False
+        Session.expired == False,
     ).find(
         # find all sessions older than the specified time delta
-        Session.started_at < datetime.now() - timedelta(minutes=time_delta)
-    ).update(Set({Session.expired: True}))
+        Session.started_at
+        < datetime.now() - timedelta(minutes=time_delta)
+    ).update(
+        Set({Session.expired: True})
+    )
 
     # mark as expired finished but not replaced sessions
     await Session.find(
         Session.finished == True,  # session is finished
-        Session.replaced == False  # session is not replaced
-    ).find(
-        Session.time_spent > timedelta(minutes=time_delta)
-    ).update(Set({Session.expired: True}))
+        Session.replaced == False,  # session is not replaced
+    ).find(Session.time_spent > timedelta(minutes=time_delta)).update(
+        Set({Session.expired: True})
+    )
 
     # get all newly expired sessions
     new_expired = await Session.find(
         # session is marked as expired
         Session.expired == True,
         # session has not yet been replaced
-        Session.replaced == False
+        Session.replaced == False,
     ).to_list()
 
     # nothing to replace
@@ -178,15 +179,11 @@ async def replace_stale_session(exp_config: ExperimentSettings,
     for s in new_expired:
         # create an empty session to replace the expired one
         new_s = create_trials(
-            config_id=exp_config.id,
             experiment_num=s.experiment_num,
-            experiment_type=s.experiment_type,
             generation=s.generation,
             session_idx=s.session_num_in_generation,
-            n_social_learning_trials=exp_config.n_social_learning_trials,
-            n_individual_trials=exp_config.n_individual_trials,
-            n_demonstration_trials=exp_config.n_demonstration_trials,
-            redirect_url=exp_config.redirect_url
+            condition=s.condition,
+            config=exp_config,
         )
         new_s.advise_ids = s.advise_ids
         new_s.child_ids = s.child_ids

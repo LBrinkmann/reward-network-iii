@@ -20,7 +20,7 @@ def event_loop():
     loop.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def default_client():
     test_settings = DatabaseSettings()
     # test_settings.MONGO_URL = "mongodb://localhost:27017"
@@ -34,18 +34,15 @@ async def default_client():
         # Clean up resources
         await Session.find().delete()
         await Subject.find().delete()
+        await ExperimentSettings.find().delete()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def e_config(default_client):
-    # find an active configuration
-    config = await ExperimentSettings.find_one(ExperimentSettings.active == True)
-    if config is None:
-        # if there are no configs in the database
-        # create a new config
-        config = ExperimentSettings()
-        config.active = True
-        await config.save()
+    # create a new config
+    config = ExperimentSettings()
+    config.active = True
+    await config.save()
     return config
 
 
@@ -56,15 +53,6 @@ async def create_empty_experiment(
     reset_networks()
     for replication in range(e_config.n_session_tree_replications):
         await generate_sessions(
-            config_id=e_config.id,
-            n_generations=e_config.n_individual_trials,
-            n_sessions_per_generation=e_config.n_sessions_per_generation,
-            n_advise_per_session=e_config.n_advise_per_session,
-            experiment_type=e_config.experiment_type,
             experiment_num=replication,
-            n_ai_players=e_config.n_ai_players,
-            n_sessions_first_generation=e_config.n_sessions_first_generation,
-            n_social_learning_trials=e_config.n_social_learning_trials,
-            n_individual_trials=e_config.n_individual_trials,
-            n_demonstration_trials=e_config.n_demonstration_trials,
+            config=e_config,
         )
