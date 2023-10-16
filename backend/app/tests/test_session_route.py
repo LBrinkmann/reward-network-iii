@@ -18,7 +18,7 @@ from tests.simultate_session_data import simulate_data
 
 
 @pytest.mark.asyncio
-async def test_one_subject(
+async def test_one_subject_gen_0(
     default_client: httpx.AsyncClient,
     e_config: ExperimentSettings,
     create_empty_experiment,
@@ -40,6 +40,7 @@ async def test_one_subject_gen_1(
     """Test one subject from the generation 0"""
     # simulate data for generation 0
     generation = 1
+
     await simulate_data(generation, e_config)
 
     await one_subject(default_client, e_config, 0, generation)
@@ -53,10 +54,6 @@ async def test_one_subject_gen_1(
         if t.trial_type == "social_learning":
             assert t.advisor is not None
             assert t.network is not None
-
-    # Clean up resources
-    await Session.find().delete()
-    await Subject.find().delete()
 
 
 @pytest.mark.asyncio
@@ -82,7 +79,9 @@ async def test_multiple_subjects(
         In(Session.subject_id, [s.id for s in subjects])
     ).to_list()
 
-    assert len(sessions) == e_config.n_sessions_first_generation - e_config.n_ai_players
+    assert len(sessions) == e_config.n_sessions_per_generation // len(
+        e_config.conditions
+    )
 
     # generation 1
     tasks = []
@@ -102,10 +101,6 @@ async def test_multiple_subjects(
     ).to_list()
 
     assert len(sessions) == e_config.n_sessions_per_generation
-
-    # Clean up resources
-    await Session.find().delete()
-    await Subject.find().delete()
 
 
 async def one_subject(
@@ -137,40 +132,73 @@ async def one_subject(
     trial_num += 1
 
     # welcome
-    await get_post_trial(default_client, "instruction", trial_num, url)
+    await get_post_trial(
+        default_client, "instruction", trial_num, url, instruction_type="welcome"
+    )
     trial_num += 1
 
     # practice
     await get_post_trial(default_client, "practice", trial_num, url)
     trial_num += 1
 
-    if generation != 0:
-        # individual_start
-        await get_post_trial(default_client, "instruction", trial_num, url)
-        trial_num += 1
-
-        # individual
-        for _ in range(2):
+    for i in range(e_config.n_practice_trials):
+        if i == 0:
+            # instruction
             await get_post_trial(
-                default_client, "individual", trial_num, url, solution, headers
+                default_client,
+                "instruction",
+                trial_num,
+                url,
+                instruction_type="individual_start",
             )
             trial_num += 1
 
-        # written_strategy_start
+        # practice
         await get_post_trial(
-            default_client,
-            "written_strategy",
-            trial_num,
-            url,
-            written_strategy,
-            headers,
+            default_client, "individual", trial_num, url, solution, headers
         )
         trial_num += 1
 
-        for i in range(e_config.n_social_learning_trials):
+    # written_strategy_start
+    await get_post_trial(
+        default_client,
+        "written_strategy",
+        trial_num,
+        url,
+        written_strategy,
+        headers,
+    )
+    trial_num += 1
+
+    if generation == 0:
+        # individual_start
+        await get_post_trial(
+            default_client,
+            "instruction",
+            trial_num,
+            url,
+            instruction_type="individual_gen0",
+        )
+        trial_num += 1
+
+        for i in range(e_config.n_social_learning_blocks):
+            for ii in range(e_config.n_social_learning_networks_per_block):
+                for iii in range(2):
+                    await get_post_trial(
+                        default_client, "individual", trial_num, url, solution, headers
+                    )
+                    trial_num += 1
+    else:
+        for i in range(e_config.n_social_learning_blocks):
             if i == 0:
                 # instruction_learning_selection
-                await get_post_trial(default_client, "instruction", trial_num, url)
+                await get_post_trial(
+                    default_client,
+                    "instruction",
+                    trial_num,
+                    url,
+                    instruction_type="learning_selection",
+                )
                 trial_num += 1
 
             # social learning selection
@@ -184,11 +212,17 @@ async def one_subject(
             trial_num += 1
 
             if i == 0:
-                await get_post_trial(default_client, "instruction", trial_num, url)
+                await get_post_trial(
+                    default_client,
+                    "instruction",
+                    trial_num,
+                    url,
+                    instruction_type="learning",
+                )
                 trial_num += 1
 
             # social learning
-            for _ in range(e_config.n_individual_trials):
+            for _ in range(e_config.n_social_learning_networks_per_block):
                 await get_post_trial(
                     default_client, "try_yourself", trial_num, url, solution, headers
                 )
@@ -202,31 +236,17 @@ async def one_subject(
                 )
                 trial_num += 1
 
-    if generation > 0:
-        n_individual_trials = e_config.n_individual_trials
-    else:
-        n_individual_trials = e_config.n_individual_trials
-        n_individual_trials += (
-            e_config.n_social_learning_trials * e_config.n_demonstration_trials * 3
-        )
-
-    for i in range(n_individual_trials):
-        if i == 0:
-            # instruction individual
-            await get_post_trial(default_client, "instruction", trial_num, url)
-            trial_num += 1
-
-        # individual trial
-        await get_post_trial(
-            default_client, "individual", trial_num, url, solution, headers
-        )
-        trial_num += 1
-
     # demonstration trial
     for i in range(e_config.n_demonstration_trials):
         if i == 0:
             # instruction demonstration
-            await get_post_trial(default_client, "instruction", trial_num, url)
+            await get_post_trial(
+                default_client,
+                "instruction",
+                trial_num,
+                url,
+                instruction_type="demonstration",
+            )
             trial_num += 1
 
         await get_post_trial(
@@ -250,7 +270,9 @@ async def one_subject(
     trial_num += 1
 
 
-async def get_post_trial(client, trial_type, t_id, url, solution=None, headers=None):
+async def get_post_trial(
+    client, trial_type, t_id, url, solution=None, headers=None, instruction_type=None
+):
     # get trial
     response = await client.get(url)
     assert response.status_code == 200
@@ -264,7 +286,21 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None, headers=N
         trial = data
 
     assert trial["id"] == t_id
-    assert trial["trial_type"] == trial_type
+
+    if instruction_type is not None:
+        exp_trail_name = f"{trial_type}:{instruction_type}"
+    else:
+        exp_trail_name = trial_type
+    if trial["instruction_type"] is not None:
+        found_trail_name = f"{trial['trial_type']}:{trial['instruction_type']}"
+    else:
+        found_trail_name = trial["trial_type"]
+    assert (
+        trial["trial_type"] == trial_type
+    ), f'Expected trial_type "{exp_trail_name}" but found "{found_trail_name}" in trail {t_id}'
+
+    if instruction_type is not None:
+        assert data["instruction_type"] == instruction_type
 
     # wait for 0.05 seconds before post trial
     await asyncio.sleep(0.05)
@@ -326,10 +362,6 @@ async def test_replace_stale_session(
     assert replaced_session.subject_id is None
     assert expired_session.subject_id == subj.id
 
-    # Clean up resources
-    await Session.find().delete()
-    await Subject.find().delete()
-
 
 @pytest.mark.asyncio
 async def test_end_session(
@@ -351,7 +383,3 @@ async def test_end_session(
     # expired session should be in the database
     expired_session = await Session.find_one(Session.expired == True)
     assert expired_session is not None
-
-    # Clean up resources
-    await Session.find().delete()
-    await Subject.find().delete()
