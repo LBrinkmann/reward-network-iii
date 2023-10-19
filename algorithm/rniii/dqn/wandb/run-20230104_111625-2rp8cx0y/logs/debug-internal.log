@@ -1,0 +1,153 @@
+2023-01-04 11:16:25,566 INFO    StreamThr :3248 [internal.py:wandb_internal():88] W&B internal server running at pid: 3248, started at: 2023-01-04 11:16:25.563435
+2023-01-04 11:16:25,568 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: status
+2023-01-04 11:16:25,571 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: status
+2023-01-04 11:16:25,573 DEBUG   SenderThread:3248 [sender.py:send():303] send: header
+2023-01-04 11:16:25,573 INFO    WriterThread:3248 [datastore.py:open_for_write():75] open: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/run-2rp8cx0y.wandb
+2023-01-04 11:16:25,574 DEBUG   SenderThread:3248 [sender.py:send():303] send: run
+2023-01-04 11:16:26,215 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: check_version
+2023-01-04 11:16:26,216 INFO    SenderThread:3248 [dir_watcher.py:__init__():216] watching files in: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files
+2023-01-04 11:16:26,216 INFO    SenderThread:3248 [sender.py:_start_run_threads():928] run started: 2rp8cx0y with start time 1672827385.514799
+2023-01-04 11:16:26,216 DEBUG   SenderThread:3248 [sender.py:send():303] send: summary
+2023-01-04 11:16:26,217 INFO    SenderThread:3248 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2023-01-04 11:16:26,217 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: check_version
+2023-01-04 11:16:26,355 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: run_start
+2023-01-04 11:16:26,364 DEBUG   HandlerThread:3248 [system_info.py:__init__():31] System info init
+2023-01-04 11:16:26,364 DEBUG   HandlerThread:3248 [system_info.py:__init__():46] System info init done
+2023-01-04 11:16:26,364 INFO    HandlerThread:3248 [system_monitor.py:start():150] Starting system monitor
+2023-01-04 11:16:26,365 INFO    SystemMonitor:3248 [system_monitor.py:_start():116] Starting system asset monitoring threads
+2023-01-04 11:16:26,366 INFO    HandlerThread:3248 [system_monitor.py:probe():168] Collecting system info
+2023-01-04 11:16:26,366 DEBUG   HandlerThread:3248 [system_info.py:probe():195] Probing system
+2023-01-04 11:16:26,366 INFO    SystemMonitor:3248 [interfaces.py:start():168] Started cpu
+2023-01-04 11:16:26,366 INFO    SystemMonitor:3248 [interfaces.py:start():168] Started disk
+2023-01-04 11:16:26,367 INFO    SystemMonitor:3248 [interfaces.py:start():168] Started memory
+2023-01-04 11:16:26,368 INFO    SystemMonitor:3248 [interfaces.py:start():168] Started network
+2023-01-04 11:16:26,369 DEBUG   HandlerThread:3248 [system_info.py:_probe_git():180] Probing git
+2023-01-04 11:16:26,422 DEBUG   HandlerThread:3248 [system_info.py:_probe_git():188] Probing git done
+2023-01-04 11:16:26,422 DEBUG   HandlerThread:3248 [system_info.py:probe():241] Probing system done
+2023-01-04 11:16:26,422 DEBUG   HandlerThread:3248 [system_monitor.py:probe():177] {'os': 'macOS-12.6.1-x86_64-i386-64bit', 'python': '3.10.8', 'heartbeatAt': '2023-01-04T10:16:26.366379', 'startedAt': '2023-01-04T10:16:25.495942', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/dqn_agent.py', 'codePath': 'rniii/dqn/dqn_agent.py', 'git': {'remote': 'https://github.com/LBrinkmann/reward-network-iii-algorithm.git', 'commit': '3ff4c0ecdff9cf8ddf7c3f3dd4f767ffa52575e7'}, 'email': 'sarabonati96@gmail.com', 'root': '/Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm', 'host': 'chm-osx-004860', 'username': 'bonati', 'executable': '/Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/.venv/bin/python', 'cpu_count': 6, 'cpu_count_logical': 12, 'cpu_freq': {'current': 2600, 'min': 2600, 'max': 2600}, 'cpu_freq_per_core': [{'current': 2600, 'min': 2600, 'max': 2600}], 'disk': {'total': 465.62699127197266, 'used': 80.07065200805664}, 'memory': {'total': 16.0}}
+2023-01-04 11:16:26,423 INFO    HandlerThread:3248 [system_monitor.py:probe():178] Finished collecting system info
+2023-01-04 11:16:26,423 INFO    HandlerThread:3248 [system_monitor.py:probe():181] Publishing system info
+2023-01-04 11:16:26,423 DEBUG   HandlerThread:3248 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2023-01-04 11:16:26,424 DEBUG   HandlerThread:3248 [system_info.py:_save_pip():67] Saving pip packages done
+2023-01-04 11:16:26,425 INFO    HandlerThread:3248 [system_monitor.py:probe():183] Finished publishing system info
+2023-01-04 11:16:26,430 DEBUG   SenderThread:3248 [sender.py:send():303] send: files
+2023-01-04 11:16:26,430 INFO    SenderThread:3248 [sender.py:_save_file():1171] saving file wandb-metadata.json with policy now
+2023-01-04 11:16:26,439 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: stop_status
+2023-01-04 11:16:26,440 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: stop_status
+2023-01-04 11:16:26,645 DEBUG   SenderThread:3248 [sender.py:send():303] send: telemetry
+2023-01-04 11:16:26,645 DEBUG   SenderThread:3248 [sender.py:send():303] send: telemetry
+2023-01-04 11:16:26,645 DEBUG   SenderThread:3248 [sender.py:send():303] send: exit
+2023-01-04 11:16:26,645 INFO    SenderThread:3248 [sender.py:send_exit():442] handling exit code: 1
+2023-01-04 11:16:26,645 INFO    SenderThread:3248 [sender.py:send_exit():444] handling runtime: 0
+2023-01-04 11:16:26,648 INFO    SenderThread:3248 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2023-01-04 11:16:26,648 INFO    SenderThread:3248 [sender.py:send_exit():450] send defer
+2023-01-04 11:16:26,649 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:26,649 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 0
+2023-01-04 11:16:26,650 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:26,650 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 0
+2023-01-04 11:16:26,650 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 1
+2023-01-04 11:16:26,652 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:26,652 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 1
+2023-01-04 11:16:26,653 INFO    HandlerThread:3248 [system_monitor.py:finish():160] Stopping system monitor
+2023-01-04 11:16:26,667 DEBUG   SystemMonitor:3248 [system_monitor.py:_start():130] Starting system metrics aggregation loop
+2023-01-04 11:16:26,667 DEBUG   SystemMonitor:3248 [system_monitor.py:_start():137] Finished system metrics aggregation loop
+2023-01-04 11:16:26,668 DEBUG   SystemMonitor:3248 [system_monitor.py:_start():141] Publishing last batch of metrics
+2023-01-04 11:16:26,669 INFO    HandlerThread:3248 [interfaces.py:finish():173] Joined cpu
+2023-01-04 11:16:26,669 INFO    HandlerThread:3248 [interfaces.py:finish():173] Joined disk
+2023-01-04 11:16:26,669 INFO    HandlerThread:3248 [interfaces.py:finish():173] Joined memory
+2023-01-04 11:16:26,669 INFO    HandlerThread:3248 [interfaces.py:finish():173] Joined network
+2023-01-04 11:16:26,670 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:26,670 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 1
+2023-01-04 11:16:26,670 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 2
+2023-01-04 11:16:26,670 DEBUG   SenderThread:3248 [sender.py:send():303] send: stats
+2023-01-04 11:16:26,671 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:26,671 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 2
+2023-01-04 11:16:26,671 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:26,671 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 2
+2023-01-04 11:16:26,671 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 3
+2023-01-04 11:16:26,672 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:26,672 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 3
+2023-01-04 11:16:26,672 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:26,672 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 3
+2023-01-04 11:16:26,672 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 4
+2023-01-04 11:16:26,672 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:26,672 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 4
+2023-01-04 11:16:26,672 DEBUG   SenderThread:3248 [sender.py:send():303] send: summary
+2023-01-04 11:16:26,673 INFO    SenderThread:3248 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2023-01-04 11:16:26,673 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:26,673 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 4
+2023-01-04 11:16:26,673 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 5
+2023-01-04 11:16:26,673 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:26,673 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 5
+2023-01-04 11:16:26,674 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:26,674 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 5
+2023-01-04 11:16:27,027 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 6
+2023-01-04 11:16:27,027 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:27,027 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 6
+2023-01-04 11:16:27,028 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:27,028 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 6
+2023-01-04 11:16:27,028 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 7
+2023-01-04 11:16:27,028 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:27,028 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 7
+2023-01-04 11:16:27,028 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:27,028 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 7
+2023-01-04 11:16:27,028 INFO    SenderThread:3248 [dir_watcher.py:finish():362] shutting down directory watcher
+2023-01-04 11:16:27,033 INFO    Thread-16 :3248 [upload_job.py:push():143] Uploaded file /var/folders/bf/1wzkxhv923145cbh3xbz51kh0000gr/T/tmp6hojfvhjwandb/jtvtg93r-wandb-metadata.json
+2023-01-04 11:16:27,220 INFO    SenderThread:3248 [dir_watcher.py:_on_file_modified():292] file/dir modified: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/config.yaml
+2023-01-04 11:16:27,220 INFO    SenderThread:3248 [dir_watcher.py:_on_file_created():275] file/dir created: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/wandb-metadata.json
+2023-01-04 11:16:27,221 INFO    SenderThread:3248 [dir_watcher.py:_on_file_created():275] file/dir created: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/requirements.txt
+2023-01-04 11:16:27,221 INFO    SenderThread:3248 [dir_watcher.py:_on_file_created():275] file/dir created: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/wandb-summary.json
+2023-01-04 11:16:27,221 INFO    SenderThread:3248 [dir_watcher.py:finish():392] scan: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files
+2023-01-04 11:16:27,221 INFO    SenderThread:3248 [dir_watcher.py:finish():406] scan save: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/requirements.txt requirements.txt
+2023-01-04 11:16:27,221 INFO    SenderThread:3248 [dir_watcher.py:finish():406] scan save: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/config.yaml config.yaml
+2023-01-04 11:16:27,222 INFO    SenderThread:3248 [dir_watcher.py:finish():406] scan save: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/wandb-summary.json wandb-summary.json
+2023-01-04 11:16:27,224 INFO    SenderThread:3248 [dir_watcher.py:finish():406] scan save: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/wandb-metadata.json wandb-metadata.json
+2023-01-04 11:16:27,225 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 8
+2023-01-04 11:16:27,229 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:27,229 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 8
+2023-01-04 11:16:27,230 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:27,230 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 8
+2023-01-04 11:16:27,230 INFO    SenderThread:3248 [file_pusher.py:finish():168] shutting down file pusher
+2023-01-04 11:16:27,444 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: poll_exit
+2023-01-04 11:16:27,445 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: poll_exit
+2023-01-04 11:16:27,847 INFO    Thread-17 :3248 [upload_job.py:push():143] Uploaded file /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/requirements.txt
+2023-01-04 11:16:27,855 INFO    Thread-18 :3248 [upload_job.py:push():143] Uploaded file /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/config.yaml
+2023-01-04 11:16:27,857 INFO    Thread-19 :3248 [upload_job.py:push():143] Uploaded file /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/files/wandb-summary.json
+2023-01-04 11:16:28,062 INFO    Thread-12 (_thread_body):3248 [sender.py:transition_state():463] send defer: 9
+2023-01-04 11:16:28,062 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:28,062 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 9
+2023-01-04 11:16:28,063 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:28,063 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 9
+2023-01-04 11:16:28,063 INFO    SenderThread:3248 [file_pusher.py:join():173] waiting for file pusher
+2023-01-04 11:16:28,063 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 10
+2023-01-04 11:16:28,063 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:28,063 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 10
+2023-01-04 11:16:28,063 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:28,063 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 10
+2023-01-04 11:16:28,448 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: poll_exit
+2023-01-04 11:16:28,966 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 11
+2023-01-04 11:16:28,966 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: poll_exit
+2023-01-04 11:16:28,967 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:28,967 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 11
+2023-01-04 11:16:28,968 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:28,968 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 11
+2023-01-04 11:16:28,968 INFO    SenderThread:3248 [sender.py:transition_state():463] send defer: 12
+2023-01-04 11:16:28,969 DEBUG   SenderThread:3248 [sender.py:send():303] send: final
+2023-01-04 11:16:28,969 DEBUG   SenderThread:3248 [sender.py:send():303] send: footer
+2023-01-04 11:16:28,969 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: defer
+2023-01-04 11:16:28,969 INFO    HandlerThread:3248 [handler.py:handle_request_defer():162] handle defer: 12
+2023-01-04 11:16:28,970 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: defer
+2023-01-04 11:16:28,970 INFO    SenderThread:3248 [sender.py:send_request_defer():459] handle sender defer: 12
+2023-01-04 11:16:28,972 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: poll_exit
+2023-01-04 11:16:28,973 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: server_info
+2023-01-04 11:16:28,973 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: poll_exit
+2023-01-04 11:16:28,974 DEBUG   SenderThread:3248 [sender.py:send_request():317] send_request: server_info
+2023-01-04 11:16:28,975 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: get_summary
+2023-01-04 11:16:28,976 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: sampled_history
+2023-01-04 11:16:29,446 DEBUG   HandlerThread:3248 [handler.py:handle_request():139] handle_request: shutdown
+2023-01-04 11:16:29,446 INFO    HandlerThread:3248 [handler.py:finish():814] shutting down handler
+2023-01-04 11:16:29,973 INFO    WriterThread:3248 [datastore.py:close():279] close: /Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/wandb/run-20230104_111625-2rp8cx0y/run-2rp8cx0y.wandb
+2023-01-04 11:16:30,448 INFO    SenderThread:3248 [sender.py:finish():1331] shutting down sender
+2023-01-04 11:16:30,448 INFO    SenderThread:3248 [file_pusher.py:finish():168] shutting down file pusher
+2023-01-04 11:16:30,448 INFO    SenderThread:3248 [file_pusher.py:join():173] waiting for file pusher
+2023-01-04 11:16:31,451 INFO    MainThread:3248 [internal.py:handle_exit():78] Internal process exited
