@@ -1,0 +1,20 @@
+,Unnamed: 0,sessionId,strategy,task_explanation,difficulty_rating,time_limit_sufficient,arrows_color,additional_comments,expName
+0,0,636e6aa45fa132cb00661dc7,avoiding purple,2,3,3,3,no,rn-iii-pilot-1B
+1,1,636e6aa45fa132cb00661dc8,No strategies just instinct,4,4,2,3,,rn-iii-pilot-1B
+2,2,636e6aa45fa132cb00661dc9,Maximize points,4,4,2,2,,rn-iii-pilot-1B
+3,3,636e6aa45fa132cb00661dca,I was searching for the dark green arrows but I ended up doing the worst path most of the time for the time limit,4,4,2,2,,rn-iii-pilot-1B
+4,4,636e6aa45fa132cb00661dcb,I would try and look at max gain minimum sacrifice but the time pressure made me lose track of thought,4,2,1,4,,rn-iii-pilot-1B
+5,5,636e6aa45fa132cb00661dcc,avoid purple,4,3,3,1,,rn-iii-pilot-1B
+6,6,636e6aa55fa132cb00661dce,Unikałam poruszania się po strzałkach fioletowych,3,4,2,2,,rn-iii-pilot-1B
+7,7,636e6aa55fa132cb00661dcf,Get on the highest scoring line if possible,5,4,2,4,,rn-iii-pilot-1B
+8,8,636e6aa55fa132cb00661dd0,I am focusing on the dark green lines where they are,2,3,1,2,,rn-iii-pilot-1B
+9,0,636e575d5fa132cb00661dae,Following the arrows ,3,4,4,3,,rn-iii-pilot-1A
+10,1,636e575d5fa132cb00661daf,following the green lines.,1,5,1,4,No,rn-iii-pilot-1A
+11,2,636e575d5fa132cb00661db0,I tried to minimize point loss by selecting light purple or white arrows when there were no green ones,2,5,1,1,,rn-iii-pilot-1A
+12,3,636e575d5fa132cb00661db1,I was always aiming for green arrows or closed cirlces that were giving me points with each click,2,4,2,4,,rn-iii-pilot-1A
+13,4,636e575d5fa132cb00661db2,Strategy was to avoid losing lanes but it failed because of not enough time to accurately analyse lines. So i don't know anymore.,5,5,1,3,"Was too short time and too big minus for some lines, lost everything and gain huge minus in one mistake. After that i lost engagement in rest of the tests because they were pointless after that. It's first time after many many studies like this i didn't managed to win.....",rn-iii-pilot-1A
+14,5,636e575d5fa132cb00661db3,Try get as many dark points,2,5,1,4,,rn-iii-pilot-1A
+15,6,636e575d5fa132cb00661db4,"I tried to understand as quick as possible if there was any ""safe"" path that allowed me to get the highest amount of points (or to loose the fewest amount)",3,4,2,3,,rn-iii-pilot-1A
+16,7,636e575d5fa132cb00661db5,getting to max + points,3,4,2,1,,rn-iii-pilot-1A
+17,8,636e575d5fa132cb00661db6,Checked where is the line that gives the most points and what is the quickest way to get there.,3,3,3,1,,rn-iii-pilot-1A
+18,9,636e575d5fa132cb00661db7,"tried to find te darkest line and work back, unfortunatelly that strategy was time consuming ",3,3,1,2,im stupid sorry ,rn-iii-pilot-1A

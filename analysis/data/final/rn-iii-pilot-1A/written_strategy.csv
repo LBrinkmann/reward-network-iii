@@ -1,0 +1,11 @@
+,sessionId,condition,strategyText,strategyScore
+0,636e575d5fa132cb00661dae,human_lineage,The strategy that I used was to follow the arrows specifically looking at which letter are they pointing mainly avoiding the ones which had less points ,TODO
+1,636e575d5fa132cb00661daf,human_lineage,Follow the green lines and try and avoid the purple lines.,TODO
+2,636e575d5fa132cb00661db0,human_lineage,Use light purple or white arrows when there are no green ones to use,TODO
+3,636e575d5fa132cb00661db1,human_lineage,Always aim to get to the green arrow unless youve found a closed cirlce of arrows thats giving you 20 points each,TODO
+4,636e575d5fa132cb00661db2,human_lineage,Strategy was to avoid losing lanes but it failed because of not enough time to accurately analyse lines. So i don't know anymore.,TODO
+5,636e575d5fa132cb00661db3,human_lineage,Look for how to get the dark green links. Tried to plan ahead. ,TODO
+6,636e575d5fa132cb00661db4,human_lineage,"Your aim is trying to loose the fewest number of points in order to get a high score. To do so, sometimes the best strategy is to repeat a path if it minimize the risk of loosing points",TODO
+7,636e575d5fa132cb00661db5,human_lineage,getting to max + point through - points was best strattegy,TODO
+8,636e575d5fa132cb00661db6,human_lineage,Check where is the line that gives you the most points and how you can get to it with the least moves. Especially if that line is part of a safe loop.,TODO
+9,636e575d5fa132cb00661db7,human_lineage,find the darkest green line and go back from there. works better if you dont have just 25 seconds and panic,TODO

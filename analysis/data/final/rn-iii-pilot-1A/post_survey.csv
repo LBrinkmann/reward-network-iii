@@ -1,0 +1,11 @@
+,sessionId,strategy,task_explanation,difficulty_rating,time_limit_sufficient,arrows_color,additional_comments
+0,636e575d5fa132cb00661dae,Following the arrows ,3,4,4,3,
+1,636e575d5fa132cb00661daf,following the green lines.,1,5,1,4,No
+2,636e575d5fa132cb00661db0,I tried to minimize point loss by selecting light purple or white arrows when there were no green ones,2,5,1,1,
+3,636e575d5fa132cb00661db1,I was always aiming for green arrows or closed cirlces that were giving me points with each click,2,4,2,4,
+4,636e575d5fa132cb00661db2,Strategy was to avoid losing lanes but it failed because of not enough time to accurately analyse lines. So i don't know anymore.,5,5,1,3,"Was too short time and too big minus for some lines, lost everything and gain huge minus in one mistake. After that i lost engagement in rest of the tests because they were pointless after that. It's first time after many many studies like this i didn't managed to win....."
+5,636e575d5fa132cb00661db3,Try get as many dark points,2,5,1,4,
+6,636e575d5fa132cb00661db4,"I tried to understand as quick as possible if there was any ""safe"" path that allowed me to get the highest amount of points (or to loose the fewest amount)",3,4,2,3,
+7,636e575d5fa132cb00661db5,getting to max + points,3,4,2,1,
+8,636e575d5fa132cb00661db6,Checked where is the line that gives the most points and what is the quickest way to get there.,3,3,3,1,
+9,636e575d5fa132cb00661db7,"tried to find te darkest line and work back, unfortunatelly that strategy was time consuming ",3,3,1,2,im stupid sorry 

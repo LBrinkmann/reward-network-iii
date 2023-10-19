@@ -1,0 +1,11 @@
+,sessionId,condition,strategyText,strategyScore
+0,649d8d61d98de2a0b3c50195,Human_lineage,Trying to reach the green arrows without going through the darker red arrows in minimal moves,TODO
+1,649d8d61d98de2a0b3c50196,Human_lineage,"Since I don't really work that well under pressure, I couldn't really come up with a strategy. I just tried to get as many points as possible while losing as few as possible. ",TODO
+2,649d8d61d98de2a0b3c50197,Human_lineage,Before choosing first node I tried to analyze many possible outcomes and after brief calculation I choose the best one I've found.,TODO
+3,649d8d61d98de2a0b3c50198,Human_lineage,I was a little bit chaotic but I tried to get to the green arrows even if I had to hit some red. I was a bit lazy and stuck to the light green arrows,TODO
+4,649d8d61d98de2a0b3c50199,Human_lineage,i try to go to the letter from which i can earn most points while going back to this letter and other,TODO
+5,649d8d61d98de2a0b3c5019a,Human_lineage,Tried to look for the looping greens,TODO
+6,649d8d61d98de2a0b3c5019b,Human_lineage,Repeated the steps that gave me more points but sucrificed some points in the first steps to earn more eventually,TODO
+7,649d8d61d98de2a0b3c5019c,Human_lineage,choose between highlighted circles based on which one connected to more green outgoing lines. if short on time go between 0 point lines and positive point lines until 8 moves reached.,TODO
+8,649d8d61d98de2a0b3c5019d,Human_lineage,"Tring to go to the nodes of the network with more green paths, or try ate least one maximum score",TODO
+9,649d8d61d98de2a0b3c5019f,Human_lineage,"Firstly I tried to not lose any point, but then I noticed that it's better to lose some point, so I can get to the lines that give me more points. ",TODO

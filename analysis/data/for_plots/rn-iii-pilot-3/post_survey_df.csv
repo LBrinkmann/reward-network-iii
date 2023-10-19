@@ -1,0 +1,11 @@
+Unnamed: 0,sessionId,task_explanation,difficulty_rating,time_limit_sufficient,arrows_color,additional_comments,expName
+0,6422d978aff8868105633832,2,3,2,2,,rn-iii-pilot-3B
+1,6422d978aff8868105633833,4,3,3,2,,rn-iii-pilot-3B
+2,6422d978aff8868105633834,4,2,2,3,None,rn-iii-pilot-3B
+3,6422d978aff8868105633835,5,4,2,1,No technical problems,rn-iii-pilot-3B
+4,6422d978aff8868105633836,5,4,1,3,,rn-iii-pilot-3B
+5,6422d978aff8868105633837,4,4,2,2,,rn-iii-pilot-3B
+6,6422d978aff8868105633838,4,3,2,3,,rn-iii-pilot-3B
+7,6422d978aff886810563383a,5,4,3,1,I feel like the high density of arrows affected the readability. Sometimes I was struggling to find the path to node I wanted to reach,rn-iii-pilot-3B
+8,6422d978aff886810563383b,3,4,2,3,,rn-iii-pilot-3B
+9,6422d978aff886810563383c,3,3,1,1,Interesting experiment,rn-iii-pilot-3B

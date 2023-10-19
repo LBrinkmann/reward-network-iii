@@ -1,0 +1,10 @@
+,sessionId,strategy,task_explanation,difficulty_rating,time_limit_sufficient,arrows_color,additional_comments
+0,636e6aa45fa132cb00661dc7,avoiding purple,2,3,3,3,no
+1,636e6aa45fa132cb00661dc8,No strategies just instinct,4,4,2,3,
+2,636e6aa45fa132cb00661dc9,Maximize points,4,4,2,2,
+3,636e6aa45fa132cb00661dca,I was searching for the dark green arrows but I ended up doing the worst path most of the time for the time limit,4,4,2,2,
+4,636e6aa45fa132cb00661dcb,I would try and look at max gain minimum sacrifice but the time pressure made me lose track of thought,4,2,1,4,
+5,636e6aa45fa132cb00661dcc,avoid purple,4,3,3,1,
+6,636e6aa55fa132cb00661dce,Unikałam poruszania się po strzałkach fioletowych,3,4,2,2,
+7,636e6aa55fa132cb00661dcf,Get on the highest scoring line if possible,5,4,2,4,n/a
+8,636e6aa55fa132cb00661dd0,I am focusing on the dark green lines where they are,2,3,1,2,

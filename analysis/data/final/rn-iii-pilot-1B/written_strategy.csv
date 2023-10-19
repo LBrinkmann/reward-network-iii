@@ -1,0 +1,10 @@
+,sessionId,condition,strategyText,strategyScore
+0,636e6aa45fa132cb00661dc7,AI_lineage,"try to only use white or green arrow, avoid purple",TODO
+1,636e6aa45fa132cb00661dc8,AI_lineage,Try to follow the green lines but sometimes taking one step back makes you take two steps forward,TODO
+2,636e6aa45fa132cb00661dc9,AI_lineage,"Always go for the arrow that would give me the most points. In case there were only negative options, go for the less negative one or for a node which would be followed by a big positive arrow ",TODO
+3,636e6aa45fa132cb00661dca,AI_lineage,"Often the first solution you see is only the risk free one, if you pay attention you can find a second solution which requires to spend some points first, but you will earn much more",TODO
+4,636e6aa45fa132cb00661dcb,AI_lineage,"I panicked on this one, and didn't think to sacrifice points to gain more .",TODO
+5,636e6aa45fa132cb00661dcc,AI_lineage,"avoid purple lines and try to end in positive, i found it hard to get to the dark green",TODO
+6,636e6aa55fa132cb00661dce,AI_lineage,Staram się poruszać po sieci nie tracąc punktów. Unikałam poruszania się po fioletowych strzałkach.,TODO
+7,636e6aa55fa132cb00661dcf,AI_lineage,I didn't have a strategy but I did try and look to get on the biggest scoring line if possible.,TODO
+8,636e6aa55fa132cb00661dd0,AI_lineage,I am focusing on the dark green lines where they are,TODO

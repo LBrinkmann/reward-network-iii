@@ -1,0 +1,21 @@
+,sessionId,condition,strategyText,strategyScore
+0,642bdb6f5b5b9c825f6d8ac9,AI_lineage,Jump to more green points than red.,TODO
+1,642bdb6f5b5b9c825f6d8ac9,AI_lineage,Jump to more green points than red. Try to follow a pattern that opens up another favorable move for the next move to a green point if i must jump to a red line.,TODO
+2,642bdb6f5b5b9c825f6d8aca,AI_lineage,Find a positive points loop,TODO
+3,642bdb6f5b5b9c825f6d8aca,AI_lineage,Try to reach the two nodes that are connected in a loop in as less moves as possible,TODO
+4,642bdb6f5b5b9c825f6d8acb,AI_lineage,"I try to see a path with more green arrows, although I am having some dificultties going to paths with more green arrows",TODO
+5,642bdb6f5b5b9c825f6d8acb,AI_lineage,"I tried to see the best path, sometimes I was not able to figure out the best way to go to the areas with more green arrows, because I started panicking and was not able to get there. ",TODO
+6,642bdb6f5b5b9c825f6d8acc,AI_lineage,I think I tried to take a look at the network and tried to quickly understand which paths I shouldn't take,TODO
+7,642bdb6f5b5b9c825f6d8acc,AI_lineage,My strategy was to get the 3 red arrows as early as possible to try and get the green ones that are more valued,TODO
+8,642bdb6f5b5b9c825f6d8acd,AI_lineage,didn't have a strategy,TODO
+9,642bdb6f5b5b9c825f6d8acd,AI_lineage,i tried to get as much green as possible in this task,TODO
+10,642bdb6f5b5b9c825f6d8ace,AI_lineage,I looked at where the arrow was pointing and whether there is another arrow from my next node,TODO
+11,642bdb6f5b5b9c825f6d8ace,AI_lineage,Choose the violet as first two or three choices and that will lead you to manier greens,TODO
+12,642bdb6f5b5b9c825f6d8acf,AI_lineage,"I tried to avoid the dark pink routes, if I was obliged I looked for those who then had alternatives that allowed to compensate for the lost points",TODO
+13,642bdb6f5b5b9c825f6d8acf,AI_lineage,"I tried to avoid the dark pink routes, if I was obliged I looked for those who then had alternatives that allowed to compensate for the lost points",TODO
+14,642bdb6f5b5b9c825f6d8ad0,AI_lineage,"I would try and work out a path first, but often ended up panicking and clicking due to the short time limit.",TODO
+15,642bdb6f5b5b9c825f6d8ad0,AI_lineage,"Try to maximize green arrows, especially loops. Use the light pink (0) if necessary.",TODO
+16,642bdb6f5b5b9c825f6d8ad1,AI_lineage,"I had to think quickly and move on to the next arrow if the one I choose doesn't work but because timers make me nervous, I end up fucking up.",TODO
+17,642bdb6f5b5b9c825f6d8ad1,AI_lineage,I used strategies I learnt from the previous examples.,TODO
+18,642bdb6f5b5b9c825f6d8ad2,AI_lineage,Focus on the nodes that have green lines and try to find a way to a darker green line.,TODO
+19,642bdb6f5b5b9c825f6d8ad2,AI_lineage,Try to find a way to more green lines even if you start with purple lines at first.,TODO
