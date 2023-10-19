@@ -1,0 +1,42 @@
+{
+    "os": "macOS-12.6.5-x86_64-i386-64bit",
+    "python": "3.10.8",
+    "heartbeatAt": "2023-06-20T12:40:12.049809",
+    "startedAt": "2023-06-20T12:40:11.225862",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/rniii/dqn/dqn_agent.py",
+    "codePath": "rniii/dqn/dqn_agent.py",
+    "git": {
+        "remote": "https://github.com/LBrinkmann/reward-network-iii-algorithm.git",
+        "commit": "a9c8ccf8e7ee0f38c4267e9f92c286fe2ab52219"
+    },
+    "email": "sarabonati96@gmail.com",
+    "root": "/Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm",
+    "host": "chm-osx-004860",
+    "username": "bonati",
+    "executable": "/Users/bonati/Desktop/CHM/reward_networks/reward-network-iii-algorithm/.venv/bin/python",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 2600,
+        "min": 2600,
+        "max": 2600
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2600,
+            "min": 2600,
+            "max": 2600
+        }
+    ],
+    "disk": {
+        "total": 465.62699127197266,
+        "used": 137.53402709960938
+    },
+    "memory": {
+        "total": 16.0
+    }
+}
