@@ -1,0 +1,7 @@
+numpy
+pydantic==1.9.2
+python-dotenv
+pyyaml
+stringcase
+networkx
+

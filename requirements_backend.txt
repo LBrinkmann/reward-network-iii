@@ -1,0 +1,7 @@
+fastapi
+httpx
+motor
+pymongo
+pyvis
+uvicorn
+beanie
