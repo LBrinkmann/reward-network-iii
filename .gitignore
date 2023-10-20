@@ -4,6 +4,7 @@ app.egg-info
 __pycache__
 *~
 build
+*.egg-info
 
 # Ignore JetBrains files
 # .idea

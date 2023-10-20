@@ -2,6 +2,7 @@ import os
 import json
 import random
 import yaml
+import argparse
 
 import numpy as np
 import pandas as pd
@@ -153,35 +154,37 @@ class RuleAgent:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Solve networks with a rule based algorithm."
+    )
+    parser.add_argument(
+        "-c", "--config", help="Path to the config YAML file", required=True
+    )
+    parser.add_argument(
+        "-n", "--networks", help="Path to the networks JSON file", required=True
+    )
+    parser.add_argument(
+        "-o", "--output", help="Path to the output files", required=True
+    )
+    args = parser.parse_args()
 
-    # --------Specify paths--------------------------
-    current_dir = os.getcwd()
-    print(f"Current working directory: {current_dir}")
-    root_dir = os.sep.join(current_dir.split(os.sep)[:2])
+    solve_params = load_yaml(args.config)
+    seed = 43
+    random.seed(seed)
+    np.random.seed(seed)
 
-    # Specify directories depending on system
-    if root_dir == "/mnt":  # (cluster)
-        user_name = os.sep.join(current_dir.split(os.sep)[4:5])
-        home_dir = f"/mnt/beegfs/home/{user_name}"
-        project_dir = os.path.join(home_dir, "CHM", "reward_networks_III", "reward-network-iii-algorithm")
-        code_dir = os.path.join(project_dir, "solve")
-        params_dir = os.path.join(project_dir, "params", "rule_based_solve")
-        data_dir = os.path.join(project_dir, "data")
-        out_dir = os.path.join(data_dir, "solutions")
-
-    elif root_dir == "/Users":  # (local)
-        project_dir = os.path.split(os.getcwd())[0]
-        data_dir = os.path.join(project_dir, "data")
-        params_dir = os.path.join(project_dir, "params", "rule_based_solve")
-        out_dir = os.path.join(data_dir, "solutions")
-
-    # load parameters for rule based solutions
-    solve_params = load_yaml(os.path.join(params_dir, "rule_based.yml"))
-    with open(os.path.join(data_dir, solve_params['networks_filename'])) as json_file:
+    with open(args.networks) as json_file:
         networks = json.load(json_file)
 
     for strategy in ['myopic', 'take_loss', 'random']:
         A = RuleAgent(networks, strategy, solve_params)
         A.solve()
-        A.save_solutions_frontend()
+        solutions = A.save_solutions_frontend()
+
+        filename = os.path.join(args.output, f"__{strategy}.json")
+
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(solutions)
+
+
 
