@@ -3,8 +3,8 @@ import json
 import random
 import string
 import yaml
-import os
 from collections import Counter
+import argparse
 
 import networkx as nx
 import numpy as np
@@ -13,11 +13,6 @@ import matplotlib.pyplot as plt
 from network import Network, Node, Edge
 from environment import Environment
 
-# from .utils import parse_network, calculate_q_value, calculate_trace
-
-seed = 42
-random.seed(seed)
-np.random.seed(seed)
 
 
 def load_yaml(filename):
@@ -77,8 +72,6 @@ class NetworkGenerator:
             # for a, b in zip(node_order, [pos[node] for node in g]):
             #     random_pos[a[0]] = b
 
-            print(pos)
-
             pos_map = {
                 n: {"x": p[0] * 100, "y": p[1] * -1 * 100} for n, p in pos.items()
             }
@@ -87,7 +80,7 @@ class NetworkGenerator:
 
             # NEW: add vertices for visualization purposes
             plt.figure()
-            plt.axis('equal')
+            plt.axis("equal")
             arrow_size = 0.1
             node_size = self.node_size
 
@@ -132,8 +125,8 @@ class NetworkGenerator:
             c = Counter([e["source"] for e in net["links"]])
 
             if (
-                    all(value == self.env.n_edges_per_node for value in c.values())
-                    and len(list(c.keys())) == self.env.n_nodes
+                all(value == self.env.n_edges_per_node for value in c.values())
+                and len(list(c.keys())) == self.env.n_nodes
             ):
                 create_network = self.create_network_object(
                     pos_map=pos_map,
@@ -141,7 +134,6 @@ class NetworkGenerator:
                     network_id=network_id,
                     **net,
                 )
-                print("Network created", create_network)
                 self.networks.append(create_network)
                 print(f"Network {len(self.networks)} created")
             else:
@@ -185,8 +177,8 @@ class NetworkGenerator:
         return sorted(
             nodes,
             key=lambda n: G.nodes[n]["level"]
-                          + G.out_degree(n) * 0.1
-                          + random.random() * 0.01,
+            + G.out_degree(n) * 0.1
+            + random.random() * 0.01,
             reverse=False,
         )
 
@@ -228,12 +220,9 @@ class NetworkGenerator:
         # add nodes to graph
         level_list = [level.idx for level in levels for _ in range(level.n_nodes)]
         random.shuffle(level_list)
-        print(level_list)
         for level in level_list:
             self.add_new_node(graph, level)
-        print(f"Nodes: {[graph.nodes[node] for node in graph]}")
         zero_level_nodes = [node for node in graph if graph.nodes[node]["level"] == 0]
-        print(zero_level_nodes)
         self.start_node = random.choice(zero_level_nodes)
 
     def sample_network(self):
@@ -295,31 +284,24 @@ class NetworkGenerator:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Generate networks based on environment parameters."
+    )
+    parser.add_argument(
+        "-i", "--input", help="Path to the input YAML file", required=True
+    )
+    parser.add_argument(
+        "-o", "--output", help="Path to the output JSON file", required=True
+    )
+    args = parser.parse_args()
 
-    # --------Specify paths--------------------------
-    current_dir = os.getcwd()
-    print(f"Current working directory: {current_dir}")
-    root_dir = os.sep.join(current_dir.split(os.sep)[:2])
-
-    # Specify directories depending on system
-    if root_dir == "/mnt":  # (cluster)
-        user_name = os.sep.join(current_dir.split(os.sep)[4:5])
-        home_dir = f"/mnt/beegfs/home/{user_name}"
-        project_dir = os.path.join(home_dir, "CHM", "reward_networks_III", "reward-network-iii-algorithm")
-        code_dir = os.path.join(project_dir, "generate")
-        params_dir = os.path.join(project_dir, "params", "generate")
-        data_dir = os.path.join(project_dir, "data")
-
-    elif root_dir == "/Users":  # (local)
-        project_dir = os.path.split(os.getcwd())[0]
-        data_dir = os.path.join(project_dir, "data")
-        params_dir = os.path.join(project_dir, "params", "generate")
-
-    environment = load_yaml("../../params/generate/environment_8december.yml")
+    environment = load_yaml(args.input)
+    seed = environment['seed']
+    random.seed(seed)
+    np.random.seed(seed)
     generate_params = Environment(**environment)
 
     net_generator = NetworkGenerator(generate_params)
-    networks = net_generator.generate(10)
-    with open('data.json', 'w', encoding='utf-8') as f:
+    networks = net_generator.generate(environment['n_networks'])
+    with open(args.output, "w", encoding="utf-8") as f:
         f.write(json.dumps(net_generator.save_as_json()))
-    net_generator.save_as_json()
