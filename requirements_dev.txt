@@ -1,0 +1,8 @@
+autopep8
+flake8
+ipdb
+ipykernel
+ipython
+pydantic-to-typescript
+pytest
+pytest-asyncio
