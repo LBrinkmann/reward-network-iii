@@ -5,17 +5,17 @@ from beanie import Document
 
 
 class ExperimentSettings(Document):
-    ### META SETTINGS
+    # META SETTINGS
     # whether the experiment is active
     active: bool = False
     created_at: Optional[datetime] = datetime.now()
     # Redirect URL for Prolific
     redirect_url: Optional[str] = "https://app.prolific.co/submissions/complete"
 
-    ### GENERAL SETTINGS
+    # GENERAL SETTINGS
     # name of the experiment
     experiment_type: str = "reward-network-iii"
-    # weather the experiment with the same name is to be overwritten (just for development)
+    # whether the experiment with the same name is to be overwritten (just for development)
     rewrite_previous_data: bool = False
 
     # SESSION TREE SETTINGS
