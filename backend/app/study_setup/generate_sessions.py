@@ -3,7 +3,7 @@ import random
 from pathlib import Path
 from typing import List
 
-from beanie import PydanticObjectId
+# from beanie import PydanticObjectId
 from beanie.odm.operators.update.general import Set
 
 from models.config import ExperimentSettings
@@ -40,7 +40,8 @@ def get_net_solution(solution_type="loss"):
         moves = [s for s in solutions if s["network_id"] == network.network_id]
     else:
         # myopic solution
-        moves = [s for s in solutions_myopic if s["network_id"] == network.network_id]
+        moves = [s for s in solutions_myopic if s["network_id"]
+                 == network.network_id]
 
     # for some reason the first move is always 0, so we need to replace it
     moves[0]["moves"][0] = network.starting_node
@@ -109,7 +110,7 @@ async def generate_sessions(
 
     previous_sessions = None
 
-    for generation in range(config.n_generations):
+    for generation in range(config.n_generations - 1):
         sessions = await create_generation(
             generation=generation,
             experiment_num=experiment_num,
@@ -216,7 +217,8 @@ def create_trials(
     :param redirect_url: URL to redirect to after the experiment is finished
     """
 
-    is_ai = (generation == 0) and ((condition == "w_ai") or config.simulate_humans)
+    is_ai = (generation == 0) and (
+        (condition == "w_ai") or config.simulate_humans)
     is_human = not is_ai
 
     trials = []
@@ -232,7 +234,8 @@ def create_trials(
         )
 
         trials.append(
-            Trial(id=len(trials), trial_type="instruction", instruction_type="welcome")
+            Trial(id=len(trials), trial_type="instruction",
+                  instruction_type="welcome")
         )
 
         trials.append(Trial(id=len(trials), trial_type="practice"))
