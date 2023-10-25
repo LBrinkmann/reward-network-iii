@@ -1,0 +1,32 @@
+Unnamed: 0,sessionId,task_explanation,difficulty_rating,time_limit_sufficient,arrows_color,additional_comments,expName
+0,649d8d61d98de2a0b3c50195,5,4,3,2,,rn-iii-pilot-5A
+1,649d8d61d98de2a0b3c50196,3,4,1,1,,rn-iii-pilot-5A
+2,649d8d61d98de2a0b3c50197,4,2,3,2,,rn-iii-pilot-5A
+3,649d8d61d98de2a0b3c50198,2,3,2,3,,rn-iii-pilot-5A
+4,649d8d61d98de2a0b3c50199,4,3,5,1,,rn-iii-pilot-5A
+5,649d8d61d98de2a0b3c5019a,5,4,2,3,,rn-iii-pilot-5A
+6,649d8d61d98de2a0b3c5019b,4,2,4,3,,rn-iii-pilot-5A
+7,649d8d61d98de2a0b3c5019c,2,3,2,1,,rn-iii-pilot-5A
+8,649d8d61d98de2a0b3c5019d,5,4,1,5,,rn-iii-pilot-5A
+9,649d8d61d98de2a0b3c5019f,4,4,2,1,,rn-iii-pilot-5A
+0,647731a58664fd383a5bfc19,2,5,1,3,,rn-iii-pilot-5B
+1,647731a58664fd383a5bfc1a,5,4,3,2,,rn-iii-pilot-5B
+2,647731a58664fd383a5bfc1b,2,3,4,3,,rn-iii-pilot-5B
+3,647731a58664fd383a5bfc1c,4,3,2,1,,rn-iii-pilot-5B
+4,647731a58664fd383a5bfc1d,1,3,1,3,,rn-iii-pilot-5B
+5,647731a58664fd383a5bfc1e,2,3,4,3,,rn-iii-pilot-5B
+6,647731a58664fd383a5bfc1f,3,5,1,4,,rn-iii-pilot-5B
+7,647731a58664fd383a5bfc20,1,5,2,4,,rn-iii-pilot-5B
+8,647731a58664fd383a5bfc22,2,2,1,5,"like i said, the arrows were too bright and i couldn't see where they were pointing",rn-iii-pilot-5B
+9,647731a58664fd383a5bfc23,5,3,2,1,,rn-iii-pilot-5B
+10,64773d6f8664fd383a5bfc32,5,4,3,2,,rn-iii-pilot-5B
+0,649d986ad98de2a0b3c501b8,3,2,4,3,,rn-iii-pilot-5C
+1,649d986ad98de2a0b3c501b9,5,4,2,4,"Some of the lighter colors are too light, perhaps you should bold the arrows' ends to indicate where it leads to.",rn-iii-pilot-5C
+2,649d986ad98de2a0b3c501ba,2,4,2,3,,rn-iii-pilot-5C
+3,649d986ad98de2a0b3c501bb,1,4,2,3,"It wasn't well explained at the start, ie. which circle you would have to start from",rn-iii-pilot-5C
+4,649d986ad98de2a0b3c501bc,1,1,1,1,,rn-iii-pilot-5C
+5,649d986ad98de2a0b3c501be,4,4,2,1,no,rn-iii-pilot-5C
+6,649d986ad98de2a0b3c501bf,5,3,2,3,,rn-iii-pilot-5C
+7,649d986ad98de2a0b3c501c0,4,2,3,3,,rn-iii-pilot-5C
+8,649d986ad98de2a0b3c501c1,2,4,2,3,,rn-iii-pilot-5C
+9,649d986ad98de2a0b3c501c2,3,3,2,2,,rn-iii-pilot-5C

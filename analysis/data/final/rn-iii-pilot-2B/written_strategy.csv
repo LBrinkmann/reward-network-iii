@@ -1,0 +1,12 @@
+,sessionId,condition,strategyText,strategyScore
+0,63e623d186a07638e1044c48,AI_lineage,"Try to find a way to get ""stuck"" between two points that you can go back and foward",TODO
+1,63e623d186a07638e1044c49,AI_lineage,"try to follow green lines where you can, you may need to go to pink to get yourself back on green",TODO
+2,63e623d186a07638e1044c4a,AI_lineage,I tried to look which line may bring the least amount of negatives and most amount of points,TODO
+3,63e623d186a07638e1044c4b,AI_lineage,By choosing the three red arrows first you can get to the most amount of points after,TODO
+4,63e623d186a07638e1044c4c,AI_lineage,"Try to get as quickly as possible to the 200 or 400 arrows, that have the possibility of going back and forth between the dots and gain points on every move.",TODO
+5,63e623d186a07638e1044c4d,AI_lineage,Try to get into a loop with good rewards. Take some pinks to get to some greens. ,TODO
+6,63e623d186a07638e1044c4e,AI_lineage,"I tried to get as many points as possible without losing that many
+",TODO
+7,63e623d186a07638e1044c4f,AI_lineage,try to go with three red arrows first if you can but if u can't go where the green are,TODO
+8,63e623d186a07638e1044c50,AI_lineage,Try to see the path to the lines that give more points,TODO
+9,63e623d186a07638e1044c51,AI_lineage,Most of the times you can choose a path that takes some point on the beginning but then can get you the maximum possible out,TODO

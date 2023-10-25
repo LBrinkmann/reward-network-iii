@@ -1,0 +1,12 @@
+,sessionId,condition,strategyText,strategyScore
+0,63e60e5c86a07638e1044c25,human_lineage,"be as quick as possible, but also try to follow the paths in order to score higher",TODO
+1,63e60e5c86a07638e1044c26,human_lineage,My strategy was to stay more on the side with maximum points as well as not being scared of sacrificing a few points to earn maximum.,TODO
+2,63e60e5c86a07638e1044c27,human_lineage,"I tried to select the best final nodes that would maximize the points. And after that, I tried to choose the path that led to those nodes that was also the one with the least loss of points.",TODO
+3,63e60e5c86a07638e1044c28,human_lineage,"i dont have a true strategy, just follow green arrows",TODO
+4,63e60e5c86a07638e1044c29,human_lineage,"Hello!. Try to use the most green arrow paths.have a nice day
+",TODO
+5,63e60e5c86a07638e1044c2a,human_lineage,"must use 8 moves or less, the dark green are the high scorers. sometimes you have to go back along the same line to get to where the dark greens are.",TODO
+6,63e60e5c86a07638e1044c2b,human_lineage,"Do not look for arrows of 400 points, because you can lose more",TODO
+7,63e60e5c86a07638e1044c2c,human_lineage,I tried to find a loop where I could avoid the purple lines and I could go back and forth between the green ones.,TODO
+8,63e60e5c86a07638e1044c2d,human_lineage,"The best strategy to obtain as many points as much possible is to see at first your overall options. Do not spent tou much time there, only a few seconds. After that try to see and click greener lines",TODO
+9,63e60e5c86a07638e1044c2e,human_lineage,You should follow the paths to the most valuable nodes. If possible choose back and forth cycles where you can repeatedly gain points.,TODO

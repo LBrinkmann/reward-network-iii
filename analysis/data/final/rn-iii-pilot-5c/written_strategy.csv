@@ -1,0 +1,22 @@
+,sessionId,condition,strategyText,strategyScore
+0,649d986ad98de2a0b3c501b8,Myopic_lineage,I saw the lines and decided based on the color as fast as possible.,TODO
+1,649d986ad98de2a0b3c501b8,Myopic_lineage,I looked into the highlighted letters which had a green layer over it.,TODO
+2,649d986ad98de2a0b3c501b9,Myopic_lineage,avoid the minus paths as much as i can,TODO
+3,649d986ad98de2a0b3c501b9,Myopic_lineage,"look at the nodes with a profitable loop(s), and find out how to get there in the shortest route possible",TODO
+4,649d986ad98de2a0b3c501ba,Myopic_lineage,"I tried to do the same path to receive more points than I lost, but I couldn't. when I changed the strategy I no longer had steps that would allow me to earn as much as I wanted",TODO
+5,649d986ad98de2a0b3c501ba,Myopic_lineage,"I tried to figure out which path allowed me to earn more, even if I lost along the way.",TODO
+6,649d986ad98de2a0b3c501bb,Myopic_lineage,I followed the arrows leading from each circle to another one. The task wasn't explained well at all in the beginning so I don't know which moves are allowed or not.,TODO
+7,649d986ad98de2a0b3c501bb,Myopic_lineage,"I looked for darker arrows and tried to get to those circles, even if it cost me points to get there as overall it was worth it",TODO
+8,649d986ad98de2a0b3c501bc,Myopic_lineage,avoied pink lines as much as i could and tried to find paths and loops with green lines thats would give me more points ,TODO
+9,649d986ad98de2a0b3c501bc,Myopic_lineage,"same as before, time makes it hard to make the right choice",TODO
+10,649d986ad98de2a0b3c501be,Myopic_lineage,5d21b07b01a19000018ba27c,TODO
+11,649d986ad98de2a0b3c501be,Myopic_lineage,"again, the strategy was to get to the highest scoring loop as quickly as possible",TODO
+12,649d986ad98de2a0b3c501bf,Myopic_lineage,"I decided to approach the task with calm, but I took to many time thinking.",TODO
+13,649d986ad98de2a0b3c501bf,Myopic_lineage,"I choosed to be a little bit more fast and pay more attention to the colors.
+",TODO
+14,649d986ad98de2a0b3c501c0,Myopic_lineage,i was going for the more greener arrows because they had more points. the aim was to try and gain points and lose less,TODO
+15,649d986ad98de2a0b3c501c0,Myopic_lineage,Grean arrows have more points. Avoid purple,TODO
+16,649d986ad98de2a0b3c501c1,Myopic_lineage,"Well on the first task I tried nearly every letter, then in the second one I just used two letters repeatedly.",TODO
+17,649d986ad98de2a0b3c501c1,Myopic_lineage,"Just went for the dark green colour every time, I hope it worked.",TODO
+18,649d986ad98de2a0b3c501c2,Myopic_lineage,tried to see if the next target had the most exits to a green lines,TODO
+19,649d986ad98de2a0b3c501c2,Myopic_lineage,tried to see where the green lines were and see the best way to reach them,TODO

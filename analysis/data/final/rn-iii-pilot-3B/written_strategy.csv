@@ -1,0 +1,21 @@
+,sessionId,condition,strategyText,strategyScore
+0,6422d978aff8868105633832,AI_lineage,try to get to a point with more green arrows,TODO
+1,6422d978aff8868105633832,AI_lineage,"trying to follow green arrows, but might not be the best strategy",TODO
+2,6422d978aff8868105633833,AI_lineage,i try to get the green lines but use the purple lines to get to green lines that go back and forth ,TODO
+3,6422d978aff8868105633833,AI_lineage,I tried to get use the grey line to get on a purple line that would help me get to a green line ,TODO
+4,6422d978aff8868105633834,AI_lineage,I tried the ways that have the most green patchs,TODO
+5,6422d978aff8868105633834,AI_lineage,always try to pass in the green paths before even start the task,TODO
+6,6422d978aff8868105633835,AI_lineage,I tried to keep on green lines to maximise points,TODO
+7,6422d978aff8868105633835,AI_lineage,"Again, tried to maximise green, especially dark green",TODO
+8,6422d978aff8868105633836,AI_lineage,I was trying to associate the color of the arrows with the points,TODO
+9,6422d978aff8868105633836,AI_lineage,I wish there was more time. I tried to check which node was the one connected with more green arrows and arrive there.,TODO
+10,6422d978aff8868105633837,AI_lineage,"Tried to stay in the green paths, went backwards and forwards if needed",TODO
+11,6422d978aff8868105633837,AI_lineage,Find the dark green and figure out how to get to it. Then cycle back and forth.,TODO
+12,6422d978aff8868105633838,AI_lineage,You want to go to the nodes with lots of green arrow and avoid the ones with lots of purples arrows,TODO
+13,6422d978aff8868105633838,AI_lineage,Try to get the dark green arrows and go back and forth,TODO
+14,6422d978aff886810563383a,AI_lineage,"SInce the highest value move gave plus 400 points and lowest minus 50 I focused on going for that move, while ignoring consequences of all other moves",TODO
+15,6422d978aff886810563383a,AI_lineage,My strategy was trying to reach the nodes that allow you to move while only gaining points. Preferably one with dark green and green point move,TODO
+16,6422d978aff886810563383b,AI_lineage,I followed the arrows from the highlighted alphabet to another alphabet that the arrow points to  and all along I followed the same color of the arrows. ,TODO
+17,6422d978aff886810563383b,AI_lineage,I followed the colour of the arrow specifically green pointing from one highlighted alphabet to the next.,TODO
+18,6422d978aff886810563383c,AI_lineage,I tried to stick by the green arrows.,TODO
+19,6422d978aff886810563383c,AI_lineage,"I had no strategy at all. it was tricky, I thought I had it until the arrows were overwhelmingly many",TODO
