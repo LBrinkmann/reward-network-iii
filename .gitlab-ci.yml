@@ -16,3 +16,11 @@ frontend:
   trigger:
     include: .gitlab-ci-frontend.yml
     strategy: depend
+
+task_explorer:
+  stage: start child pipelines
+  variables:
+    CHILD_PIPELINE_EXECUTION_CONTEXT: "task_explorer"
+  trigger:
+    include: .gitlab-ci-task-explorer.yml
+    strategy: depend

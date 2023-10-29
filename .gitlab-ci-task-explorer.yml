@@ -1,0 +1,40 @@
+variables:
+  APP_NAME: rn-iii-task-explorer
+  DOCKER_FILE: docker/Dockerfile
+  DOCKER_TARGET: task-explorer
+  REPLICA_COUNT: 1
+
+include:
+  - project: "mpib/chm/common/deploy-pipeline"
+    ref: "1.8.1-docker-target"
+    file: "python-app.yml"
+
+# override the inherited stage, to set the CPU limit
+deploy-prod:
+  script:
+    - deploy-pipeline/docker_login.sh
+    - deploy-pipeline/aws_config.sh
+    - deploy-pipeline/deployment_vars.pl
+
+    - if [ -n "$HELM_DRYRUN" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
+
+    - helm upgrade --install -n mcu $DRYRUN
+      ${APP_NAME}-${CI_COMMIT_REF_NAME}
+      deploy-pipeline/charts/web-service
+      --set dockersecret=${DOCKERCFG}
+      --set app_name="${APP_NAME}-${CI_COMMIT_REF_NAME}"
+      --set app_image="${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
+      --set main_url=${MAIN_URL}
+      --set web_port=${WEB_PORT}
+      --set replica_count=${REPLICA_COUNT}
+      --set sticky_session=${STICKY_SESSION}
+      --set resources.limits.cpu=1
+      -f /tmp/deployment_vars.yml
+      --atomic
+
+docker:
+  tags:
+    - chm
+  before_script:
+    - whoami
+    - hostname
