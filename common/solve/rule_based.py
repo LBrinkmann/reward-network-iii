@@ -6,14 +6,22 @@ import argparse
 
 import numpy as np
 import pandas as pd
+from pydantic import BaseModel
 
-from environment_solve import Reward_Network
+from .environment_solve import Reward_Network
 
 
 def load_yaml(filename):
     with open(filename) as f:
         data = yaml.safe_load(f)
     return data
+
+
+class RuleAgentParams(BaseModel):
+    n_steps: int
+    n_losses: int
+    rewards: list[int]
+    solution_columns: list[str]
 
 
 class RuleAgent:
@@ -32,17 +40,23 @@ class RuleAgent:
 
         # assert tests
         self.solutions = []
-        assert strategy in ['myopic', 'take_loss', 'random'], \
-            f'Strategy name must be one of {["myopic", "take_first_loss", "random"]}, got {strategy}'
+        assert strategy in [
+            "myopic",
+            "take_loss",
+            "random",
+        ], f'Strategy name must be one of {["myopic", "take_loss", "random"]}, got {strategy}'
 
         self.networks = networks
         self.strategy = strategy
-        self.params = params
-        self.min_reward = min(self.params['rewards'])
+        self.params = dict(RuleAgentParams(**params))
+        self.min_reward = min(self.params["rewards"])
 
         # colors for plot
-        self.colors = {'myopic': 'skyblue', 'take_first_loss': 'orangered',
-                       'random': 'springgreen'}
+        self.colors = {
+            "myopic": "skyblue",
+            "take_loss": "orangered",
+            "random": "springgreen",
+        }
 
     def select_action(self, possible_actions, possible_actions_rewards):
         """
@@ -56,40 +70,43 @@ class RuleAgent:
             (np.array): selected action
         """
 
-        if self.strategy == 'take_loss':
+        if self.strategy == "take_loss":
             print(self.strategy, self.loss_counter, possible_actions_rewards)
 
-        if self.strategy == 'random':
+        if self.strategy == "random":
             return random.choice(possible_actions)
 
         # take first loss -> select among possible actions the one that gives best reward BUT
         # make sure to take a first big loss (-100 but can also change)
-        if self.strategy == 'take_loss' and \
-                self.loss_counter < self.params['n_losses'] and \
-                self.min_reward in possible_actions_rewards:
+        if (
+            self.strategy == "take_loss"
+            and self.loss_counter < self.params["n_losses"]
+            and self.min_reward in possible_actions_rewards
+        ):
 
             self.loss_counter += 1
 
-            if len(np.argwhere(possible_actions_rewards == self.min_reward)[
-                       0]) != 2:  # that is, we have only one big loss in the possible actions
+            if (
+                len(np.argwhere(possible_actions_rewards == self.min_reward)[0]) != 2
+            ):  # that is, we have only one big loss in the possible actions
                 return possible_actions[
-                    np.argwhere(possible_actions_rewards == self.min_reward)[0][
-                        0]]
+                    np.argwhere(possible_actions_rewards == self.min_reward)[0][0]
+                ]
             else:  # else if both actions lead to big loss pick a random one
-                return possible_actions[random.choice(
-                    np.argwhere(possible_actions_rewards == self.min_reward)[
-                        0])]
+                return possible_actions[
+                    random.choice(
+                        np.argwhere(possible_actions_rewards == self.min_reward)[0]
+                    )
+                ]
         else:
 
             try:
-                if not np.all(
-                        possible_actions_rewards == possible_actions_rewards[
-                            0]):
+                if not np.all(possible_actions_rewards == possible_actions_rewards[0]):
                     return possible_actions[np.argmax(possible_actions_rewards)]
                 else:
                     return random.choice(possible_actions)
             except:
-                print(f'Error in network {self.environment.id}')
+                print(f"Error in network {self.environment.id}")
                 print(self.environment.action_space)
 
     def solve(self):
@@ -103,7 +120,7 @@ class RuleAgent:
 
         for network in self.networks:
 
-            if self.strategy == 'take_loss':
+            if self.strategy == "take_loss":
                 self.loss_counter = 0  # to reset!
 
             # solution variables
@@ -116,19 +133,22 @@ class RuleAgent:
             while not self.environment.is_done:
                 s = []
                 obs = self.environment.observe()
-                a = self.select_action(obs['actions_available'],
-                                       obs['next_possible_rewards'])
+                a = self.select_action(
+                    obs["actions_available"], obs["next_possible_rewards"]
+                )
                 step = self.environment.step(a)
                 s.append(self.environment.id)
                 s.append(self.strategy)
-                s.append(step['n_steps'])
-                s.append(step['source_node'])
-                s.append(step['current_node'])
-                s.append(step['reward'])
-                s.append(step['total_reward'])
+                s.append(step["n_steps"])
+                s.append(step["source_node"])
+                s.append(step["current_node"])
+                s.append(step["reward"])
+                s.append(step["total_reward"])
                 solution.append(s)
 
-            solution_df = pd.DataFrame(solution, columns=self.params['solution_columns'])
+            solution_df = pd.DataFrame(
+                solution, columns=self.params["solution_columns"]
+            )
             self.solutions.append(solution_df)
 
         return pd.concat(self.solutions, ignore_index=True)
@@ -145,10 +165,13 @@ class RuleAgent:
             a.insert(0, 0)
             return a
 
-        s = df.groupby(['network_id'])['current_node'].apply(
-            list).reset_index(name='moves')
-        s['moves'] = s['moves'].apply(add_source)
-        obj = s.to_dict('records')
+        s = (
+            df.groupby(["network_id"])["current_node"]
+            .apply(list)
+            .reset_index(name="moves")
+        )
+        s["moves"] = s["moves"].apply(add_source)
+        obj = s.to_dict("records")
 
         return json.dumps(obj)
 
@@ -176,7 +199,7 @@ if __name__ == "__main__":
     with open(args.networks) as json_file:
         networks = json.load(json_file)
 
-    for strategy in ['myopic', 'take_loss', 'random']:
+    for strategy in ["myopic", "take_loss", "random"]:
         A = RuleAgent(networks, strategy, solve_params)
         A.solve()
         solutions = A.save_solutions_frontend()
@@ -185,6 +208,3 @@ if __name__ == "__main__":
 
         with open(filename, "w", encoding="utf-8") as f:
             f.write(solutions)
-
-
-
