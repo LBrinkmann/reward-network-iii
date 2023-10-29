@@ -4,7 +4,7 @@ variables:
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
-    ref: "1.8.1"
+    ref: "1.7.9"
     file: "react-app.yml"
 
 init:
@@ -13,7 +13,7 @@ init:
     - cp -r $CHILD_PIPELINE_EXECUTION_CONTEXT/* ./
     - rm -rf frontend
     - rm -rf backend
-#    - ls -R
+  #    - ls -R
   artifacts:
     paths:
       - ./
