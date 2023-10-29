@@ -2,8 +2,13 @@ from setuptools import setup, find_packages
 
 
 def read_requirements(file):
-    with open(file, "r") as f:
-        return [line.strip() for line in f if line.strip() and not line.startswith("#")]
+    try:
+        with open(file, "r") as f:
+            return [
+                line.strip() for line in f if line.strip() and not line.startswith("#")
+            ]
+    except FileNotFoundError:
+        return []
 
 
 setup(
