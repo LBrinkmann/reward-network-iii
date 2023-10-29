@@ -40,5 +40,16 @@ docker:
     - hostname
   script:
     - deploy-pipeline/docker_login.sh
+
     - echo "${IMAGE_NAME}:${IMAGE_TAG}"
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile docker/Dockerfile --target task-explorer --destination ${REGISTRY_URL}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
+
+    - docker build --no-cache -f docker/Dockerfile --target task-explorer
+      -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
+      -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest
+      .
+
+    - docker push
+      ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
+
+    - docker push
+      ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest
