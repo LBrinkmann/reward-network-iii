@@ -10,9 +10,8 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
-from network import Network, Node, Edge
-from environment import Environment
-
+from common.models.network import Network, Node, Edge
+from common.models.environment import Environment
 
 
 def load_yaml(filename):
@@ -296,12 +295,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     environment = load_yaml(args.input)
-    seed = environment['seed']
+    seed = environment["seed"]
     random.seed(seed)
     np.random.seed(seed)
     generate_params = Environment(**environment)
 
     net_generator = NetworkGenerator(generate_params)
-    networks = net_generator.generate(environment['n_networks'])
+    networks = net_generator.generate(environment["n_networks"])
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(json.dumps(net_generator.save_as_json()))
