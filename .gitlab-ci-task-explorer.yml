@@ -6,7 +6,7 @@ variables:
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
-    ref: "1.8.1-docker-target-3"
+    ref: "1.5.7"
     file: "python-app.yml"
 
 # override the inherited stage, to set the CPU limit
@@ -38,3 +38,7 @@ docker:
   before_script:
     - whoami
     - hostname
+  script:
+    - deploy-pipeline/docker_login.sh
+    - echo "${IMAGE_NAME}:${IMAGE_TAG}"
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile docker/Dockerfile --target task-explorer --destination ${REGISTRY_URL}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
