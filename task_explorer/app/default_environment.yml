@@ -63,3 +63,5 @@ edges:
   - from_level: 4
     to_levels: [3, 4]
     rewards: [3, 4]
+n_networks: 10
+seed: 42
