@@ -17,7 +17,7 @@ frontend:
     include: .gitlab-ci-frontend.yml
     strategy: depend
 
-task_explorer:
+task-explorer:
   stage: start child pipelines
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "task_explorer"
