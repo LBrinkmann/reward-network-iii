@@ -6,7 +6,7 @@ variables:
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
-    ref: "1.8.1-docker-target"
+    ref: "1.8.1-docker-target-3"
     file: "python-app.yml"
 
 # override the inherited stage, to set the CPU limit
