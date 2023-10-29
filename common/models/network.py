@@ -1,7 +1,4 @@
-import pydantic
-
-pydantic.class_validators._FUNCS.clear()
-from typing import Dict, Any, Optional
+from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, validator, root_validator
 
 
@@ -22,7 +19,7 @@ class Node(BaseModel):
 
     @validator("level")
     def max_four_levels(cls, n):
-        if n < 0 or n > 4:
+        if n < 0 or n > 5:
             raise ValueError("level must be a number between 0 and 3")
         return n
 
@@ -65,13 +62,6 @@ class Edge(BaseModel):
             raise ValueError("target node number must be a number between 0 and 9")
         return n
 
-    # @validator('reward')
-    # def check_reward(cls, n):
-    #    possible_rewards = [-100, -20, 0, 20, 140]
-    #    if n not in possible_rewards:
-    #        raise ValueError(f'reward must be a value in {possible_rewards}')
-    #    return n
-
     @validator("arc_type")
     def check_arc_type(cls, n):
         if n not in ["straight", "curved"]:
@@ -107,7 +97,7 @@ class Edge(BaseModel):
 
 class Network(BaseModel):
     network_id: str
-    nodes: list[Node]
-    edges: list[Edge]
+    nodes: List[Node]
+    edges: List[Edge]
     starting_node: int
     max_reward: Optional[int]

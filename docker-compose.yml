@@ -66,5 +66,19 @@ services:
     depends_on:
       - react
 
+  task-explorer:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: task-explorer-dev
+    environment:
+      PORT: 5050
+    volumes:
+      - ./task_explorer/app:/app/task_explorer/app
+      - ./common:/app/common
+    ports:
+      - "5050:5050"
+    command: streamlit run task_explorer/app/app.py --server.port=5050 --server.address=0.0.0.0
+
 volumes:
   data:

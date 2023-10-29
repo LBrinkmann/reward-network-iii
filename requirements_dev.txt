@@ -1,5 +1,4 @@
 autopep8
-erdantic
 flake8
 ipdb
 ipykernel
@@ -7,4 +6,3 @@ ipython
 pydantic-to-typescript
 pytest
 pytest-asyncio
-pyvis

@@ -33,6 +33,8 @@ class Edge(BaseModel):
 
 
 class Environment(BaseModel):
+    n_networks: int
+    seed: int
     levels: List[Level]
     rewards: List[Rewards]
     edges: List[Edge]

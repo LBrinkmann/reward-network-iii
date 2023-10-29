@@ -1,5 +1,30 @@
 # Reward Network III
 
+## Setup
+
+### Prerequisites
+
+```
+python3 -m venv .venv
+# Mac/Linux
+. .venv/bin/activate
+# Windows
+# source .venv/Scripts/Activate
+
+
+pip install --upgrade pip
+pip install wheel setuptools
+pip install -e ".[dev,train,viz]"
+```
+
+## Quick start
+
+### Generate Networks
+
+
+
+
+
 ## Deployment
 
 - Frontend

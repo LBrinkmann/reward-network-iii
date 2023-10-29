@@ -1,0 +1,6 @@
+matplotlib-inline
+matplotlib
+pandas
+scipy
+seaborn
+streamlit
