@@ -3,6 +3,7 @@ variables:
   BACKEND_URL: https://rn-iii-backend.eks-test-default.mpg-chm.com
   DOCKER_FILE: docker/Dockerfile-frontend
   MAIN_URL: rn-iii-frontend.eks-test-default.mpg-chm.com
+  FRONTEND_PATH: frontend
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
@@ -15,24 +16,24 @@ init:
   script:
     - apk add --no-cache git
     - source deploy-pipeline/build_env.sh
-    - /bin/sh deploy-pipeline/display_env.sh
+    - /bin/sh deploy-pipeline/display_env.sh # BUG: /bin/bash not available in image
 
 build:
   before_script:
-    - cd frontend
+    - cd $FRONTEND_PATH # Feature: make frontend path configurable
   cache:
     paths:
-      - frontend/node_modules/
+      - ${FRONTEND_PATH}/node_modules/ # Feature: make frontend path configurable
 
   artifacts:
     paths:
-      - frontend/dist/
+      - ${FRONTEND_PATH}/dist/ # Feature: make frontend path configurable
     expire_in: 1 week
 
 docker:
   extends: .docker-stage
   script:
-    - /bin/sh deploy-pipeline/docker_login.sh
+    - /bin/sh deploy-pipeline/docker_login.sh # BUG: /bin/bash not available in image
     - echo "${IMAGE_NAME}:${IMAGE_TAG}"
     - DOCKER_TARGET_ARG=$( [ -z "$DOCKER_TARGET" ] && echo "" || echo "--target ${DOCKER_TARGET}" )
     - /kaniko/executor
