@@ -2,10 +2,11 @@ variables:
   APP_NAME: rn-iii-task-explorer
   DOCKER_FILE: docker/Dockerfile
   DOCKER_TARGET: task-explorer
+  FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
-    ref: "1.8.0"
+    ref: "1.8.1"
     file: "python-app.yml"
 
 build: *before_script_stage

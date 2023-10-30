@@ -8,6 +8,7 @@ def network_component(
     type: str = "default",
     network: dict = None,
     max_step: int = 8,
+    rerender_counter: int = 0,
 ):
     """Embeds a network component from Chromatic.
 
@@ -26,7 +27,7 @@ def network_component(
 
     url = (
         f"{BASE_URL}/streamlit?network={network_args}&max_moves={max_step}"
-        f"&showAllEdges={showAllEdges}"
+        f"&showAllEdges={showAllEdges}&rerender_counter={rerender_counter}"
     )
 
     components.iframe(url, height=700, width=800)
