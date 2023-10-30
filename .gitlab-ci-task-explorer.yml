@@ -6,7 +6,7 @@ variables:
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
-    ref: "1.8.1"
+    ref: "1.8.2"
     file: "python-app.yml"
 
 .before_script_stage: &before_script_stage
