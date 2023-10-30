@@ -83,7 +83,8 @@ services:
       target: task-explorer-dev
     environment:
       PORT: 5050
-      FRONTEND_URL: "http://localhost:9000"
+      # FRONTEND_URL: "http://localhost:9000"
+      FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
     volumes:
       - ./task_explorer/app:/app/task_explorer/app
       - ./task_explorer/environments:/app/task_explorer/environments
@@ -92,7 +93,7 @@ services:
       - "5050:5050"
     command: streamlit run task_explorer/app/app.py --server.port=5050 --server.address=0.0.0.0
 
-  task-exporer-prod:
+  task-explorer-prod:
     build:
       context: .
       dockerfile: docker/Dockerfile
