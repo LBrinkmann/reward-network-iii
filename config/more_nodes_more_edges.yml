@@ -1,4 +1,4 @@
-n_networks: 100
+n_networks: 10
 seed: 1
 edges:
   - from_level: 0

@@ -1,7 +1,26 @@
 import json
+import math
 import os
 
 import streamlit.components.v1 as components
+
+
+def round_to_significant_figures(num, sig_figs):
+    """Round to specified number of sigfigs."""
+    if num != 0:
+        return round(num, -int(math.floor(math.log10(abs(num))) - (sig_figs - 1)))
+    else:
+        return 0  # handle zero separately
+
+
+def round_floats(o):
+    if isinstance(o, float):
+        return round_to_significant_figures(o, 2)
+    if isinstance(o, dict):
+        return {k: round_floats(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [round_floats(x) for x in o]
+    return o
 
 
 def network_component(
@@ -21,17 +40,15 @@ def network_component(
     """
 
     showAllEdges = "true" if type == "legacy" else "false"
-    network_args = json.dumps(network, separators=(",", ":"))
+    network_args = json.dumps(round_floats(network), separators=(",", ":"))
 
-    print(network)
+    print(network_args)
 
     BASE_URL = os.getenv("FRONTEND_URL", "http://localhost:9000")
-    print(BASE_URL)
-
     url = (
         f"{BASE_URL}/streamlit?network={network_args}&max_moves={max_step}"
         f"&showAllEdges={showAllEdges}&rerender_counter={rerender_counter}"
     )
-    print(url)
+    # print(url)
 
     components.iframe(url, height=700, width=800)

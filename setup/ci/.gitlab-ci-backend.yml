@@ -1,10 +1,9 @@
 variables:
-  DEPLOYMENT_VARS: "FRONTEND_URL"
-  APP_NAME: rn-iii-te
-  DOCKER_FILE: docker/Dockerfile
-  DOCKER_TARGET: task-explorer
-  FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
-  MAIN_URL: rn-iii-te.eks-test-default.mpg-chm.com
+  DEPLOYMENT_VARS: "MONGO_URL, DATABASE_NAME, BACKEND_USER, BACKEND_PASSWORD"
+  APP_NAME: rn-iii-backend
+  DOCKER_FILE: setup/docker/Dockerfile
+  DOCKER_TARGET: backend
+  MAIN_URL: rn-iii-backend.eks-test-default.mpg-chm.com # BUG: script fails if not set explicitly
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
@@ -17,12 +16,13 @@ init:
     - apk add --no-cache git
     - source deploy-pipeline/build_env.sh
     - ls -lt deploy-pipeline
-    - /bin/sh deploy-pipeline/display_env.sh
+    - /bin/sh deploy-pipeline/mongo_client_env.sh # BUG: /bin/bash not available in image
+    - /bin/sh deploy-pipeline/display_env.sh # BUG: /bin/bash not available in image
 
 docker:
   extends: .docker-stage
   script:
-    - /bin/sh deploy-pipeline/docker_login.sh
+    - /bin/sh deploy-pipeline/docker_login.sh # BUG: /bin/bash not available in image
     - echo "${IMAGE_NAME}:${IMAGE_TAG}"
     - DOCKER_TARGET_ARG=$( [ -z "$DOCKER_TARGET" ] && echo "" || echo "--target ${DOCKER_TARGET}" )
     - /kaniko/executor
@@ -53,5 +53,5 @@ deploy-prod:
       --set sticky_session="${STICKY_SESSION}"
       --set resources.limits.cpu=1
       --values /tmp/deployment_vars.yml
-      --atomic
+      --atomic # Feature: Enabling setting of cpu limit per variable
     - echo "The experiment has been deployed to ${MAIN_URL}."

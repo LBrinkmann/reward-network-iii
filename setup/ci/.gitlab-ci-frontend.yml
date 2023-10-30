@@ -1,7 +1,7 @@
 variables:
   APP_NAME: rn-iii-frontend
   BACKEND_URL: https://rn-iii-backend.eks-test-default.mpg-chm.com
-  DOCKER_FILE: docker/Dockerfile-frontend
+  DOCKER_FILE: setup/docker/Dockerfile-frontend
   MAIN_URL: rn-iii-frontend.eks-test-default.mpg-chm.com
   FRONTEND_PATH: frontend
 
