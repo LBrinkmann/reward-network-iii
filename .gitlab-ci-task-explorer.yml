@@ -16,4 +16,4 @@ init:
     - apk add --no-cache git
     - source deploy-pipeline/build_env.sh
     - ls -lt deploy-pipeline
-    - deploy-pipeline/display_env.sh
+    # - deploy-pipeline/display_env.sh
