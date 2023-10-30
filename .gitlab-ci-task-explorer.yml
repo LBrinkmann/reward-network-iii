@@ -2,54 +2,23 @@ variables:
   APP_NAME: rn-iii-task-explorer
   DOCKER_FILE: docker/Dockerfile
   DOCKER_TARGET: task-explorer
-  REPLICA_COUNT: 1
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
-    ref: "1.5.7"
+    ref: "1.8.0"
     file: "python-app.yml"
 
-# override the inherited stage, to set the CPU limit
-deploy-prod:
-  script:
-    - deploy-pipeline/docker_login.sh
-    - deploy-pipeline/aws_config.sh
-    - deploy-pipeline/deployment_vars.pl
-
-    - if [ -n "$HELM_DRYRUN" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
-
-    - helm upgrade --install -n mcu $DRYRUN
-      ${APP_NAME}-${CI_COMMIT_REF_NAME}
-      deploy-pipeline/charts/web-service
-      --set dockersecret=${DOCKERCFG}
-      --set app_name="${APP_NAME}-${CI_COMMIT_REF_NAME}"
-      --set app_image="${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
-      --set main_url=${MAIN_URL}
-      --set web_port=${WEB_PORT}
-      --set replica_count=${REPLICA_COUNT}
-      --set sticky_session=${STICKY_SESSION}
-      --set resources.limits.cpu=1
-      -f /tmp/deployment_vars.yml
-      --atomic
-
+build: *before_script_stage
 docker:
-  tags:
-    - chm
-  before_script:
-    - whoami
-    - hostname
+  <<: *before_script_stage
   script:
     - deploy-pipeline/docker_login.sh
 
     - echo "${IMAGE_NAME}:${IMAGE_TAG}"
 
-    - docker build --no-cache -f docker/Dockerfile --target task-explorer
-      -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
-      -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest
-      .
-
-    - docker push
+    - /kaniko/executor --snapshot-mode=redo --context . --dockerfile
+      ${DOCKER_FILE} --target ${DOCKER_TARGET} --destination
       ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
 
-    - docker push
-      ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest
+.deploy: *before_script_stage
+undeploy: *before_script_stage
