@@ -24,10 +24,12 @@ def network_component(
     network_args = json.dumps(network, separators=(",", ":"))
 
     BASE_URL = os.getenv("FRONTEND_URL", "http://localhost:9000")
+    print(BASE_URL)
 
     url = (
         f"{BASE_URL}/streamlit?network={network_args}&max_moves={max_step}"
         f"&showAllEdges={showAllEdges}&rerender_counter={rerender_counter}"
     )
+    print(url)
 
     components.iframe(url, height=700, width=800)
