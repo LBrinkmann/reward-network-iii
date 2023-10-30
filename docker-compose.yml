@@ -10,8 +10,8 @@ services:
 
   fastapi: # backend
     build:
-      context: ./backend
-      dockerfile: Dockerfile-dev
+      context: .
+      dockerfile: docker/Dockerfile
     volumes:
       - ./backend:/backend
     environment:
@@ -24,7 +24,7 @@ services:
       BACKEND_USER: "admin"
       BACKEND_PASSWORD: "admin"
     # start-reload.sh is a version of start.sh for development with live auto-reload
-    command: "/start-reload.sh"
+    command: ["uvicorn", "server:api", "--host", "0.0.0.0", "--port", "5000"]
     ports:
       - "5040:5040"
     depends_on:
@@ -39,6 +39,7 @@ services:
     volumes:
       - /usr/frontend/node_modules
       - ./frontend/static:/frontend/static
+      - ./frontend/dist:/frontend/dist
       - ./frontend/src:/frontend/src
       - ./frontend/tsconfig.json:/frontend/tsconfig.json
       - ./frontend/webpack.config.js:/frontend/webpack.config.js
@@ -48,6 +49,13 @@ services:
     tty: true # to replicate `-it` mode in docker run
     depends_on:
       - fastapi
+
+  react-prod: # frontend
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-frontend
+    ports:
+      - "9090:80"
 
   react-storybook: # frontend
     build:
@@ -90,9 +98,11 @@ services:
       dockerfile: docker/Dockerfile
       target: task-explorer
     environment:
-      FRONTEND_URL: "http://localhost:9000"
+      FRONTEND_URL: "http://localhost:9090"
     ports:
       - "5030:5000"
+    depends_on:
+      - react-prod
 
   common: # backend
     build:

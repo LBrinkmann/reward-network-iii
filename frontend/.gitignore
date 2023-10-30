@@ -1,5 +1,6 @@
 node_modules
 dist
+!dist/.keep
 
 src/**/config.js
 build-storybook.log

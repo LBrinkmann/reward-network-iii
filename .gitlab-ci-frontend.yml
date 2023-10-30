@@ -1,54 +1,35 @@
 variables:
   APP_NAME: rn-iii-frontend
   BACKEND_URL: https://rn-iii-backend.eks-test-default.mpg-chm.com
+  DOCKER_FILE: docker/Dockerfile-frontend
+  MAIN_URL: rn-iii-frontend.eks-test-default.mpg-chm.com
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
-    ref: "1.5.7"
+    ref: "1.8.2"
     file: "react-app.yml"
 
 init:
   extends: .init-stage
-  after_script:
-    - cp -r $CHILD_PIPELINE_EXECUTION_CONTEXT/* ./
-    - rm -rf frontend
-    - rm -rf backend
-  #    - ls -R
-  artifacts:
-    paths:
-      - ./
-
-# Replace the build stage from the template `react-app.yml`
-# https://gitlab.gwdg.de/mpib/chm/common/deploy-pipeline/-/blob/master/react-app.yml
-build:
-  stage: build
-
-  extends:
-    - .tags
-    - .services
-
-  image: node:16
-
-  cache:
-    paths:
-      - node_modules/
-
-  artifacts:
-    paths:
-      - dist/
-    expire_in: 1 week
-
-  before_script:
-    - rm -rf frontend
-    - rm -rf backend
 
   script:
-    - npm install
-    - npm run build-prod
+    - apk add --no-cache git
+    - source deploy-pipeline/build_env.sh
+    - /bin/sh deploy-pipeline/display_env.sh
+
+build:
+  before_script:
+    - cd frontend
 
 docker:
   extends: .docker-stage
-  before_script:
-    - rm -rf frontend
-    - rm -rf backend
-    - ls -R
+  script:
+    - /bin/sh deploy-pipeline/docker_login.sh
+    - echo "${IMAGE_NAME}:${IMAGE_TAG}"
+    - DOCKER_TARGET_ARG=$( [ -z "$DOCKER_TARGET" ] && echo "" || echo "--target ${DOCKER_TARGET}" )
+    - /kaniko/executor
+      --context "$CI_PROJECT_DIR"
+      --dockerfile "${DOCKER_FILE}"
+      ${DOCKER_TARGET_ARG}
+      --destination
+      "${REGISTRY_URL}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
