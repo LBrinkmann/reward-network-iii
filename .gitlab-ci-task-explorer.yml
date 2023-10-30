@@ -1,5 +1,5 @@
 variables:
-  APP_NAME: rn-iii-task-explorer
+  APP_NAME: rn-iii-te
   DOCKER_FILE: docker/Dockerfile
   DOCKER_TARGET: task-explorer
   FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
