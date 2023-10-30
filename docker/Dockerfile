@@ -12,6 +12,7 @@ FROM base as task-explorer-dev
 COPY requirements_viz.txt .
 RUN pip --no-cache-dir install -r requirements_viz.txt
 
-FROM base as task-explorer
+FROM task-explorer-dev as task-explorer
 ADD task_explorer/app /app/task_explorer/app
+ADD task_explorer/environments /app/task_explorer/environments
 CMD ["streamlit", "run", "task_explorer/app/app.py", "--server.port=5000", "--server.address=0.0.0.0"]
