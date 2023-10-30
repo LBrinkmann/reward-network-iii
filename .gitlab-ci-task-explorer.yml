@@ -15,6 +15,10 @@ include:
     # - cd frontend
     # - mv ../deploy-pipeline .
 
+.tags: &tags
+  tags:
+    - chm
+
 build: *before_script_stage
 docker:
   <<: *before_script_stage
