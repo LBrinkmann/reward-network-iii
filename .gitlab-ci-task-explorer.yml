@@ -8,28 +8,3 @@ include:
   - project: "mpib/chm/common/deploy-pipeline"
     ref: "1.8.2"
     file: "python-app.yml"
-
-.before_script_stage: &before_script_stage
-  before_script:
-    - ls -lt
-    # - cd frontend
-    # - mv ../deploy-pipeline .
-
-.tags: &tags
-  tags:
-    - chm
-
-build: *before_script_stage
-docker:
-  <<: *before_script_stage
-  script:
-    - deploy-pipeline/docker_login.sh
-
-    - echo "${IMAGE_NAME}:${IMAGE_TAG}"
-
-    - /kaniko/executor --snapshot-mode=redo --context . --dockerfile
-      ${DOCKER_FILE} --target ${DOCKER_TARGET} --destination
-      ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
-
-.deploy: *before_script_stage
-undeploy: *before_script_stage
