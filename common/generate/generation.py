@@ -143,12 +143,24 @@ class NetworkGenerator:
 
         return self.networks
 
+    def get_source_reward_idx(self, G, source_node):
+        return [
+            G.edges[source_node, target_node]["reward_idx"]
+            for target_node in G[source_node]
+        ]
+
     # individual network building functions
     #######################################
     def add_link(self, G, source_node, target_node):
         from_level = G.nodes[source_node]["level"]
         to_level = G.nodes[target_node]["level"]
-        reward_idx = random.choice(self.from_to[(from_level, to_level)])
+        possible_rewards = self.from_to[(from_level, to_level)]
+        other_source_reward_idx = self.get_source_reward_idx(G, source_node)
+        if len(possible_rewards) > 1:
+            possible_rewards = [
+                r for r in possible_rewards if r not in other_source_reward_idx
+            ]
+        reward_idx = random.choice(possible_rewards)
         reward = self.env.rewards[reward_idx]
         G.add_edge(
             source_node,
