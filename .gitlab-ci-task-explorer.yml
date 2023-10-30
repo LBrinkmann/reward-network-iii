@@ -3,6 +3,7 @@ variables:
   DOCKER_FILE: docker/Dockerfile
   DOCKER_TARGET: task-explorer
   FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
+  MAIN_URL: https://rn-iii-task-explorer.eks-test-default.mpg-chm.com
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
