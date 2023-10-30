@@ -20,6 +20,14 @@ init:
 build:
   before_script:
     - cd frontend
+  cache:
+    paths:
+      - frontend/node_modules/
+
+  artifacts:
+    paths:
+      - frontend/dist/
+    expire_in: 1 week
 
 docker:
   extends: .docker-stage
