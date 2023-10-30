@@ -22,7 +22,7 @@ docker:
   extends: .docker-stage
   script:
     - ls -lt
-    - ls -lt deploy-pipelines
+    - ls -lt deploy-pipeline
     - apk add --no-cache bash
     - deploy-pipeline/docker_login.sh
     - echo "${IMAGE_NAME}:${IMAGE_TAG}"
