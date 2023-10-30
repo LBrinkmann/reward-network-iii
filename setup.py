@@ -1,7 +1,9 @@
 from setuptools import setup, find_packages
+from os import path
 
 
 def read_requirements(file):
+    file = path.join("setup", "requirements", file)
     try:
         with open(file, "r") as f:
             return [

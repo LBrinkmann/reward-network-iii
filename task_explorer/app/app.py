@@ -22,7 +22,7 @@ st.write(
 )
 
 if "gen_env" not in st.session_state:
-    environment = load_yaml("task_explorer/environments/default_environment.yml")
+    environment = load_yaml("config/default_environment.yml")
     st.session_state.gen_env = Environment(**environment)
 
 if "rerender_counter" not in st.session_state:
@@ -46,7 +46,7 @@ with st.sidebar:
 
     with st.form(key="select_file"):
         # multiselect
-        files = list_files("task_explorer/environments", "yml")
+        files = list_files("config", "yml")
         files = {f.name: str(f) for f in files}
         file = st.selectbox("Select environment file", list(files.keys()))
         file = files[file]
