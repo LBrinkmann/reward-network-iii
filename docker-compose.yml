@@ -78,6 +78,7 @@ services:
       FRONTEND_URL: "http://localhost:9000"
     volumes:
       - ./task_explorer/app:/app/task_explorer/app
+      - ./task_explorer/environments:/app/task_explorer/environments
       - ./common:/app/common
     ports:
       - "5050:5050"
