@@ -84,6 +84,16 @@ services:
       - "5050:5050"
     command: streamlit run task_explorer/app/app.py --server.port=5050 --server.address=0.0.0.0
 
+  task-exporer-prod:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: task-explorer
+    environment:
+      FRONTEND_URL: "http://localhost:9000"
+    ports:
+      - "5030:5000"
+
   common: # backend
     build:
       context: .
