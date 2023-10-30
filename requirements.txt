@@ -4,4 +4,4 @@ python-dotenv
 pyyaml
 stringcase
 networkx
-
+matplotlib

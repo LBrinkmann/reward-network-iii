@@ -6,6 +6,9 @@ COPY package.json .
 
 RUN npm install
 
+# Install git
+RUN apk add --no-cache git
+
 COPY . .
 
 EXPOSE 6006

@@ -5,7 +5,6 @@ edges:
     rewards:
       - 1
       - 2
-      - 3
     to_levels:
       - 0
   - from_level: 0
@@ -15,12 +14,16 @@ edges:
       - 1
   - from_level: 1
     rewards:
+      - 1
+      - 2
       - 3
     to_levels:
       - 0
   - from_level: 1
     rewards:
+      - 1
       - 2
+      - 3
     to_levels:
       - 1
   - from_level: 1
@@ -30,21 +33,23 @@ edges:
       - 2
   - from_level: 2
     rewards:
-      - 4
+      - 3
     to_levels:
       - 0
-  # - from_level: 2
-  #   rewards:
-  #     - 1
-  #     - 2
-  #     - 3
-  #   to_levels:
-  #     - 1
-  # - from_level: 2
-  #   rewards:
-  #     - 2
-  #   to_levels:
-  #     - 2
+  - from_level: 2
+    rewards:
+      - 1
+      - 2
+      - 3
+    to_levels:
+      - 1
+  - from_level: 2
+    rewards:
+      - 1
+      - 2
+      - 3
+    to_levels:
+      - 2
   - from_level: 2
     rewards:
       - 0
@@ -53,11 +58,12 @@ edges:
   - from_level: 3
     rewards:
       - 4
+      - 3
     to_levels:
       - 3
   - from_level: 3
     rewards:
-      - 3
+      - 1
     to_levels:
       - 2
 levels:
@@ -71,7 +77,7 @@ levels:
     idx: 1
     is_start: null
     max_n_nodes: null
-    min_n_nodes: 2
+    min_n_nodes: 1
   - color: lightskyblue
     idx: 2
     is_start: null

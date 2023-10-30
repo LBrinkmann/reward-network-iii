@@ -249,16 +249,16 @@ with st.expander("Compare strategies 🤖"):
         st.info("Please generate networks first!")
 
 # ------------------------------------------------------------------------------
-#                            Visualize Networks
+#                            Visualize Networks (new)
 # ------------------------------------------------------------------------------
-with st.expander("Try yourself to solve the network 😎"):
+with st.expander("Try yourself without full visibility 😎"):
     if "networks" in st.session_state:
         nets = st.session_state.networks
         net_id = st.session_state.net_id
         print(net_id)
         print(len(nets))
 
-        with st.form("vizualization_form", clear_on_submit=False):
+        with st.form("vizualization_form_wo_full", clear_on_submit=False):
             col1, col2, _ = st.columns(3)
             with col1:
                 prev_net = st.form_submit_button("Show previous network")
@@ -275,13 +275,43 @@ with st.expander("Try yourself to solve the network 😎"):
                     st.session_state.net_id = net_id
 
             network_component(
-                timer=60,
+                type="default",
                 network=st.session_state.networks[st.session_state.net_id - 1],
                 max_step=st.session_state.gen_env.n_steps,
-                rewards=[r.reward for r in st.session_state.gen_env.rewards],
             )
-    else:
-        network_component(60)
+
+
+# ------------------------------------------------------------------------------
+#                            Visualize Networks (legacy)
+# ------------------------------------------------------------------------------
+with st.expander("Try yourself with full visibility 😎"):
+    if "networks" in st.session_state:
+        nets = st.session_state.networks
+        net_id = st.session_state.net_id
+        print(net_id)
+        print(len(nets))
+
+        with st.form("vizualization_form_w_full", clear_on_submit=False):
+            col1, col2, _ = st.columns(3)
+            with col1:
+                prev_net = st.form_submit_button("Show previous network")
+            with col2:
+                next_net = st.form_submit_button("Show next network")
+
+            if next_net:
+                if st.session_state.net_id < len(nets):
+                    net_id += 1
+                    st.session_state.net_id = net_id
+            if prev_net:
+                if st.session_state.net_id > 0:
+                    net_id -= 1
+                    st.session_state.net_id = net_id
+
+            network_component(
+                type="legacy",
+                network=st.session_state.networks[st.session_state.net_id - 1],
+                max_step=st.session_state.gen_env.n_steps,
+            )
 
 with st.expander("Show solution dataframes 📊"):
     if "networks" in st.session_state:

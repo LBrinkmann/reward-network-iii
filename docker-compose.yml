@@ -15,7 +15,7 @@ services:
     volumes:
       - ./backend:/backend
     environment:
-      PORT: 5000
+      PORT: 5040
       MONGO_URL: "mongodb://database:27017/"
       GENERATE_FRONTEND_TYPES: "false"
       # Environment variables for official FastAPI docker image
@@ -26,7 +26,7 @@ services:
     # start-reload.sh is a version of start.sh for development with live auto-reload
     command: "/start-reload.sh"
     ports:
-      - "5000:5000"
+      - "5040:5040"
     depends_on:
       - database
 
@@ -43,7 +43,7 @@ services:
       - ./frontend/tsconfig.json:/frontend/tsconfig.json
       - ./frontend/webpack.config.js:/frontend/webpack.config.js
     environment:
-      BACKEND_URL: "http://localhost:5000"
+      BACKEND_URL: "http://localhost:5040"
     stdin_open: true # to replicate `-it` mode in docker run
     tty: true # to replicate `-it` mode in docker run
     depends_on:
@@ -63,8 +63,10 @@ services:
       - ./frontend/.storybook:/frontend/.storybook
       - ./frontend/tsconfig.json:/frontend/tsconfig.json
       - ./frontend/webpack.config.js:/frontend/webpack.config.js
-    depends_on:
-      - react
+      - ./frontend/package.json:/frontend/package.json
+      - ./.git:/.git
+    # depends_on:
+    #   - react
 
   task-explorer:
     build:
@@ -73,12 +75,23 @@ services:
       target: task-explorer-dev
     environment:
       PORT: 5050
+      FRONTEND_URL: "http://localhost:9000"
     volumes:
       - ./task_explorer/app:/app/task_explorer/app
       - ./common:/app/common
     ports:
       - "5050:5050"
     command: streamlit run task_explorer/app/app.py --server.port=5050 --server.address=0.0.0.0
+
+  common: # backend
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: base
+    volumes:
+      - .:/app/.
+    depends_on:
+      - database
 
 volumes:
   data:
