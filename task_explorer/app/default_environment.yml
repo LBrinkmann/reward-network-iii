@@ -64,7 +64,7 @@ levels:
   - color: white
     idx: 0
     is_start: true
-    max_n_nodes: 4
+    max_n_nodes: 6
     min_n_nodes: 4
     n_nodes: 4
   - color: paleturquoise
@@ -80,10 +80,10 @@ levels:
   - color: royalblue
     idx: 3
     is_start: null
-    max_n_nodes: null
+    max_n_nodes: 3
     min_n_nodes: 2
 n_edges_per_node: 2
-n_nodes: 10
+n_nodes: 12
 n_steps: 8
 rewards:
   - color: red

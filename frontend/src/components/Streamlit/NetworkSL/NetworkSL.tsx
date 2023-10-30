@@ -80,9 +80,7 @@ const NetworkSL: FC<NetworkSLInterface> = (props) => {
           alignItems: "center",
         }}
       >
-        <Box sx={{ fontSize: "1.2rem", fontWeight: "bold" }}>
-          Total Points {showAllEdges} {max_moves}
-        </Box>
+        <Box sx={{ fontSize: "1.2rem", fontWeight: "bold" }}>Total Points</Box>
         <Box sx={{ fontSize: "1.5rem", fontWeight: "bold" }}>{totalPoints}</Box>
         <Box sx={{ fontSize: "1.2rem", fontWeight: "bold" }}>Moves</Box>
         <Box sx={{ fontSize: "1.5rem", fontWeight: "bold" }}>

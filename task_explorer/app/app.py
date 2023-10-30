@@ -24,6 +24,9 @@ if "gen_env" not in st.session_state:
     environment = load_yaml("task_explorer/app/default_environment.yml")
     st.session_state.gen_env = Environment(**environment)
 
+if "rerender_counter" not in st.session_state:
+    st.session_state.rerender_counter = 0
+
 # ------------------------------------------------------------------------------
 #                      sidebar: generate and download options
 # ------------------------------------------------------------------------------
@@ -259,11 +262,16 @@ with st.expander("Try yourself without full visibility 😎"):
         print(len(nets))
 
         with st.form("vizualization_form_wo_full", clear_on_submit=False):
-            col1, col2, _ = st.columns(3)
+            col1, col2, col3 = st.columns(3)
             with col1:
                 prev_net = st.form_submit_button("Show previous network")
             with col2:
                 next_net = st.form_submit_button("Show next network")
+            with col3:
+                restart_clicked = st.form_submit_button("Restart")
+
+            if restart_clicked:
+                st.session_state.rerender_counter += 1
 
             if next_net:
                 if st.session_state.net_id < len(nets):
@@ -278,6 +286,7 @@ with st.expander("Try yourself without full visibility 😎"):
                 type="default",
                 network=st.session_state.networks[st.session_state.net_id - 1],
                 max_step=st.session_state.gen_env.n_steps,
+                rerender_counter=st.session_state.rerender_counter,
             )
 
 
@@ -292,11 +301,16 @@ with st.expander("Try yourself with full visibility 😎"):
         print(len(nets))
 
         with st.form("vizualization_form_w_full", clear_on_submit=False):
-            col1, col2, _ = st.columns(3)
+            col1, col2, col3 = st.columns(3)
             with col1:
                 prev_net = st.form_submit_button("Show previous network")
             with col2:
                 next_net = st.form_submit_button("Show next network")
+            with col3:
+                restart_clicked = st.form_submit_button("Restart")
+
+            if restart_clicked:
+                st.session_state.rerender_counter += 1
 
             if next_net:
                 if st.session_state.net_id < len(nets):
@@ -311,6 +325,7 @@ with st.expander("Try yourself with full visibility 😎"):
                 type="legacy",
                 network=st.session_state.networks[st.session_state.net_id - 1],
                 max_step=st.session_state.gen_env.n_steps,
+                rerender_counter=st.session_state.rerender_counter,
             )
 
 with st.expander("Show solution dataframes 📊"):
