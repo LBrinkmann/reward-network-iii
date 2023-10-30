@@ -17,3 +17,17 @@ init:
     - source deploy-pipeline/build_env.sh
     - ls -lt deploy-pipeline
     # - deploy-pipeline/display_env.sh
+
+docker:
+  extends: .docker-stage
+  script:
+    - ls -lt
+    - ls -lt deploy-pipeline
+    - deploy-pipeline/docker_login.sh
+    - echo "${IMAGE_NAME}:${IMAGE_TAG}"
+    - DOCKER_TARGET_ARG=$( [ -z "$DOCKER_TARGET" ] && echo "" || echo "--target ${DOCKER_TARGET}" )
+    - /kaniko/executor
+      --context "$CI_PROJECT_DIR"
+      --dockerfile "${DOCKER_FILE}"
+      ${DOCKER_TARGET_ARG}
+      --destination "${REGISTRY_URL}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
