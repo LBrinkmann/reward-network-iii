@@ -243,7 +243,9 @@ class NetworkGenerator:
                 graph, graph.nodes, source_node
             )
             if len(allowed_target_nodes) == 0:
-                raise ValueError("No allowed nodes to connect to.")
+                raise ValueError(
+                    f"No allowed nodes to connect to. Source level: {graph.nodes[source_node]['level']}"
+                )
             target_node = self.nodes_random_sorted_by_in_degree(
                 graph, allowed_target_nodes
             )[0]
