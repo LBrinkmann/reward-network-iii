@@ -4,6 +4,7 @@ variables:
   DOCKER_FILE: setup/docker/Dockerfile
   DOCKER_TARGET: backend
   MAIN_URL: rn-iii-backend.eks-test-default.mpg-chm.com # BUG: script fails if not set explicitly
+  DATABASE_NAME: "rn-iii-backend-main" # BUG: script fails if not set explicitly
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
