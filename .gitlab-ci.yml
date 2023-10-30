@@ -6,7 +6,7 @@ backend:
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "backend"
   trigger:
-    include: .gitlab-ci-backend.yml
+    include: setup/ci/.gitlab-ci-backend.yml
     strategy: depend
 
 frontend:
@@ -14,11 +14,11 @@ frontend:
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "frontend"
   trigger:
-    include: .gitlab-ci-frontend.yml
+    include: setup/ci/.gitlab-ci-frontend.yml
     strategy: depend
 
 task-explorer:
   stage: start child pipelines
   trigger:
-    include: .gitlab-ci-task-explorer.yml
+    include: setup/ci/.gitlab-ci-task-explorer.yml
     strategy: depend

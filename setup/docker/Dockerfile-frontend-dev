@@ -2,15 +2,13 @@ FROM node:alpine
 
 WORKDIR /frontend
 
-COPY package.json .
+COPY frontend/package.json .
 
 RUN npm install
 
 # Install git
 RUN apk add --no-cache git
 
-COPY . .
+COPY frontend .
 
-EXPOSE 6006
-
-CMD ["npm", "run", "storybook"]
+CMD ["npm", "run", "start"]

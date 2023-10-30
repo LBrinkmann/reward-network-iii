@@ -11,7 +11,7 @@ services:
   fastapi: # backend
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: setup/docker/Dockerfile
     volumes:
       - ./backend:/backend
     environment:
@@ -32,10 +32,11 @@ services:
 
   react: # frontend
     build:
-      context: ./frontend
-      dockerfile: Dockerfile-dev
+      context: .
+      dockerfile: setup/docker/Dockerfile-frontend-dev
     ports:
-      - "9000:9000"
+      - "9000:9000" # app
+      - "6006:6006" # storybook
     volumes:
       - /usr/frontend/node_modules
       - ./frontend/static:/frontend/static
@@ -45,22 +46,23 @@ services:
       - ./frontend/webpack.config.js:/frontend/webpack.config.js
     environment:
       BACKEND_URL: "http://localhost:5040"
-    stdin_open: true # to replicate `-it` mode in docker run
-    tty: true # to replicate `-it` mode in docker run
+    stdin_open: true
+    tty: true
     depends_on:
       - fastapi
+    command: ["npm", "run", "start:both"] # start storybook and app
 
   react-prod: # frontend
     build:
       context: .
-      dockerfile: docker/Dockerfile-frontend
+      dockerfile: setup/docker/Dockerfile-frontend
     ports:
       - "9090:80"
 
   react-storybook: # frontend
     build:
       context: ./frontend
-      dockerfile: Dockerfile-storybook
+      dockerfile: setup/dockerfile-storybook
     ports:
       - "6006:6006"
     restart: always
@@ -79,24 +81,26 @@ services:
   task-explorer:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: setup/docker/Dockerfile
       target: task-explorer-dev
     environment:
       PORT: 5050
-      # FRONTEND_URL: "http://localhost:9000"
-      FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
+      FRONTEND_URL: "http://localhost:9000"
+      # FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
     volumes:
       - ./task_explorer/app:/app/task_explorer/app
-      - ./task_explorer/environments:/app/task_explorer/environments
+      - ./config:/app/config
       - ./common:/app/common
     ports:
       - "5050:5050"
     command: streamlit run task_explorer/app/app.py --server.port=5050 --server.address=0.0.0.0
+    depends_on:
+      - react
 
   task-explorer-prod:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: setup/docker/Dockerfile
       target: task-explorer
     environment:
       # FRONTEND_URL: "http://localhost:9090"
@@ -109,7 +113,7 @@ services:
   common: # backend
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: setup/docker/Dockerfile
       target: base
     volumes:
       - .:/app/.
