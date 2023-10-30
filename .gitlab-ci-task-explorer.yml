@@ -1,4 +1,5 @@
 variables:
+  DEPLOYMENT_VARS: "FRONTEND_URL"
   APP_NAME: rn-iii-te
   DOCKER_FILE: docker/Dockerfile
   DOCKER_TARGET: task-explorer
@@ -31,3 +32,28 @@ docker:
       --dockerfile "${DOCKER_FILE}"
       ${DOCKER_TARGET_ARG}
       --destination "${REGISTRY_URL}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
+
+deploy-prod:
+  extends: .deploy-prod-stage
+  script:
+    - deploy-pipeline/docker_login.sh
+    - deploy-pipeline/aws_config.sh
+    - deploy-pipeline/deployment_vars.pl
+    - if [ -n "$HELM_DRYRUN" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
+    - helm upgrade
+      --install
+      --namespace mcu
+      $DRYRUN
+      "${APP_NAME}-${CI_COMMIT_REF_NAME}"
+      deploy-pipeline/charts/web-service
+      --set dockersecret=${DOCKERCFG}
+      --set app_name="${APP_NAME}-${CI_COMMIT_REF_NAME}"
+      --set app_image="${REGISTRY_URL}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
+      --set main_url="${MAIN_URL}"
+      --set web_port="${WEB_PORT}"
+      --set replica_count="${REPLICA_COUNT}"
+      --set sticky_session="${STICKY_SESSION}"
+      --set resources.limits.cpu=1
+      --values /tmp/deployment_vars.yml
+      --atomic
+    - echo "The experiment has been deployed to ${MAIN_URL}."

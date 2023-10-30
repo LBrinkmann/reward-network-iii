@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Union
 from pydantic import BaseModel, validator, Extra
 
 
@@ -38,9 +38,10 @@ class Environment(BaseModel):
     levels: List[Level]
     rewards: List[Rewards]
     edges: List[Edge]
-    n_edges_per_node: int
+    n_edges_per_node: float
     n_nodes: int
     n_steps: int
+    n_losses: int
 
     @validator("levels", pre=True)
     def val_levels(cls, levels):
