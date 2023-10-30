@@ -22,9 +22,9 @@ docker:
   extends: .docker-stage
   script:
     - ls -lt
-    - ls -lt deploy-pipeline
-    - chmod +x deploy-pipeline/docker_login.sh
-    - bash deploy-pipeline/docker_login.sh
+    - ls -lt deploy-pipelines
+    - apk add --no-cache bash
+    - deploy-pipeline/docker_login.sh
     - echo "${IMAGE_NAME}:${IMAGE_TAG}"
     - DOCKER_TARGET_ARG=$( [ -z "$DOCKER_TARGET" ] && echo "" || echo "--target ${DOCKER_TARGET}" )
     - /kaniko/executor
