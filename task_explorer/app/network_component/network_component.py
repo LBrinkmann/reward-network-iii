@@ -1,36 +1,32 @@
 import json
+import os
 
 import streamlit.components.v1 as components
 
-BASE_URL = "https://631063bad8ec25de99f6946b-wordcsbsge.chromatic.com/" \
-           "iframe.html?"
-STORY_COMPONENT = "id=utils-taskexplorer2--default&viewMode=story"
 
-
-def network_component(timer: int = 25, network: dict = None, max_step: int = 8,
-                      rewards: list = [-100, -20, 0, 20, 140]):
+def network_component(
+    type: str = "default",
+    network: dict = None,
+    max_step: int = 8,
+):
     """Embeds a network component from Chromatic.
 
     Parameters
     ----------
-    timer : int
-        The time in ms for the component to wait before rendering.
     network : dict
         The network to be rendered.
     max_step : int
         The maximum number of steps in one trial.
-    rewards : list
     """
 
-    url = f"{BASE_URL}args=timer:{timer};maxSteps:{max_step}" \
-          f"&{STORY_COMPONENT}"
-    if network is not None:
-        # convert dict to string
-        # set separators=(',', ':') to remove spaces
-        network_args = json.dumps(network, separators=(',', ':'))
-        url += f"&custom_args={network_args}"
+    showAllEdges = "true" if type == "legacy" else "false"
+    network_args = json.dumps(network, separators=(",", ":"))
 
-    rewards_args = json.dumps(rewards, separators=(',', ':'))
-    url += f"&custom_rewards={rewards_args}"
+    BASE_URL = os.getenv("FRONTEND_URL", "http://localhost:9000")
+
+    url = (
+        f"{BASE_URL}/streamlit?network={network_args}&max_moves={max_step}"
+        f"&showAllEdges={showAllEdges}"
+    )
 
     components.iframe(url, height=700, width=800)
