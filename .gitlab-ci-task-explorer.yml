@@ -9,6 +9,12 @@ include:
     ref: "1.8.1"
     file: "python-app.yml"
 
+.before_script_stage: &before_script_stage
+  before_script:
+    - ls -lt
+    # - cd frontend
+    # - mv ../deploy-pipeline .
+
 build: *before_script_stage
 docker:
   <<: *before_script_stage
