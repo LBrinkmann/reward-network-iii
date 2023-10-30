@@ -23,8 +23,7 @@ docker:
   script:
     - ls -lt
     - ls -lt deploy-pipeline
-    - apk add --no-cache bash
-    - deploy-pipeline/docker_login.sh
+    - /bin/sh deploy-pipeline/docker_login.sh
     - echo "${IMAGE_NAME}:${IMAGE_TAG}"
     - DOCKER_TARGET_ARG=$( [ -z "$DOCKER_TARGET" ] && echo "" || echo "--target ${DOCKER_TARGET}" )
     - /kaniko/executor
