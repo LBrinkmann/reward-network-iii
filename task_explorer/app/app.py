@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import yaml
+from pathlib import Path
 
 from common.generate.generation import NetworkGenerator
 from common.models.environment import Environment
@@ -21,21 +22,51 @@ st.write(
 )
 
 if "gen_env" not in st.session_state:
-    environment = load_yaml("task_explorer/app/default_environment.yml")
+    environment = load_yaml("task_explorer/environments/default_environment.yml")
     st.session_state.gen_env = Environment(**environment)
 
 if "rerender_counter" not in st.session_state:
     st.session_state.rerender_counter = 0
+
+
+def list_files(dir_path, extension):
+    """
+    List files in a directory with a specific extension
+    """
+    directory = Path(dir_path)
+    return (f for f in directory.iterdir() if f.name.endswith("." + extension))
+
 
 # ------------------------------------------------------------------------------
 #                      sidebar: generate and download options
 # ------------------------------------------------------------------------------
 with st.sidebar:
     st.write("## Generate Networks")
-    gen_params = {}
     data = None
 
+    with st.form(key="select_file"):
+        # multiselect
+        files = list_files("task_explorer/environments", "yml")
+        files = {f.name: str(f) for f in files}
+        file = st.selectbox("Select environment file", list(files.keys()))
+        file = files[file]
+        submit_file = st.form_submit_button(label="Submit")
+
+        if submit_file:
+            try:
+                data = load_yaml(file)
+                st.success("File successfully loaded")
+                st.session_state.gen_env = Environment(**data)
+
+                # remove from session state
+                if "networks" in st.session_state:
+                    del st.session_state["networks"]
+            except Exception as e:
+                st.error(f"Error: {e}")
+
     with st.expander("Upload environment file", expanded=False):
+        # select environment file
+
         with st.form(key="upload_params"):
             file = st.file_uploader("Upload environment parameters file", type="yml")
             submit_file = st.form_submit_button(label="Submit")
@@ -46,6 +77,14 @@ with st.sidebar:
                         data = yaml.safe_load(file)
                         st.success("File uploaded successfully")
                         st.session_state.gen_env = Environment(**data)
+
+                        # remove from session state
+                        if "networks" in st.session_state:
+                            del st.session_state["networks"]
+
+                        # store file
+                        with open(f"{file.name}", "wb") as f:
+                            f.write(file.getvalue())
                     except Exception as e:
                         st.error(f"Error: {e}")
 
@@ -56,29 +95,30 @@ with st.sidebar:
     with st.form("generate_form", clear_on_submit=False):
         st.write("### Generate Parameters")
         st.write("Select the generation parameters")
+
+        changed_env = st.session_state.gen_env.dict()
         # how many networks to generate?
-        gen_params["n_networks"] = st.number_input(
+        changed_env["n_networks"] = st.number_input(
             label="How many networks do you want to generate?",
             min_value=1,
             max_value=100_000,
-            value=11,
+            value=changed_env.get("n_networks", 1),
             step=10,
         )
 
-        gen_params["n_losses"] = st.number_input(
+        changed_env["n_losses"] = st.number_input(
             label="How many large losses to take (for loss solving strategy)?",
             min_value=1,
             max_value=5,
-            value=1,
+            value=changed_env.get("n_losses", 1),
             step=1,
         )
 
-        changed_env = st.session_state.gen_env.dict()
         changed_env["n_steps"] = st.number_input(
             label="How many step?",
             min_value=1,
             max_value=20,
-            value=changed_env["n_steps"],
+            value=int(changed_env["n_steps"]),
             step=1,
         )
 
@@ -148,17 +188,19 @@ with st.sidebar:
                 environment = load_yaml("app/default_environment.yml")
                 st.session_state.gen_env = Environment(**environment)
 
+            state_env = st.session_state.gen_env
+
             # Network_Generator class
-            net_generator = NetworkGenerator(st.session_state.gen_env)
-            networks = net_generator.generate(gen_params["n_networks"])
+            net_generator = NetworkGenerator(state_env)
+            networks = net_generator.generate(state_env.n_networks)
             networks = [n.dict() for n in networks]
 
             # check if the size of the networks is valid
-            if len(networks) != gen_params["n_networks"]:
+            if len(networks) != state_env.n_networks:
                 st.error(
                     f"The number of generated networks {len(networks)} is not "
                     f" equal to the number of networks requested "
-                    f"{gen_params['n_networks']}"
+                    f"{state_env.n_networks}"
                 )
 
             # update starting nodes
@@ -173,10 +215,9 @@ with st.sidebar:
             if to_download_data:
                 st.session_state.net_data = net_generator.save_as_json()
 
-            gen_params["rewards"] = [
-                r["reward"] for r in st.session_state.gen_env.dict()["rewards"]
-            ]
-            gen_params["n_steps"] = st.session_state.gen_env.n_steps
+            gen_params = state_env.dict()
+
+            gen_params["rewards"] = [r["reward"] for r in gen_params["rewards"]]
 
             gen_params["solution_columns"] = [
                 "network_id",

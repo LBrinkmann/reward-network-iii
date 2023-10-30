@@ -123,8 +123,16 @@ class NetworkGenerator:
 
             c = Counter([e["source"] for e in net["links"]])
 
+            print(self.env.n_edges_per_node)
+
             if (
-                all(value == self.env.n_edges_per_node for value in c.values())
+                (
+                    sum(value for value in c.values())
+                    == int(self.env.n_edges_per_node * self.env.n_nodes)
+                )
+                and (
+                    min(value for value in c.values()) == int(self.env.n_edges_per_node)
+                )
                 and len(list(c.keys())) == self.env.n_nodes
             ):
                 create_network = self.create_network_object(
@@ -156,7 +164,7 @@ class NetworkGenerator:
         to_level = G.nodes[target_node]["level"]
         possible_rewards = self.from_to[(from_level, to_level)]
         other_source_reward_idx = self.get_source_reward_idx(G, source_node)
-        if len(possible_rewards) > 1:
+        if len(possible_rewards) > len(other_source_reward_idx):
             possible_rewards = [
                 r for r in possible_rewards if r not in other_source_reward_idx
             ]
@@ -240,11 +248,13 @@ class NetworkGenerator:
         graph = nx.DiGraph()
 
         self.assign_levels(graph)
-        for i in range(self.env.n_edges_per_node * self.env.n_nodes):
+        min_degree = 0
+        for i in range(int(self.env.n_edges_per_node * self.env.n_nodes)):
             allowed_source_nodes = [
                 n
                 for n in graph.nodes
-                if graph.out_degree(n) < self.env.n_edges_per_node
+                if (graph.out_degree(n) < self.env.n_edges_per_node)
+                and (graph.out_degree(n) <= min_degree)
             ]
             if len(allowed_source_nodes) == 0:
                 raise ValueError("No allowed nodes to connect from.")
@@ -262,6 +272,7 @@ class NetworkGenerator:
                 graph, allowed_target_nodes
             )[0]
             self.add_link(graph, source_node, target_node)
+            min_degree = min(graph.out_degree(n) for n in graph.nodes)
         return graph
 
     @staticmethod
@@ -312,7 +323,12 @@ if __name__ == "__main__":
     seed = environment["seed"]
     random.seed(seed)
     np.random.seed(seed)
+
+    print(environment)
+
     generate_params = Environment(**environment)
+
+    print(generate_params)
 
     net_generator = NetworkGenerator(generate_params)
     networks = net_generator.generate(environment["n_networks"])

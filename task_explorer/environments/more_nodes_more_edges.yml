@@ -81,10 +81,11 @@ levels:
     idx: 3
     is_start: null
     max_n_nodes: 3
-    min_n_nodes: 2
-n_edges_per_node: 2
+    min_n_nodes: 3
+n_edges_per_node: 2.5
 n_nodes: 12
-n_steps: 8
+n_steps: 10
+n_losses: 5
 rewards:
   - color: red
     idx: 0
