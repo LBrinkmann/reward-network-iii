@@ -23,6 +23,8 @@ def network_component(
     showAllEdges = "true" if type == "legacy" else "false"
     network_args = json.dumps(network, separators=(",", ":"))
 
+    print(network)
+
     BASE_URL = os.getenv("FRONTEND_URL", "http://localhost:9000")
     print(BASE_URL)
 
