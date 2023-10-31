@@ -48,3 +48,5 @@ class ExperimentSettings(Document):
     simulate_humans: bool = False
     # whether to add a repeat trial at the end of the social learning block (otherwise a try yourself trail is added)
     add_repeat_trial: bool = False
+    # main experiment only (for testing)
+    main_only: bool = False

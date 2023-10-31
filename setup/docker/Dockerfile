@@ -26,6 +26,10 @@ COPY setup/requirements/requirements_backend.txt .
 RUN pip --no-cache-dir install -r requirements_backend.txt
 COPY setup/requirements/requirements_dev.txt .
 RUN pip --no-cache-dir install -r requirements_dev.txt
+COPY backend/setup.py .
+COPY backend/app /app/app
+RUN pip --no-cache-dir install --no-deps -e .
+WORKDIR /app/app
 
 FROM base as backend
 COPY setup/requirements/requirements_backend.txt .

@@ -149,7 +149,7 @@ async def one_subject(
                 "instruction",
                 trial_num,
                 url,
-                instruction_type="individual_start",
+                instruction_type="practice_rounds",
             )
             trial_num += 1
 
@@ -171,13 +171,13 @@ async def one_subject(
     trial_num += 1
 
     if generation == 0:
-        # individual_start
+        # practice_rounds
         await get_post_trial(
             default_client,
             "instruction",
             trial_num,
             url,
-            instruction_type="individual_gen0",
+            instruction_type="pre_social_learning_gen0",
         )
         trial_num += 1
 
@@ -217,7 +217,7 @@ async def one_subject(
                     "instruction",
                     trial_num,
                     url,
-                    instruction_type="learning",
+                    instruction_type="pre_social_learning",
                 )
                 trial_num += 1
 
@@ -317,7 +317,7 @@ async def get_post_trial(
         else:
             response = await client.post(url)
 
-    assert response.status_code == 200
+    assert response.status_code == 200, f'Error in trial {t_id} {exp_trail_name} {response.json()}'
     data = response.json()
     assert data["message"] == "Trial saved"
 
