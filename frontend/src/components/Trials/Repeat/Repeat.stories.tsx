@@ -2,10 +2,11 @@ import React, {useEffect} from 'react';
 
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
-import Repeat from "./Repeat";
+import Repeat, {IRepeat} from "./Repeat";
 
 import data from "../../Network/examples";
 import useNetworkContext, {NetworkContextProvider} from "../../../contexts/NetworkContext";
+
 
 
 export default {
@@ -22,8 +23,18 @@ export default {
     ]
 } as ComponentMeta<typeof Repeat>;
 
-const Template: ComponentStory<typeof Repeat> = function (args) {
+
+
+interface TemplateArgs extends IRepeat {
+    wrongRepeatPunishment: number;
+    correctRepeatReward: number;
+}
+
+
+
+const Template: ComponentStory<typeof Repeat> = function (args: TemplateArgs) {
     const {networkState, networkDispatcher} = useNetworkContext();
+    const {solution, wrongRepeatPunishment, correctRepeatReward, playerTotalPoints} = args;
 
     useEffect(() => {
         if (!networkState.network) {
@@ -34,7 +45,13 @@ const Template: ComponentStory<typeof Repeat> = function (args) {
                         edges: data[0].edges,
                         nodes: data[0].nodes
                     },
-                    isPractice: false
+                    isPractice: false,
+                    solution: {
+                        moves: solution,
+                    },
+                    correctRepeatReward: correctRepeatReward,
+                    wrongRepeatPunishment: wrongRepeatPunishment,
+                    forceSolution: true,
                 }
             });
         }
@@ -45,7 +62,7 @@ const Template: ComponentStory<typeof Repeat> = function (args) {
     return (
         <>
             {networkState.network &&
-                <Repeat{...args}/>}
+                <Repeat solution={solution} playerTotalPoints={playerTotalPoints} teacherId={1} />}
         </>
 
 
@@ -57,4 +74,6 @@ export const Default = Template.bind({});
 Default.args = {
     solution: [9, 3, 8, 7, 4, 6, 7, 4, 6],
     playerTotalPoints: 100,
+    wrongRepeatPunishment: -50,
+    correctRepeatReward: 100,
 };

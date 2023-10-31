@@ -18,6 +18,7 @@ type timerState = {
 
 export type NetworkState = {
     network: { edges: StaticNetworkEdgeInterface[], nodes: StaticNetworkNodeInterface[] } | undefined;
+    solution: {moves: number[], score?: number} | undefined;
     step: number;
     points: number;
     moves: number[];
@@ -42,6 +43,10 @@ export type NetworkState = {
     };
     teacherComment: string;
     currentReward?: number;
+    rewardIdx?: number;
+    wrongRepeatPunishment: number;
+    correctRepeatReward: number;
+    forceSolution: boolean;
 }
 
 export type NetworkContextType = {
@@ -65,6 +70,7 @@ export const networkInitialState: NetworkState = {
     possibleMoves: undefined,
     isNetworkDisabled: false,
     network: undefined,
+    solution: undefined,
     isNetworkFinished: false,
     isPractice: false,
     tutorialStep: 0,
@@ -82,6 +88,10 @@ export const networkInitialState: NetworkState = {
     },
     teacherComment: '',
     currentReward: undefined,
+    rewardIdx: 0,
+    wrongRepeatPunishment: 0,
+    correctRepeatReward: 0,
+    forceSolution: false,
 }
 
 const networkInitializer = (initialState: NetworkState) => {
