@@ -205,6 +205,123 @@ async def create_generation(
     return sessions
 
 
+
+# def social_learning_block_try_observe_try(trials, config, block_idx, social_learning_idx):
+#     trials.append(
+#         Trial(
+#             id=len(trials),
+#             trial_type="try_yourself",
+#             is_practice=True,
+#             practice_count=f"{social_learning_idx+1}/{config.n_social_learning_networks_per_block}",
+#             social_learning_block_idx=block_idx,
+#             social_learning_idx=social_learning_idx,
+#         )
+#     )
+#     trials.append(
+#         Trial(
+#             id=len(trials),
+#             trial_type="observation",
+#             is_practice=True,
+#             practice_count=f"{social_learning_idx+1}/{config.n_social_learning_networks_per_block}",
+#             social_learning_block_idx=block_idx,
+#             social_learning_idx=social_learning_idx,
+#         )
+#     )
+#     trials.append(
+#         Trial(
+#             id=len(trials),
+#             trial_type="try_yourself",
+#             is_practice=True,
+#             practice_count=f"{social_learning_idx+1}/{config.n_social_learning_networks_per_block}",
+#             last_trial_for_current_example=True,
+#             social_learning_block_idx=block_idx,
+#             social_learning_idx=social_learning_idx,
+#             )
+#         )
+#     return trials
+
+
+
+# def social_learning_block_try_observe_repeat(trials, config, block_idx, social_learning_idx):
+#     trials.append(
+#         Trial(
+#             id=len(trials),
+#             trial_type="try_yourself",
+#             is_practice=True,
+#             practice_count=f"{social_learning_idx+1}/{config.n_social_learning_networks_per_block}",
+#             social_learning_block_idx=block_idx,
+#             social_learning_idx=social_learning_idx,
+#         )
+#     )
+#     trials.append(
+#         Trial(
+#             id=len(trials),
+#             trial_type="observation",
+#             is_practice=True,
+#             practice_count=f"{social_learning_idx+1}/{config.n_social_learning_networks_per_block}",
+#             social_learning_block_idx=block_idx,
+#             social_learning_idx=social_learning_idx,
+#         )
+#     )
+#     trials.append(
+#         Trial(
+#             id=len(trials),
+#             trial_type="repeat",
+#             is_practice=True,
+#             practice_count=f"{social_learning_idx+1}/{config.n_social_learning_networks_per_block}",
+#             last_trial_for_current_example=True,
+#             social_learning_block_idx=block_idx,
+#             social_learning_idx=social_learning_idx,
+#             )
+#         )
+#     return trials
+
+
+# def social_learning_control_block(trials, n_trails, config, is_human, condition, block_idx, social_learning_idx):
+#     if is_human:
+#         net, _ = get_net_solution()
+#         solution = None
+#     else:
+#         solution_type = "loss" if condition == "w_ai" else "myopic"
+#         net, moves = get_net_solution(solution_type)
+#         solution = Solution(
+#             moves=moves,
+#             score=estimate_solution_score(net, moves),
+#             solution_type=solution_type,
+#         )
+#     for iii in range(n_trails):
+#         trial = Trial(
+#             trial_type="individual",
+#             id=len(trials),
+#             network=net,
+#             is_practice=True,
+#             practice_count=f"{social_learning_idx+1}/{config.n_social_learning_networks_per_block}",
+#             solution=solution,
+#             social_learning_block_idx=block_idx,
+#             social_learning_idx=social_learning_idx,
+#         )
+#         # update the starting node
+#         trial.network.nodes[
+#             trial.network.starting_node
+#         ].starting_node = True
+#         trials.append(trial)
+#     return trials
+
+
+# def get_social_learning_block(trials, config, is_human, condition, block_idx, social_learning_idx, control=False):
+#     if config.social_learning_block_type == "try_observe_try":
+#         if control:
+#             trials = social_learning_control_block(trials, 2, config, is_human, condition, block_idx, social_learning_idx)
+#         else:
+#             trials = social_learning_block_try_observe_try(trials, config, block_idx, social_learning_idx)
+#     elif config.social_learning_block_type == "observe_try":
+#         if control:
+#             trials = social_learning_control_block(trials, 1, config, is_human, condition, block_idx, social_learning_idx)
+#         else:
+#             trials = social_learning_block_observe_try(trials, config, block_idx, social_learning_idx)
+
+
+
 def create_trials(
     experiment_num: int,
     session_idx: int,
@@ -355,7 +472,7 @@ def create_trials(
                 trials.append(
                     Trial(
                         id=len(trials),
-                        trial_type="try_yourself",
+                        trial_type="repeat" if config.add_repeat_trial else "try_yourself",
                         is_practice=True,
                         practice_count=f"{ii+1}/{config.n_social_learning_networks_per_block}",
                         last_trial_for_current_example=True,
