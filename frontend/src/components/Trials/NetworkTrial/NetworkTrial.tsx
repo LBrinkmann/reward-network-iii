@@ -1,6 +1,6 @@
 import React, {FC, useEffect} from "react";
 import useNetworkContext from "../../../contexts/NetworkContext";
-import {Box, Divider, Grid} from "@mui/material";
+import {Box, Divider, Grid, Typography} from "@mui/material";
 import StaticNetwork, {StaticNetworkEdgeInterface} from "../../Network/StaticNetwork/StaticNetwork";
 import PlayerInformation from "../PlayerInformation";
 import LinearSolution from "../../Network/LinearSolution";
@@ -141,10 +141,10 @@ const FlashingReward: FC = () => {
     const {networkState} = useNetworkContext();
     const [show, setShow] = React.useState(false);
     useEffect(() => {
-        if (networkState.step !== 0) {
+        if (networkState.rewardIdx !== 0) {
             setShow(true);
         }
-    }, [networkState.step]);
+    }, [networkState.rewardIdx]);
 
     useEffect(() => {
         if (show) {
@@ -155,6 +155,20 @@ const FlashingReward: FC = () => {
         }
     }, [show]);
 
+
+    var color;
+    var text;
+    if (networkState.currentReward === undefined) {
+        color = 'white'
+        text = ''
+    } else if (networkState.forceSolution) {
+        color = networkState.currentReward > 0 ? colors[2] : colors[0]
+        text = networkState.currentReward > 0 ? 'Correct' : 'Wrong'
+    } else {
+        color = colors[allRewards.indexOf(networkState.currentReward)]
+        text = networkState.currentReward > 0 ? 'Gain' : (networkState.currentReward < 0 ? 'Loss' : 'Neutral')
+    }
+
     return (
         <Box
             style={{position: 'absolute', top: '160px', left: '160px', opacity: show ? 0.8 : 0}}
@@ -162,14 +176,23 @@ const FlashingReward: FC = () => {
                 borderRadius: '50%',
                 width: '60px',
                 height: '40px',
-                bgcolor: networkState.currentReward !== undefined ? colors[allRewards.indexOf(networkState.currentReward)] : 'white',
-                typography: 'h4',
-                textAlign: 'center',
+                bgcolor: color,
+                // typography: 'h4',
+                // textAlign: 'center',
                 px: "40px",
-                py: "50px"
+                py: "50px",
+                display: 'flex',              // Use flexbox for alignment
+                flexDirection: 'column',      // Stack child elements vertically
+                justifyContent: 'center',     // Center child elements vertically
+                alignItems: 'center',         // Center child elements horizontally
             }}
         >
-            {networkState.currentReward}
+            <Typography variant="h4" align="center">
+                {text}
+            </Typography>
+            <Typography variant="h4" align="center">
+                {networkState.currentReward}
+            </Typography>
         </Box>
     )
 }
