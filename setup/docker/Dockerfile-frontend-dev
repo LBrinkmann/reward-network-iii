@@ -9,6 +9,4 @@ RUN npm install
 # Install git
 RUN apk add --no-cache git
 
-COPY frontend .
-
 CMD ["npm", "run", "start"]
