@@ -6,8 +6,6 @@ import StaticNetwork, {
 } from "../../Network/StaticNetwork/StaticNetwork";
 import { selectPossibleMoves } from "../../../reducers/NetworkReducer";
 
-import { useSearchParams } from "react-router-dom";
-
 interface NetworkSLInterface {
   network:
     | {
@@ -16,12 +14,12 @@ interface NetworkSLInterface {
         starting_node: number;
       }
     | undefined;
-  max_moves: number;
+  maxMoves: number;
   showAllEdges: boolean;
 }
 
 const NetworkSL: FC<NetworkSLInterface> = (props) => {
-  const { network, max_moves, showAllEdges } = props;
+  const { network, maxMoves, showAllEdges } = props;
   const [moves, setCurrentMoves] = React.useState([network.starting_node]);
   const [totalPoints, setTotalPoints] = React.useState(0);
   const [possibleMoves, setPossibleMoves] = React.useState<number[]>([]);
@@ -48,7 +46,7 @@ const NetworkSL: FC<NetworkSLInterface> = (props) => {
   }, [moves, network, showAllEdges]);
 
   const NodeClickHandler = (nodeIdx: number) => {
-    if (possibleMoves.includes(nodeIdx) && moves.length <= max_moves) {
+    if (possibleMoves.includes(nodeIdx) && moves.length <= maxMoves) {
       const currentEdge = network.edges.filter(
         (edge: any) =>
           edge.source_num === moves[moves.length - 1] &&
@@ -91,32 +89,4 @@ const NetworkSL: FC<NetworkSLInterface> = (props) => {
   );
 };
 
-const NetworkSLApp = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const networkParam = searchParams.get("network");
-  const maxMovesParam = searchParams.get("max_moves")
-    ? parseInt(searchParams.get("max_moves")!)
-    : undefined;
-  const showAllEdgesParam = searchParams.get("showAllEdges")
-    ? searchParams.get("showAllEdges") === "true"
-    : undefined;
-
-  console.log(
-    "searchParams",
-    searchParams.get("showAllEdges"),
-    searchParams.get("max_moves")
-  );
-
-  const network = networkParam ? JSON.parse(networkParam) : undefined;
-
-  return (
-    <NetworkSL
-      network={network}
-      max_moves={maxMovesParam}
-      showAllEdges={showAllEdgesParam}
-    />
-  );
-};
-
-export default NetworkSLApp;
+export { NetworkSL, NetworkSLInterface };

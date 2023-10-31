@@ -38,19 +38,21 @@ services:
       - "9000:9000" # app
       - "6006:6006" # storybook
     volumes:
-      - /usr/frontend/node_modules
       - ./frontend/static:/frontend/static
       - ./frontend/dist:/frontend/dist
       - ./frontend/src:/frontend/src
       - ./frontend/tsconfig.json:/frontend/tsconfig.json
       - ./frontend/webpack.config.js:/frontend/webpack.config.js
+      - ./frontend/gen_config.js:/frontend/gen_config.js
+      - ./frontend/.storybook:/frontend/.storybook
     environment:
       BACKEND_URL: "http://localhost:5040"
     stdin_open: true
     tty: true
+    # command: ["npm", "run", "start"] # start app only
+    command: ["npm", "run", "start:both"] # start storybook and app
     depends_on:
       - fastapi
-    command: ["npm", "run", "start:both"] # start storybook and app
 
   react-prod: # frontend
     build:
@@ -58,25 +60,6 @@ services:
       dockerfile: setup/docker/Dockerfile-frontend
     ports:
       - "9090:80"
-
-  react-storybook: # frontend
-    build:
-      context: ./frontend
-      dockerfile: setup/dockerfile-storybook
-    ports:
-      - "6006:6006"
-    restart: always
-    volumes:
-      - /usr/frontend/node_modules
-      - ./frontend/src:/frontend/src
-      - ./frontend/static:/frontend/static
-      - ./frontend/.storybook:/frontend/.storybook
-      - ./frontend/tsconfig.json:/frontend/tsconfig.json
-      - ./frontend/webpack.config.js:/frontend/webpack.config.js
-      - ./frontend/package.json:/frontend/package.json
-      - ./.git:/.git
-    # depends_on:
-    #   - react
 
   task-explorer:
     build:
