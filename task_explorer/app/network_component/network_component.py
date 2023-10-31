@@ -1,4 +1,3 @@
-import json
 import math
 import os
 
@@ -39,16 +38,15 @@ def network_component(
         The maximum number of steps in one trial.
     """
 
-    showAllEdges = "true" if type == "legacy" else "false"
-    network_args = json.dumps(round_floats(network), separators=(",", ":"))
-
-    print(network_args)
-
     BASE_URL = os.getenv("FRONTEND_URL", "http://localhost:9000")
-    url = (
-        f"{BASE_URL}/streamlit?network={network_args}&max_moves={max_step}"
-        f"&showAllEdges={showAllEdges}&rerender_counter={rerender_counter}"
+    url = f"{BASE_URL}/streamlit"
+    network_component = components.declare_component(
+        "network_component",
+        url=url,
     )
-    # print(url)
-
-    components.iframe(url, height=700, width=800)
+    network_component(
+        network=round_floats(network),
+        maxMoves=max_step,
+        showAllEdges=type == "legacy",
+        rerenderCounter=rerender_counter,
+    )

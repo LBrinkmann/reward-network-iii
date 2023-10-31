@@ -1,1 +1,1 @@
-export { default } from "./NetworkSL";
+export { default } from "./NetworkSLConnection";
