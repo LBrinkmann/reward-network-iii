@@ -84,11 +84,19 @@ const ExperimentTrial: FC = () => {
                     payload: {advisors: data.advisor_selection}
                 });
                 break;
-            case TRIAL_TYPE.OBSERVATION:
-            case TRIAL_TYPE.REPEAT:
-            case TRIAL_TYPE.TRY_YOURSELF:
             case TRIAL_TYPE.INDIVIDUAL:
+                networkDispatcher({
+                    type: NETWORK_ACTIONS.SET_NETWORK,
+                    payload: {
+                        network: {edges: data.network.edges, nodes: data.network.nodes},
+                        isPractice: false,
+                    }
+                });
+                break;
+            case TRIAL_TYPE.TRY_YOURSELF:
+            case TRIAL_TYPE.OBSERVATION:
             case TRIAL_TYPE.DEMONSTRATION:
+            case TRIAL_TYPE.REPEAT:
                 const isRepeat = data.trial_type === TRIAL_TYPE.REPEAT;
                 networkDispatcher({
                     type: NETWORK_ACTIONS.SET_NETWORK,

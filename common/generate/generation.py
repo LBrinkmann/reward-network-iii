@@ -123,8 +123,6 @@ class NetworkGenerator:
 
             c = Counter([e["source"] for e in net["links"]])
 
-            print(self.env.n_edges_per_node)
-
             if (
                 (
                     sum(value for value in c.values())
@@ -324,11 +322,7 @@ if __name__ == "__main__":
     random.seed(seed)
     np.random.seed(seed)
 
-    print(environment)
-
     generate_params = Environment(**environment)
-
-    print(generate_params)
 
     net_generator = NetworkGenerator(generate_params)
     networks = net_generator.generate(environment["n_networks"])
