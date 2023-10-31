@@ -98,7 +98,7 @@ Run all test
 
 ```zsh
 
-sudo docker compose run fastapi python -m pytest -vv -s
+sudo docker compose run backend python -m pytest -vv -s
 
 ```
 

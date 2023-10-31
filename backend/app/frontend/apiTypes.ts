@@ -60,7 +60,7 @@ export interface Trial {
     | "social_learning"
     | "instruction_individual"
     | "individual"
-    | "individual_gen0"
+    | "pre_social_learning_gen0"
     | "instruction_demonstration"
     | "demonstration"
     | "instruction_written_strategy"

@@ -22,6 +22,8 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
     else:
         subjects_with_id = []
 
+    print("subjects_with_id: ", subjects_with_id, flush=True)
+
     if len(subjects_with_id) == 0:
         # subject does not exist
         # creat a new subject
@@ -54,6 +56,8 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
 async def initialize_session(subject: Subject):
     # find an active configuration
     config = await ExperimentSettings.find_one(ExperimentSettings.active == True)
+    
+    print("config: ", config, flush=True)
     # Check and remove expired sessions
     await replace_stale_session(config)
 
@@ -146,7 +150,7 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: int 
         Session.finished == False,  # session is not finished
         Session.subject_id != None,  # session is assigned to subject
         # there can be old expired and already replaces sessions
-        Session.expired == False,
+        Session.expired == False
     ).find(
         # find all sessions older than the specified time delta
         Session.started_at
@@ -169,6 +173,7 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: int 
         Session.expired == True,
         # session has not yet been replaced
         Session.replaced == False,
+        Session.experiment_type == exp_config.experiment_type,
     ).to_list()
 
     # nothing to replace

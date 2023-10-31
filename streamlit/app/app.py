@@ -299,8 +299,6 @@ with st.expander("Try yourself without full visibility 😎"):
     if "networks" in st.session_state:
         nets = st.session_state.networks
         net_id = st.session_state.net_id
-        print(net_id)
-        print(len(nets))
 
         with st.form("vizualization_form_wo_full", clear_on_submit=False):
             col1, col2, col3 = st.columns(3)
@@ -338,8 +336,6 @@ with st.expander("Try yourself with full visibility 😎"):
     if "networks" in st.session_state:
         nets = st.session_state.networks
         net_id = st.session_state.net_id
-        print(net_id)
-        print(len(nets))
 
         with st.form("vizualization_form_w_full", clear_on_submit=False):
             col1, col2, col3 = st.columns(3)
