@@ -2,7 +2,7 @@ variables:
   DEPLOYMENT_VARS: "FRONTEND_URL"
   APP_NAME: rn-iii-te
   DOCKER_FILE: setup/docker/Dockerfile
-  DOCKER_TARGET: task-explorer
+  DOCKER_TARGET: streamlit
   FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
   MAIN_URL: rn-iii-te.eks-test-default.mpg-chm.com
 

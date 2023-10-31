@@ -10,14 +10,14 @@ RUN pip --no-cache-dir install --no-deps -e .
 
 # Task Explorer
 
-FROM base as task-explorer-dev
+FROM base as streamlit-dev
 COPY setup/requirements/requirements_viz.txt .
 RUN pip --no-cache-dir install -r requirements_viz.txt
 
-FROM task-explorer-dev as task-explorer
-ADD task_explorer/app /app/task_explorer/app
+FROM streamlit-dev as streamlit
+ADD streamlit/app /app/streamlit/app
 ADD config /app/config
-CMD ["streamlit", "run", "task_explorer/app/app.py", "--server.port=5000", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "streamlit/app/app.py", "--server.port=5000", "--server.address=0.0.0.0"]
 
 # Backend
 

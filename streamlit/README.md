@@ -1,5 +1,6 @@
 # URL
-https://rn-iii-task-explorer.eks-test-default.mpg-chm.com/
+
+https://rn-iii-streamlit.eks-test-default.mpg-chm.com/
 
 # Steamlit Template
 

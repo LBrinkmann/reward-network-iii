@@ -17,8 +17,8 @@ frontend:
     include: setup/ci/.gitlab-ci-frontend.yml
     strategy: depend
 
-task-explorer:
+streamlit:
   stage: start child pipelines
   trigger:
-    include: setup/ci/.gitlab-ci-task-explorer.yml
+    include: setup/ci/.gitlab-ci-streamlit.yml
     strategy: depend

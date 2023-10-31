@@ -8,7 +8,7 @@ services:
     ports:
       - "27017:27017"
 
-  fastapi: # backend
+  backend: # backend
     build:
       context: .
       dockerfile: setup/docker/Dockerfile
@@ -18,9 +18,6 @@ services:
       PORT: 5040
       MONGO_URL: "mongodb://database:27017/"
       GENERATE_FRONTEND_TYPES: "false"
-      # Environment variables for official FastAPI docker image
-      APP_MODULE: "server:api"
-      LOG_LEVEL: "debug"
       BACKEND_USER: "admin"
       BACKEND_PASSWORD: "admin"
     # start-reload.sh is a version of start.sh for development with live auto-reload
@@ -30,7 +27,7 @@ services:
     depends_on:
       - database
 
-  react: # frontend
+  frontend: # frontend
     build:
       context: .
       dockerfile: setup/docker/Dockerfile-frontend-dev
@@ -52,46 +49,46 @@ services:
     # command: ["npm", "run", "start"] # start app only
     command: ["npm", "run", "start:both"] # start storybook and app
     depends_on:
-      - fastapi
+      - backend
 
-  react-prod: # frontend
+  frontend-prod: # frontend
     build:
       context: .
       dockerfile: setup/docker/Dockerfile-frontend
     ports:
       - "9090:80"
 
-  task-explorer:
+  streamlit:
     build:
       context: .
       dockerfile: setup/docker/Dockerfile
-      target: task-explorer-dev
+      target: streamlit-dev
     environment:
       PORT: 5050
       FRONTEND_URL: "http://localhost:9000"
       # FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
     volumes:
-      - ./task_explorer/app:/app/task_explorer/app
+      - ./streamlit/app:/app/streamlit/app
       - ./config:/app/config
       - ./common:/app/common
     ports:
       - "5050:5050"
-    command: streamlit run task_explorer/app/app.py --server.port=5050 --server.address=0.0.0.0
+    command: streamlit run streamlit/app/app.py --server.port=5050 --server.address=0.0.0.0
     depends_on:
-      - react
+      - frontend
 
-  task-explorer-prod:
+  streamlit-prod:
     build:
       context: .
       dockerfile: setup/docker/Dockerfile
-      target: task-explorer
+      target: streamlit
     environment:
       # FRONTEND_URL: "http://localhost:9090"
       FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
     ports:
       - "5030:5000"
     depends_on:
-      - react-prod
+      - frontend-prod
 
   common: # backend
     build:
