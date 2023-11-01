@@ -28,7 +28,7 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
     trial = await prepare_trial(session)
 
     await session.save()
-
+    print("trial: ", trial, flush=True)
     return trial
 
 @session_router.post('/{prolific_id}/{trial_id}')

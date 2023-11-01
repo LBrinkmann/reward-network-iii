@@ -47,8 +47,8 @@ services:
       BACKEND_URL: "http://0.0.0.0:5000"
     stdin_open: true
     tty: true
-    command: ["npm", "run", "start"] # start app only
-    # command: ["npm", "run", "start:both"] # start storybook and app
+    # command: ["npm", "run", "start"] # start app only
+    command: ["npm", "run", "start:both"] # start storybook and app
     depends_on:
       - backend
 

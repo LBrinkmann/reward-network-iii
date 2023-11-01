@@ -85,11 +85,12 @@ const ExperimentTrial: FC = () => {
                 });
                 break;
             case TRIAL_TYPE.INDIVIDUAL:
+            case TRIAL_TYPE.DEMONSTRATION:
                 networkDispatcher({
                     type: NETWORK_ACTIONS.SET_NETWORK,
                     payload: {
                         network: {edges: data.network.edges, nodes: data.network.nodes},
-                        isPractice: false,
+                        isPractice: data.is_practice,
                     }
                 });
                 break;
@@ -103,14 +104,14 @@ const ExperimentTrial: FC = () => {
                     payload: {
                         network: {edges: data.network.edges, nodes: data.network.nodes},
                         solution: data.advisor.solution,
-                        isPractice: false,
-                        teacherComment: data.advisor && data.advisor.written_strategy,
+                        isPractice: data.is_practice,
+                        // teacherComment: data.advisor && data.advisor.written_strategy,
                         // show comment tutorial only for the first observation trial
-                        commentTutorial: data.trial_type === TRIAL_TYPE.OBSERVATION &&
-                            sessionState.showTutorialInCurrentTrial,
-                            wrongRepeatPunishment: isRepeat ? 100 : 0,
-                            correctRepeatReward: isRepeat ? 100 : 0,
-                            forceSolution: isRepeat,
+                        // commentTutorial: data.trial_type === TRIAL_TYPE.OBSERVATION &&
+                        //     sessionState.showTutorialInCurrentTrial,
+                        wrongRepeatPunishment: isRepeat ? -100 : 0,
+                        correctRepeatReward: isRepeat ? 100 : 0,
+                        forceSolution: isRepeat,
                     }
                 });
                 break;
