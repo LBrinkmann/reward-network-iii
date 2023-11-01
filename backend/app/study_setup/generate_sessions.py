@@ -213,21 +213,21 @@ def add_consent_trail(trials):
         )]
     
 def add_practice_trail(trials):
-    return [*trials, Trial(id=len(trials), trial_type="practice")]
+    return [*trials, Trial(id=len(trials), trial_type="practice", trial_title="Tutorial")]
 
-def add_instruction_trail(trials, instruction_type):
+def add_instruction_trail(trials, instruction_type, title=None):
     return [*trials, Trial(id=len(trials), trial_type="instruction",
-                  instruction_type=instruction_type)]
+                  instruction_type=instruction_type, trial_title=title if title else "Instructions")]
     
 
-def add_individual_trail(trials, i, config):
+def add_self_practice_trail(trials, i, config):
     net, _ = get_net_solution()
     trial = Trial(
         trial_type="individual",
         id=len(trials),
         network=net,
         is_practice=True,
-        practice_count=f"{i+1}/{config.n_practice_trials}",
+        trial_title=f"Self Practice | Network {i+1} of {config.n_practice_trials}",
     )
     trial.network.nodes[trial.network.starting_node].starting_node = True
     return [*trials, trial]
@@ -235,10 +235,10 @@ def add_individual_trail(trials, i, config):
 def add_written_strategy_trail(trials, written_strategy=None):
     return [*trials, Trial(id=len(trials), trial_type="written_strategy", written_strategy=written_strategy)]
 
-def add_social_learning_selection_trail(trials, block_idx):
-    return [*trials, Trial(id=len(trials), trial_type="social_learning_selection", social_learning_block_idx=block_idx)]
+def add_social_learning_selection_trail(trials, block_idx, config):
+    return [*trials, Trial(id=len(trials), trial_type="social_learning_selection", social_learning_block_idx=block_idx, trial_title=f"Learning Phase | Select Teacher")]
 
-def add_social_learning_block_gen0(trials, block_idx, advisor_idx, is_human, simulated_subject, config):
+def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, simulated_subject, config):
     if is_human:
         net, _ = get_net_solution()
         solution = None
@@ -254,15 +254,16 @@ def add_social_learning_block_gen0(trials, block_idx, advisor_idx, is_human, sim
     n_trails = len([t for t in config.social_learning_trials if t in ['repeat', 'try_yourself']])
         
     for iii in range(n_trails):
+        title_postfix = "" if n_trails == 1 else f" | Trial {iii+1} of {n_trails}"
         trial = Trial(
             trial_type="individual",
             id=len(trials),
             network=net,
             is_practice=True,
-            practice_count=f"{advisor_idx+1}/{config.n_social_learning_networks_per_block}",
             solution=solution,
             social_learning_block_idx=block_idx,
-            social_learning_idx=advisor_idx,
+            block_network_idx=network_idx,
+            trial_title=f"Learning Phase | Network {network_idx + 1}{title_postfix}"
         )
         # update the starting node
         trial.network.nodes[
@@ -272,23 +273,27 @@ def add_social_learning_block_gen0(trials, block_idx, advisor_idx, is_human, sim
     return trials
 
 
-def add_social_learning_block(trials, block_idx, advisor_idx, config):
-
+def add_social_learning_network(trials, block_idx, network_idx, config):
+    trial_type_titles = {
+        "repeat": "Repeat the Teacher's Solution",
+        "try_yourself": "Try Yourself",
+        "observation": "Observe the Teacher's Solution",
+    }
     for i, trial_type in enumerate(config.social_learning_trials):
         trials.append(
             Trial(
                 id=len(trials),
                 trial_type=trial_type,
                 is_practice=trial_type in ["observation"],
-                practice_count=f"{advisor_idx+1}/{config.n_social_learning_networks_per_block}",
                 social_learning_block_idx=block_idx,
-                social_learning_idx=advisor_idx,
+                block_network_idx=network_idx,
                 last_trial_for_current_example=(i == len(config.social_learning_trials) - 1),
+                trial_title=f"Learning Phase | Network {network_idx + 1} | {trial_type_titles[trial_type]}",
             )
         )
     return trials
 
-def add_demonstration_trail(trials, is_human, simulated_subject):
+def add_demonstration_trail(trials, is_human, simulated_subject, network_idx, config):
     if is_human:
         net, _ = get_net_solution()
         solution = None
@@ -306,6 +311,8 @@ def add_demonstration_trail(trials, is_human, simulated_subject):
         trial_type="demonstration",
         network=net,
         solution=solution,
+        block_network_idx=network_idx,
+        trial_title=f"Demonstration Phase | Network {network_idx + 1} of {config.n_demonstration_trials}",
     )
     # update the starting node
     dem_trial.network.nodes[dem_trial.network.starting_node].starting_node = True
@@ -349,42 +356,42 @@ def create_trials(
 
     if is_human and not config.main_only:
         trials = add_consent_trail(trials)
-        trials = add_instruction_trail(trials, "welcome")
+        trials = add_instruction_trail(trials, "welcome", "Welcome to the Experiment!")
         trials = add_practice_trail(trials)
 
         # Individual trials for practice
         for i in range(config.n_practice_trials):
             if i == 0:
-                trials = add_instruction_trail(trials, "practice_rounds")
-            trials = add_individual_trail(trials, i, config)
+                trials = add_instruction_trail(trials, "practice_rounds", "Self Practice")
+            trials = add_self_practice_trail(trials, i, config)
 
         trials = add_written_strategy_trail(trials)
 
     # Social learning blocks
-    for i in range(config.n_social_learning_blocks):
+    for block_idx in range(config.n_social_learning_blocks):
         # social learning selection
         if is_human and (generation > 0):
-            if i == 0:
-                trials = add_instruction_trail(trials, "learning_selection")
-            trials = add_social_learning_selection_trail(trials, i)
+            if block_idx == 0:
+                trials = add_instruction_trail(trials, "learning_selection", "Learning Phase | Select Teacher")
+            trials = add_social_learning_selection_trail(trials, block_idx, config)
 
         # instruction before learning
-        if is_human and i == 0:
+        if is_human and block_idx == 0:
             instruction_type = "pre_social_learning_gen0" if generation == 0 else "pre_social_learning"
-            trials = add_instruction_trail(trials, instruction_type)
+            trials = add_instruction_trail(trials, instruction_type, "Learning Phase | Instructions")
             
         # run social learning blocks
-        for ii in range(config.n_social_learning_networks_per_block):
+        for network_idx in range(config.n_social_learning_networks_per_block):
             if generation == 0:
-                trials = add_social_learning_block_gen0(trials, i, ii, is_human, simulated_subject, config)
+                trials = add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, simulated_subject, config)
             else:
-                trials = add_social_learning_block(trials, i, ii, config)
+                trials = add_social_learning_network(trials, block_idx, network_idx, config)
 
     if is_human:
-        trials = add_instruction_trail(trials, "demonstration")
+        trials = add_instruction_trail(trials, "demonstration", "Demonstration Phase")
 
-    for i in range(config.n_demonstration_trials):
-        trials = add_demonstration_trail(trials, is_human, simulated_subject)
+    for network_idx in range(config.n_demonstration_trials):
+        trials = add_demonstration_trail(trials, is_human, simulated_subject, network_idx, config)
     
     trials = add_written_strategy_trail(trials, None if is_human else WrittenStrategy(strategy=""))
     if is_human:
