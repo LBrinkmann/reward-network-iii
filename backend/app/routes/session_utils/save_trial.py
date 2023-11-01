@@ -97,7 +97,7 @@ async def save_social_learning_selection(body: Advisor, session: Session, trial:
     social_learning_trails = [
         t
         for t in session.trials
-        if t.trial_type in ["try_yourself", "observation"]
+        if t.trial_type in ["try_yourself", "observation", "repeat"]
         and t.social_learning_block_idx == social_learning_block_idx
     ]
 

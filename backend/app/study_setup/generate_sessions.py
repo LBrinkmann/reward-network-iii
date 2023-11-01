@@ -238,19 +238,22 @@ def add_written_strategy_trail(trials, written_strategy=None):
 def add_social_learning_selection_trail(trials, block_idx):
     return [*trials, Trial(id=len(trials), trial_type="social_learning_selection", social_learning_block_idx=block_idx)]
 
-def add_social_learning_block_gen0(trials, block_idx, advisor_idx, is_human, condition, config):
+def add_social_learning_block_gen0(trials, block_idx, advisor_idx, is_human, simulated_subject, config):
     if is_human:
         net, _ = get_net_solution()
         solution = None
     else:
-        solution_type = "loss" if condition == "w_ai" else "myopic"
+        solution_type = "myopic" if simulated_subject else "loss"
         net, moves = get_net_solution(solution_type)
         solution = Solution(
             moves=moves,
             score=estimate_solution_score(net, moves),
             solution_type=solution_type,
         )
-    for iii in range(2):
+    
+    n_trails = len([t for t in config.social_learning_trials if t in ['repeat', 'try_yourself']])
+        
+    for iii in range(n_trails):
         trial = Trial(
             trial_type="individual",
             id=len(trials),
@@ -270,45 +273,27 @@ def add_social_learning_block_gen0(trials, block_idx, advisor_idx, is_human, con
 
 
 def add_social_learning_block(trials, block_idx, advisor_idx, config):
-    trials.append(
-        Trial(
-            id=len(trials),
-            trial_type="try_yourself",
-            is_practice=True,
-            practice_count=f"{advisor_idx+1}/{config.n_social_learning_networks_per_block}",
-            social_learning_block_idx=block_idx,
-            social_learning_idx=advisor_idx,
+
+    for i, trial_type in enumerate(config.social_learning_trials):
+        trials.append(
+            Trial(
+                id=len(trials),
+                trial_type=trial_type,
+                is_practice=trial_type in ["observation"],
+                practice_count=f"{advisor_idx+1}/{config.n_social_learning_networks_per_block}",
+                social_learning_block_idx=block_idx,
+                social_learning_idx=advisor_idx,
+                last_trial_for_current_example=(i == len(config.social_learning_trials) - 1),
+            )
         )
-    )
-    trials.append(
-        Trial(
-            id=len(trials),
-            trial_type="observation",
-            is_practice=True,
-            practice_count=f"{advisor_idx+1}/{config.n_social_learning_networks_per_block}",
-            social_learning_block_idx=block_idx,
-            social_learning_idx=advisor_idx,
-        )
-    )
-    trials.append(
-        Trial(
-            id=len(trials),
-            trial_type="repeat" if config.add_repeat_trial else "try_yourself",
-            is_practice=False,
-            practice_count=f"{advisor_idx+1}/{config.n_social_learning_networks_per_block}",
-            last_trial_for_current_example=True,
-            social_learning_block_idx=block_idx,
-            social_learning_idx=advisor_idx,
-        )
-    )
     return trials
 
-def add_demonsration_trail(trials, is_human, condition):
+def add_demonstration_trail(trials, is_human, simulated_subject):
     if is_human:
         net, _ = get_net_solution()
         solution = None
     else:
-        solution_type = "loss" if condition == "w_ai" else "myopic"
+        solution_type = "myopic" if simulated_subject else "loss"
         net, moves = get_net_solution(solution_type)
         solution = Solution(
             moves=moves,
@@ -328,7 +313,8 @@ def add_demonsration_trail(trials, is_human, condition):
     return trials
 
 def add_exit_trails(trials, config):
-    trials.append(Trial(id=len(trials), trial_type="post_survey"))
+    if not config.main_only:
+        trials.append(Trial(id=len(trials), trial_type="post_survey"))
 
     # Debriefing
     trials.append(
@@ -357,6 +343,7 @@ def create_trials(
     is_ai = (generation == 0) and (
         (condition == "w_ai") or config.simulate_humans)
     is_human = not is_ai
+    simulated_subject = is_ai and not (condition)
 
     trials = []
 
@@ -389,7 +376,7 @@ def create_trials(
         # run social learning blocks
         for ii in range(config.n_social_learning_networks_per_block):
             if generation == 0:
-                trials = add_social_learning_block_gen0(trials, i, ii, is_human, condition, config)
+                trials = add_social_learning_block_gen0(trials, i, ii, is_human, simulated_subject, config)
             else:
                 trials = add_social_learning_block(trials, i, ii, config)
 
@@ -397,12 +384,11 @@ def create_trials(
         trials = add_instruction_trail(trials, "demonstration")
 
     for i in range(config.n_demonstration_trials):
-        trials = add_demonsration_trail(trials, is_human, condition)
+        trials = add_demonstration_trail(trials, is_human, simulated_subject)
     
-    if not config.main_only:
-        trials = add_written_strategy_trail(trials, None if is_human else WrittenStrategy(strategy=""))
-        if is_human:
-            trials = add_exit_trails(trials, config)
+    trials = add_written_strategy_trail(trials, None if is_human else WrittenStrategy(strategy=""))
+    if is_human:
+        trials = add_exit_trails(trials, config)
 
     # create session
     session = Session(
@@ -416,6 +402,7 @@ def create_trials(
         ai_player=is_ai,
         finished=is_ai,
         condition=condition,
+        simulated_subject=simulated_subject,
     )
     if is_ai:
         session.average_score = estimate_average_player_score(session)

@@ -95,7 +95,7 @@ const TryYourself: FC<ITryYour> = ({
             ) : (
                 <>
                     <Typography variant="h3" align='center'>
-                        Try to beat player {teacherId}'s score: {teacherTotalScore}!
+                        Try yourself, before watching {teacherId} playing!
                     </Typography>
                     <NetworkTrial playerTotalPoints={playerTotalPoints} showTotalPoints={false}/>
                 </>

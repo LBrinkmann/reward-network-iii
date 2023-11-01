@@ -312,6 +312,7 @@ const highlightEdgeToRepeatReducer = (state: NetworkState, action: any) => {
 };
 
 const networkReducer = (state: NetworkState, action: any) => {
+  console.log(state)
   switch (action.type) {
     case NETWORK_ACTIONS.SET_NETWORK:
       return setNetworkReducer(state, action);
