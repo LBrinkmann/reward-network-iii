@@ -96,7 +96,7 @@ export interface Trial {
   post_survey?: PostSurvey;
   redirect_url?: string;
   is_practice?: boolean;
-  practice_count?: string;
+  trial_title?: string;
   last_trial_for_current_example?: boolean;
 }
 export interface WrittenStrategy {

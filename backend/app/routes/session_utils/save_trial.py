@@ -20,19 +20,7 @@ async def save_trial(body, session, trial, trial_type):
     if trial_type == "individual":
         save_individual_demonstration_trial(trial, body)
     elif trial_type == "social_learning_selection":
-        # select all social learning trials for one advisor
-        # TODO: simply by adding a block id to trials, and selecting here all
-        # trails from block
-        # TODO: move all this logic to "save_social_learning_selection"
-        # sl_start = session.current_trial_num
-        # sl_end = 1
-        # for t in session.trials[sl_start + 1 :]:
-        #     if t.trial_type in ["social_learning_selection", "individual"]:
-        #         break
-        #     sl_end += 1
-        # trials = session.trials[sl_start : sl_start + sl_end]
         session = await save_social_learning_selection(body, session, trial)
-        # session.trials[sl_start : sl_start + sl_end] = trials
     elif trial_type == "observation":
         save_individual_demonstration_trial(trial, body)
     elif trial_type == "repeat":
@@ -101,8 +89,8 @@ async def save_social_learning_selection(body: Advisor, session: Session, trial:
         and t.social_learning_block_idx == social_learning_block_idx
     ]
 
-    # get max social_learning_idx
-    sl_idx_max = max([t.social_learning_idx for t in social_learning_trails])
+    # get max block_network_idx
+    sl_idx_max = max([t.block_network_idx for t in social_learning_trails])
 
     # get advisor session
     ad_s = await Session.get(body.advisor_id)
@@ -141,7 +129,7 @@ async def save_social_learning_selection(body: Advisor, session: Session, trial:
             solution=ad_demo_trail.solution,
         )
         for sl_trial in social_learning_trails:
-            if sl_trial.social_learning_idx != i:
+            if sl_trial.block_network_idx != i:
                 continue
             sl_trial.advisor = advisor
             sl_trial.network = ad_demo_trail.network
