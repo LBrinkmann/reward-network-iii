@@ -121,7 +121,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={`Learning Opportunity | Practice Trial ${sessionState.practiceCount}`}/>
+                <Header title={`Learning Opportunity | Trial ${sessionState.practiceCount}`}/>
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
                              playAnimation={!networkState.tutorialOptions.comment}
@@ -162,7 +162,7 @@ export const RepeatTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={`Practice ${sessionState.practiceCount}`}/>
+                <Header title={`Learning Opportunity | Trial ${sessionState.practiceCount}`}/>
                 <Repeat solution={props.data.advisor.solution.moves}
                         teacherId={sessionState.selectedAdvisor.advisorNumber}
                         playerTotalPoints={sessionState.totalPoints}
