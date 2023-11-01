@@ -48,7 +48,7 @@ export const ConsentTrial: FC<ITrial> = (props) => {
 export const InstructionTrial: FC<ITrial> = (props) => {
     return (
         <>
-            <Header title={props.data.instruction_type === "welcome" ? 'Overview' : 'Instructions'}/>
+            <Header title={props.data.trial_title}/>
             <Instruction endTrial={props.endTrial}
                          instructionType={props.data.instruction_type as keyof typeof instructions}/>
         </>
@@ -58,7 +58,7 @@ export const InstructionTrial: FC<ITrial> = (props) => {
 export const PracticeTrial: FC<ITrial> = (props) => {
     return (
         <>
-            <Header title={'Practice'}/>
+            <Header title={props.data.trial_title}/>
             <Practice onLastTutorialStep={() => props.endTrial({moves: []})}/>
         </>
     );
@@ -77,7 +77,7 @@ export const SelectionTrial: FC<ITrial> = (props) => {
 
     return (
         <>
-            <Header title={'Learning Opportunity'}/>
+            <Header title={props.data.trial_title}/>
             <Selection
                 advisors={sessionState.advisors}
                 onAdvisorSelected={selectAdvisor}
@@ -121,7 +121,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={`Learning Opportunity | Trial ${sessionState.practiceCount}`}/>
+                <Header title={props.data.trial_title}/>
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
                              playAnimation={!networkState.tutorialOptions.comment}
@@ -162,7 +162,7 @@ export const RepeatTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={`Learning Opportunity | Trial ${sessionState.practiceCount}`}/>
+                <Header title={props.data.trial_title}/>
                 <Repeat solution={props.data.advisor.solution.moves}
                         teacherId={sessionState.selectedAdvisor.advisorNumber}
                         playerTotalPoints={sessionState.totalPoints}
@@ -222,7 +222,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={`Learning Opportunity | Practice Trial ${sessionState.practiceCount}`}/>
+                <Header title={props.data.trial_title}/>
                 <TryYourself solution={props.data.advisor.solution.moves}
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
@@ -266,8 +266,7 @@ export const IndividualTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header
-                    title={`${sessionState.isPractice ? "Practice" : "Main Task"} ${sessionState.practiceCount}`}/>
+                <Header title={props.data.trial_title}/>
                 <NetworkTrial
                     playerTotalPoints={sessionState.totalPoints}
                     showTotalPoints={!sessionState.isPractice}  // show total points only in non-practice trials
@@ -308,7 +307,7 @@ export const DemonstrationTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={'Demonstration'}/>
+                <Header title={props.data.trial_title}/>
                 <NetworkTrial playerTotalPoints={sessionState.totalPoints}/>
             </>
         );
