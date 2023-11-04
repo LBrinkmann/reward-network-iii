@@ -4,7 +4,6 @@ variables:
   DOCKER_FILE: setup/docker/Dockerfile
   DOCKER_TARGET: streamlit
   FRONTEND_URL: https://rn-iii-frontend.eks-test-default.mpg-chm.com
-  MAIN_URL: rn-iii-te.eks-test-default.mpg-chm.com
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
