@@ -2,7 +2,6 @@ variables:
   APP_NAME: rn-iii-frontend
   BACKEND_URL: https://rn-iii-backend.eks-test-default.mpg-chm.com
   DOCKER_FILE: setup/docker/Dockerfile-frontend
-  FRONTEND_PATH: frontend
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
@@ -10,13 +9,15 @@ include:
     file: "react-app.yml"
 
 build:
+  # SEE: https://gitlab.com/gitlab-org/gitlab/-/issues/346695
   before_script:
-    - cd $FRONTEND_PATH # Feature: make frontend path configurable
+    - "echo Running child pipeline in subdirectory: $CHILD_PIPELINE_EXECUTION_CONTEXT"
+    - cd $CHILD_PIPELINE_EXECUTION_CONTEXT
   cache:
     paths:
-      - ${FRONTEND_PATH}/node_modules/ # Feature: make frontend path configurable
+      - ${CHILD_PIPELINE_EXECUTION_CONTEXT}/node_modules/ # Feature: make frontend path configurable
 
   artifacts:
     paths:
-      - ${FRONTEND_PATH}/dist/ # Feature: make frontend path configurable
+      - ${CHILD_PIPELINE_EXECUTION_CONTEXT}/dist/ # Feature: make frontend path configurable
     expire_in: 1 week
