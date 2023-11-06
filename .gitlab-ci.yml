@@ -8,6 +8,8 @@ backend:
   trigger:
     include: setup/ci/.gitlab-ci-backend.yml
     strategy: depend
+  rules:
+    - changes: [backend/*]
 
 frontend:
   stage: start child pipelines
@@ -16,9 +18,13 @@ frontend:
   trigger:
     include: setup/ci/.gitlab-ci-frontend.yml
     strategy: depend
+  rules:
+    - changes: [frontend/*]
 
 streamlit:
   stage: start child pipelines
   trigger:
     include: setup/ci/.gitlab-ci-streamlit.yml
     strategy: depend
+  rules:
+    - changes: [streamlit/*]
