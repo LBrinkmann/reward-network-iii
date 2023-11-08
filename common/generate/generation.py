@@ -65,17 +65,10 @@ class NetworkGenerator:
 
             # NEW: shuffle randomly the order of the nodes in circular layout
             pos = nx.circular_layout(g)
-            # node_order = list(g.nodes(data=True))
-            # random.shuffle(node_order)
-            # random_pos = {}
-            # for a, b in zip(node_order, [pos[node] for node in g]):
-            #     random_pos[a[0]] = b
 
             pos_map = {
                 n: {"x": p[0] * 100, "y": p[1] * -1 * 100} for n, p in pos.items()
             }
-
-            # print(pos_map)
 
             # NEW: add vertices for visualization purposes
             plt.figure()
@@ -206,10 +199,25 @@ class NetworkGenerator:
             return False
         from_level = G.nodes[source_node]["level"]
         to_level = G.nodes[target_node]["level"]
-        return (from_level, to_level) in self.from_to
+        if (from_level, to_level) not in self.from_to:
+            return False
+        # other source target levels
+        other_source_target_levels = [G.nodes[n]["level"] for n in G[source_node]]
+        if len(other_source_target_levels) == 1 and max(other_source_target_levels) > 0 and (to_level in other_source_target_levels):
+            return False
+        return True
 
     def allowed_target_nodes(self, G, nodes, source_node):
         return [node for node in nodes if self.edge_is_allowed(G, source_node, node)]
+
+    def allowed_source_nodes(self, G):
+        min_degree = min(G.out_degree(n) for n in G.nodes)
+        return [
+            n
+            for n in G.nodes
+            if (G.out_degree(n) < self.env.n_edges_per_node)
+            and (G.out_degree(n) <= min_degree)
+        ]
 
     def assign_levels(self, graph):
         levels = self.env.levels.copy()
@@ -246,14 +254,8 @@ class NetworkGenerator:
         graph = nx.DiGraph()
 
         self.assign_levels(graph)
-        min_degree = 0
         for i in range(int(self.env.n_edges_per_node * self.env.n_nodes)):
-            allowed_source_nodes = [
-                n
-                for n in graph.nodes
-                if (graph.out_degree(n) < self.env.n_edges_per_node)
-                and (graph.out_degree(n) <= min_degree)
-            ]
+            allowed_source_nodes = self.allowed_source_nodes(graph)
             if len(allowed_source_nodes) == 0:
                 raise ValueError("No allowed nodes to connect from.")
             source_node = self.nodes_random_sorted_by_out_degree(
@@ -270,7 +272,7 @@ class NetworkGenerator:
                 graph, allowed_target_nodes
             )[0]
             self.add_link(graph, source_node, target_node)
-            min_degree = min(graph.out_degree(n) for n in graph.nodes)
+
         return graph
 
     @staticmethod

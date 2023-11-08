@@ -74,7 +74,7 @@ services:
       - ./common:/app/common
     ports:
       - "5050:5050"
-    command: streamlit run streamlit/app/app.py --server.port=5050 --server.address=0.0.0.0
+    command: streamlit run streamlit/app/app.py --server.port=5050 --server.address=0.0.0.0 --server.fileWatcherType=watchdog
     depends_on:
       - frontend
 
