@@ -54,15 +54,12 @@ pip install -e ".[dev,train,viz]"
 
 ## Development environment
 
-Development environment is defined in `docker-compose-dev.yml` file. To simplify
-docker-compose usage, one can set `docker-compose-dev.yml` as an environmental
-variable in `.env` file: `COMPOSE_FILE=docker-compose-dev.yml`.
 
-Set up the development environment (it can take several minutes first time):
+Set up the development environment:
 
 ```bash
 
-docker compose -f docker-compose.yml up
+docker compose up
 
 ```
 
@@ -73,7 +70,7 @@ To run only the backend containers one can use the following command:
 
 ```bash
 
-docker compose -f docker-compose.yml up -d database fastapi
+docker compose up -d backend
 
 ```
 
@@ -81,7 +78,7 @@ Stop everything and remove all volumes:
 
 ```bash
 
-docker-compose -f docker-compose-dev.yml down --volumes
+docker-compose down --volumes
 
 ```
 
@@ -98,7 +95,7 @@ Run all test
 
 ```zsh
 
-sudo docker compose run fastapi python -m pytest -vv -s
+sudo docker compose run backend python -m pytest -vv -s
 
 ```
 

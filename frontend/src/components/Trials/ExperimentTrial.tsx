@@ -66,7 +66,6 @@ const ExperimentTrial: FC = () => {
                 currentTrialId: data.id,
                 currentTrialType: data.trial_type,
                 is_practice: data.is_practice,
-                practice_count: data.practice_count,
                 last_trial_for_current_example: data.last_trial_for_current_example,
             }
         });
@@ -84,20 +83,34 @@ const ExperimentTrial: FC = () => {
                     payload: {advisors: data.advisor_selection}
                 });
                 break;
-            case TRIAL_TYPE.OBSERVATION:
-            case TRIAL_TYPE.REPEAT:
-            case TRIAL_TYPE.TRY_YOURSELF:
             case TRIAL_TYPE.INDIVIDUAL:
             case TRIAL_TYPE.DEMONSTRATION:
                 networkDispatcher({
                     type: NETWORK_ACTIONS.SET_NETWORK,
                     payload: {
                         network: {edges: data.network.edges, nodes: data.network.nodes},
-                        isPractice: false,
-                        teacherComment: data.advisor && data.advisor.written_strategy,
+                        isPractice: data.is_practice,
+                    }
+                });
+                break;
+            case TRIAL_TYPE.TRY_YOURSELF:
+            case TRIAL_TYPE.OBSERVATION:
+            case TRIAL_TYPE.DEMONSTRATION:
+            case TRIAL_TYPE.REPEAT:
+                const isRepeat = data.trial_type === TRIAL_TYPE.REPEAT;
+                networkDispatcher({
+                    type: NETWORK_ACTIONS.SET_NETWORK,
+                    payload: {
+                        network: {edges: data.network.edges, nodes: data.network.nodes},
+                        solution: data.advisor.solution,
+                        isPractice: data.is_practice,
+                        // teacherComment: data.advisor && data.advisor.written_strategy,
                         // show comment tutorial only for the first observation trial
-                        commentTutorial: data.trial_type === TRIAL_TYPE.OBSERVATION &&
-                            sessionState.showTutorialInCurrentTrial,
+                        // commentTutorial: data.trial_type === TRIAL_TYPE.OBSERVATION &&
+                        //     sessionState.showTutorialInCurrentTrial,
+                        wrongRepeatPunishment: isRepeat ? -100 : 0,
+                        correctRepeatReward: isRepeat ? 100 : 0,
+                        forceSolution: isRepeat,
                     }
                 });
                 break;

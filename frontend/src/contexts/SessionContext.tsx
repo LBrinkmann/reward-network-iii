@@ -16,7 +16,6 @@ export type SessionState = {
     selectedAdvisorExampleId: number;
     showTutorialInCurrentTrial: boolean;
     isPractice: boolean;
-    practiceCount: string;
     practiceScore: number;
     lastTrialForCurrentExample: boolean;
 }
@@ -33,7 +32,6 @@ const sessionInitialState: SessionState = {
     selectedAdvisorExampleId: 0,
     showTutorialInCurrentTrial: false,
     isPractice: false,
-    practiceCount: '',
     practiceScore: 0,
     lastTrialForCurrentExample: false,
 }

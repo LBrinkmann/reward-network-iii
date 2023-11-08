@@ -77,10 +77,10 @@ export interface Trial {
   instruction_type?:
     | "welcome"
     | "learning_selection"
-    | "learning"
+    | "pre_social_learning"
     | "individual"
-    | "individual_start"
-    | "individual_gen0"
+    | "practice_rounds"
+    | "pre_social_learning_gen0"
     | "demonstration"
     | "written_strategy"
     | "written_strategy_start";
@@ -96,7 +96,7 @@ export interface Trial {
   post_survey?: PostSurvey;
   redirect_url?: string;
   is_practice?: boolean;
-  practice_count?: string;
+  trial_title?: string;
   last_trial_for_current_example?: boolean;
 }
 export interface WrittenStrategy {
