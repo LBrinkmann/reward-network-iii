@@ -12,18 +12,19 @@ services:
     build:
       context: .
       dockerfile: setup/docker/Dockerfile
+      target: backend-dev
     volumes:
-      - ./backend:/backend
+      - ./backend/app:/app/app
+      - ./backend/pytest.ini:/app/pytest.ini
     environment:
-      PORT: 5040
       MONGO_URL: "mongodb://database:27017/"
       GENERATE_FRONTEND_TYPES: "false"
       BACKEND_USER: "admin"
       BACKEND_PASSWORD: "admin"
     # start-reload.sh is a version of start.sh for development with live auto-reload
-    command: ["uvicorn", "server:api", "--host", "0.0.0.0", "--port", "5000"]
+    command: ["uvicorn", "server:api", "--host", "0.0.0.0", "--port", "5000", "--reload"]
     ports:
-      - "5040:5040"
+      - "5000:5000"
     depends_on:
       - database
 
@@ -43,7 +44,7 @@ services:
       - ./frontend/gen_config.js:/frontend/gen_config.js
       - ./frontend/.storybook:/frontend/.storybook
     environment:
-      BACKEND_URL: "http://localhost:5040"
+      BACKEND_URL: "http://0.0.0.0:5000"
     stdin_open: true
     tty: true
     # command: ["npm", "run", "start"] # start app only
@@ -73,7 +74,7 @@ services:
       - ./common:/app/common
     ports:
       - "5050:5050"
-    command: streamlit run streamlit/app/app.py --server.port=5050 --server.address=0.0.0.0
+    command: streamlit run streamlit/app/app.py --server.port=5050 --server.address=0.0.0.0 --server.fileWatcherType=watchdog
     depends_on:
       - frontend
 

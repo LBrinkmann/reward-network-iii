@@ -60,8 +60,14 @@ async def create_sessions_network(experiment_num) -> Path:
             label = "NA"
 
         if is_ai_player:
-            color = "#FAD77B"
-            label = "AI"
+            if session.simulated_subject:
+                color = "#6aa84f"
+                label = "SH"
+            else:
+                color = "#FAD77B"
+                label = "AI"
+                
+            
 
         if color_conditions:
             if session.condition == "wo_ai":

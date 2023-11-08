@@ -21,7 +21,7 @@ setup(
     packages=[package for package in find_packages()
               if package.startswith('app')],
     zip_safe=False,
-    install_requires=load_requirements(),
-    extras_require={'dev': load_requirements('requirements_dev.txt')},
+    install_requires=[],
+    extras_require={'dev': []},
     scripts=[]
 )

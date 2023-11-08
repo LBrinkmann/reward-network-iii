@@ -70,8 +70,8 @@ class RuleAgent:
             (np.array): selected action
         """
 
-        if self.strategy == "take_loss":
-            print(self.strategy, self.loss_counter, possible_actions_rewards)
+        # if self.strategy == "take_loss":
+        #     print(self.strategy, self.loss_counter, possible_actions_rewards)
 
         if self.strategy == "random":
             return random.choice(possible_actions)

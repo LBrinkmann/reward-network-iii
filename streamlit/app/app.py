@@ -28,6 +28,9 @@ if "gen_env" not in st.session_state:
 if "rerender_counter" not in st.session_state:
     st.session_state.rerender_counter = 0
 
+if 'last_selected_filename' not in st.session_state:
+    st.session_state['last_selected_filename'] = None
+
 
 def list_files(dir_path, extension):
     """
@@ -44,25 +47,30 @@ with st.sidebar:
     st.write("## Generate Networks")
     data = None
 
-    with st.form(key="select_file"):
-        # multiselect
-        files = list_files("config", "yml")
-        files = {f.name: str(f) for f in files}
-        file = st.selectbox("Select environment file", list(files.keys()))
-        file = files[file]
-        submit_file = st.form_submit_button(label="Submit")
+    # Listing files
+    files = list_files("config", "yml")
+    files = {f.name: str(f) for f in files}
 
-        if submit_file:
-            try:
-                data = load_yaml(file)
-                st.success("File successfully loaded")
-                st.session_state.gen_env = Environment(**data)
+    selected_filename = st.selectbox("Select environment file", list(files.keys()))
 
-                # remove from session state
-                if "networks" in st.session_state:
-                    del st.session_state["networks"]
-            except Exception as e:
-                st.error(f"Error: {e}")
+
+    # Use the selected filename to get the file path
+    selected_file_path = files[selected_filename] if selected_filename else None
+
+    # Automatically load the file when a file is selected
+    if selected_filename and selected_filename != st.session_state['last_selected_filename']:
+        try:
+            # Load the file and update session state
+            data = load_yaml(selected_file_path)
+            st.success("File successfully loaded")
+            st.session_state['last_selected_filename'] = selected_filename
+            st.session_state.gen_env = Environment(**data)
+
+            # Remove 'networks' from session state if it exists
+            if "networks" in st.session_state:
+                del st.session_state["networks"]
+        except Exception as e:
+            st.error(f"Error: {e}")
 
     with st.expander("Upload environment file", expanded=False):
         # select environment file
@@ -299,8 +307,6 @@ with st.expander("Try yourself without full visibility 😎"):
     if "networks" in st.session_state:
         nets = st.session_state.networks
         net_id = st.session_state.net_id
-        print(net_id)
-        print(len(nets))
 
         with st.form("vizualization_form_wo_full", clear_on_submit=False):
             col1, col2, col3 = st.columns(3)
@@ -338,8 +344,6 @@ with st.expander("Try yourself with full visibility 😎"):
     if "networks" in st.session_state:
         nets = st.session_state.networks
         net_id = st.session_state.net_id
-        print(net_id)
-        print(len(nets))
 
         with st.form("vizualization_form_w_full", clear_on_submit=False):
             col1, col2, col3 = st.columns(3)

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from beanie import Document
 
@@ -46,3 +46,7 @@ class ExperimentSettings(Document):
     n_demonstration_trials: int = 5
     # simulate human responses in first generation with a myopic model
     simulate_humans: bool = False
+    # social learning trials
+    social_learning_trials: List[str] = ["try_yourself", "observation", "try_yourself"]
+    # main experiment only (for testing)
+    main_only: bool = False
