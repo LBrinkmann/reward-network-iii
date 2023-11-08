@@ -62,10 +62,10 @@ class Trial(BaseModel):
         Literal[
             "welcome",
             "learning_selection",
-            "learning",
+            "pre_social_learning",
             "individual",
-            "individual_start",
-            "individual_gen0",
+            "practice_rounds",
+            "pre_social_learning_gen0",
             "demonstration",
             "written_strategy",
             "written_strategy_start",
@@ -89,13 +89,13 @@ class Trial(BaseModel):
     # redirect url with the confirmation code
     redirect_url: Optional[str]
     is_practice: Optional[bool] = False
-    practice_count: Optional[str] = ""
+    trial_title: Optional[str] = ""
     # relevant for the social learning loop to determine if the trial is the last in the example
     last_trial_for_current_example: Optional[bool] = False
     # block idx within social learning
     social_learning_block_idx: Optional[int] = 0
     # unique network idx within social learning block
-    social_learning_idx: Optional[int] = 0
+    block_network_idx: Optional[int] = 0
 
     class Config:
         orm_mode = True

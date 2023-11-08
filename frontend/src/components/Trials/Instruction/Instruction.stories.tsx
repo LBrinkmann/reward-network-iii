@@ -31,5 +31,5 @@ Welcome.args = {
 export const Learning = Template.bind({});
 Learning.args = {
     endTrial: ({moves: []}) => {},
-    instructionType: "learning",
+    instructionType: "pre_social_learning",
 }
