@@ -17,7 +17,7 @@ frontend:
     include: setup/ci/.gitlab-ci-frontend.yml
     strategy: depend
   rules:
-    - changes: [frontend/*, common/*, config/*, setup/*, .gitlab-ci.yml]
+    - changes: [frontend/*, setup/*, .gitlab-ci.yml]
 
 streamlit:
   stage: start child pipelines
