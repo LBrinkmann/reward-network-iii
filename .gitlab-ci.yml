@@ -7,7 +7,7 @@ backend:
     include: setup/ci/.gitlab-ci-backend.yml
     strategy: depend
   rules:
-    - changes: [backend/*, common/*, config/*, setup/ci/.gitlab-ci-backend.yml, setup/docker/Dockerfile, .gitlab-ci.yml]
+    - changes: [backend/*, common/*, config/*, setup/*, .gitlab-ci.yml]
 
 frontend:
   stage: start child pipelines
@@ -17,7 +17,7 @@ frontend:
     include: setup/ci/.gitlab-ci-frontend.yml
     strategy: depend
   rules:
-    - changes: [frontend/*, common/*, config/*, setup/ci/.gitlab-ci-frontend.yml, setup/docker/Dockerfile-frontend, .gitlab-ci.yml]
+    - changes: [frontend/*, common/*, config/*, setup/*, .gitlab-ci.yml]
 
 streamlit:
   stage: start child pipelines
@@ -25,4 +25,4 @@ streamlit:
     include: setup/ci/.gitlab-ci-streamlit.yml
     strategy: depend
   rules:
-    - changes: [streamlit/*, common/*, config/*, setup/ci/.gitlab-ci-streamlit.yml, setup/docker/Dockerfile, .gitlab-ci.yml]
+    - changes: [streamlit/*, common/*, config/*, setup/*, .gitlab-ci.yml]
