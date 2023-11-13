@@ -64,19 +64,19 @@ levels:
   - color: white
     idx: 0
     is_start: true
-    max_n_nodes: 6
-    min_n_nodes: 4
-    n_nodes: 4
+    max_n_nodes: 5
+    min_n_nodes: 5
+    n_nodes: 5
   - color: paleturquoise
     idx: 1
     is_start: null
-    max_n_nodes: null
+    max_n_nodes: 2
     min_n_nodes: 2
   - color: lightskyblue
     idx: 2
     is_start: null
-    max_n_nodes: null
-    min_n_nodes: 1
+    max_n_nodes: 2
+    min_n_nodes: 2
   - color: royalblue
     idx: 3
     is_start: null
