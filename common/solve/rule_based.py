@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 
-from .environment_solve import Reward_Network
+from common.solve.environment_solve import Reward_Network
 
 
 def load_yaml(filename):
@@ -198,13 +198,13 @@ if __name__ == "__main__":
 
     with open(args.networks) as json_file:
         networks = json.load(json_file)
-
+        
     for strategy in ["myopic", "take_loss", "random"]:
         A = RuleAgent(networks, strategy, solve_params)
         A.solve()
         solutions = A.save_solutions_frontend()
 
-        filename = os.path.join(args.output, f"__{strategy}.json")
+        filename = f"{args.output}__{strategy}.json"
 
         with open(filename, "w", encoding="utf-8") as f:
             f.write(solutions)
