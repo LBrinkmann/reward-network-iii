@@ -329,4 +329,4 @@ if __name__ == "__main__":
     net_generator = NetworkGenerator(generate_params)
     networks = net_generator.generate(environment["n_networks"])
     with open(args.output, "w", encoding="utf-8") as f:
-        f.write(json.dumps(net_generator.save_as_json()))
+        f.write(net_generator.save_as_json())

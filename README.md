@@ -19,10 +19,19 @@ pip install -e ".[dev,train,viz]"
 
 ## Quick start
 
+
+
 ### Generate Networks
 
+```
+docker compose run common python common/generate/generation.py -i data/23_11_13/networks.yml -o data/23_11_13/networks.json
+```
 
+### Generate Solutions
 
+```
+docker compose run common python common/solve/rule_based.py -c data/23_11_13/solution.yml -n data/23_11_13/networks.json -o data/23_11_13/solution
+```
 
 
 ## Deployment
