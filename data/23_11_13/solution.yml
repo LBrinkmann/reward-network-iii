@@ -1,0 +1,13 @@
+n_losses: 5
+n_steps: 10
+rewards: [-50, 0, 100, 200, 400]
+solution_columns:
+  [
+    "network_id",
+    "strategy",
+    "step",
+    "source_node",
+    "current_node",
+    "reward",
+    "total_reward",
+  ]

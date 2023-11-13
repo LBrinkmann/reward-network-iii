@@ -1,10 +1,6 @@
 import numpy as np
-import seaborn as sns
 import logging
 from pydantic import BaseModel
-
-
-sns.set_theme()
 
 
 class RewardNetworkParams(BaseModel):
@@ -27,7 +23,7 @@ class Reward_Network:
 
         # reward network information from json file
         self.network = network
-
+        
         # initial reward and step values
         self.INIT_REWARD = 0
         self.INIT_STEP = 0
