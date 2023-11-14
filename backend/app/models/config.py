@@ -17,6 +17,8 @@ class ExperimentSettings(Document):
     experiment_type: str = "reward-network-iii"
     # whether the experiment with the same name is to be overwritten (just for development)
     rewrite_previous_data: bool = False
+    # networks
+    networks_path: str = "data/23_11_13"
 
     # SESSION TREE SETTINGS
     # seed for network shuffle
