@@ -14,10 +14,10 @@ from models.trial import Trial, Solution, WrittenStrategy
 from utils.utils import estimate_solution_score, estimate_average_player_score
 
 network_data = None
+solutions = None
+solutions_myopic = None
 
 # load all ai solutions
-solutions = json.load(open(Path("data") / "solutions_loss.json"))
-solutions_myopic = json.load(open(Path("data") / "solutions_myopic.json"))
 
 
 def get_net_solution(solution_type="loss"):
@@ -49,12 +49,14 @@ def get_net_solution(solution_type="loss"):
     return network, moves[0]["moves"]
 
 
-def reset_networks(seed=None):
-    global network_data
+def reset_networks(config: ExperimentSettings):
+    global network_data, solutions, solutions_myopic
     # load all networks
-    network_data = json.load(open(Path("data") / "networks.json"))
+    network_data = json.load(open(Path(config.networks_path) / "networks.json"))
+    solutions = json.load(open(Path(config.networks_path) / "solutions_loss.json"))
+    solutions_myopic = json.load(open(Path(config.networks_path) / "solutions_myopic.json"))
     # randomize the order of the networks
-    random.seed(seed)
+    random.seed(config.seed)
     random.shuffle(network_data)
 
 
@@ -78,7 +80,7 @@ async def generate_experiment_sessions():
     ).first_or_none()
 
     if sessions is None:
-        reset_networks(config.seed)
+        reset_networks(config)
         # if the database is empty, generate sessions
         for replication in range(config.n_session_tree_replications):
             await generate_sessions(experiment_num=replication, config=config)
@@ -211,14 +213,14 @@ def add_consent_trail(trials):
             trial_type="consent",
             redirect_url="https://www.prolific.co/",
         )]
-    
+
 def add_practice_trail(trials):
     return [*trials, Trial(id=len(trials), trial_type="practice", trial_title="Tutorial")]
 
 def add_instruction_trail(trials, instruction_type, title=None):
     return [*trials, Trial(id=len(trials), trial_type="instruction",
                   instruction_type=instruction_type, trial_title=title if title else "Instructions")]
-    
+
 
 def add_self_practice_trail(trials, i, config):
     net, _ = get_net_solution()
@@ -250,9 +252,9 @@ def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, s
             score=estimate_solution_score(net, moves),
             solution_type=solution_type,
         )
-    
+
     n_trails = len([t for t in config.social_learning_trials if t in ['repeat', 'try_yourself']])
-        
+
     for iii in range(n_trails):
         title_postfix = "" if n_trails == 1 else f" | Trial {iii+1} of {n_trails}"
         trial = Trial(
@@ -379,7 +381,7 @@ def create_trials(
         if is_human and block_idx == 0:
             instruction_type = "pre_social_learning_gen0" if generation == 0 else "pre_social_learning"
             trials = add_instruction_trail(trials, instruction_type, "Learning Phase | Instructions")
-            
+
         # run social learning blocks
         for network_idx in range(config.n_social_learning_networks_per_block):
             if generation == 0:
@@ -392,7 +394,7 @@ def create_trials(
 
     for network_idx in range(config.n_demonstration_trials):
         trials = add_demonstration_trail(trials, is_human, simulated_subject, network_idx, config)
-    
+
     trials = add_written_strategy_trail(trials, None if is_human else WrittenStrategy(strategy=""))
     if is_human:
         trials = add_exit_trails(trials, config)
