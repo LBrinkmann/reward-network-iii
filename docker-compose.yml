@@ -22,9 +22,18 @@ services:
       BACKEND_USER: "admin"
       BACKEND_PASSWORD: "admin"
     # start-reload.sh is a version of start.sh for development with live auto-reload
-    command: ["uvicorn", "server:api", "--host", "0.0.0.0", "--port", "5000", "--reload"]
+    command:
+      [
+        "uvicorn",
+        "server:api",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "5000",
+        "--reload",
+      ]
     ports:
-      - "5000:5000"
+      - "5040:5000"
     depends_on:
       - database
 
@@ -44,7 +53,7 @@ services:
       - ./frontend/gen_config.js:/frontend/gen_config.js
       - ./frontend/.storybook:/frontend/.storybook
     environment:
-      BACKEND_URL: "http://0.0.0.0:5000"
+      BACKEND_URL: "http://0.0.0.0:5040"
     stdin_open: true
     tty: true
     # command: ["npm", "run", "start"] # start app only

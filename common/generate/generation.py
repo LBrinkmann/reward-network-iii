@@ -210,6 +210,10 @@ class NetworkGenerator:
     def allowed_target_nodes(self, G, nodes, source_node):
         return [node for node in nodes if self.edge_is_allowed(G, source_node, node)]
 
+    def allowed_starting_node(self, G, node):
+        target_levels = [G.nodes[n]["level"] for n in G[node]]
+        return (G.nodes[node]["level"] == 0) and (max(target_levels) > 0)
+
     def allowed_source_nodes(self, G):
         min_degree = min(G.out_degree(n) for n in G.nodes)
         return [
@@ -247,8 +251,6 @@ class NetworkGenerator:
         random.shuffle(level_list)
         for level in level_list:
             self.add_new_node(graph, level)
-        zero_level_nodes = [node for node in graph if graph.nodes[node]["level"] == 0]
-        self.start_node = random.choice(zero_level_nodes)
 
     def sample_network(self):
         graph = nx.DiGraph()
@@ -273,6 +275,12 @@ class NetworkGenerator:
             )[0]
             self.add_link(graph, source_node, target_node)
 
+        possible_starting_nodes = [
+            node
+            for node in graph.nodes
+            if self.allowed_starting_node(graph, node)
+        ]
+        self.start_node = random.choice(possible_starting_nodes)
         return graph
 
     @staticmethod
