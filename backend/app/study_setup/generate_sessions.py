@@ -30,7 +30,8 @@ def get_net_solution(solution_type="loss"):
         raise Exception("All networks have been used")
 
     # pop a network from the list of networks
-    network_raw = network_data.pop()
+    network_raw = network_data.pop(0)
+    network_data.append(network_raw)
 
     # parse the network
     network = Network.parse_obj(network_raw)
@@ -58,6 +59,7 @@ def reset_networks(config: ExperimentSettings):
     # randomize the order of the networks
     random.seed(config.seed)
     random.shuffle(network_data)
+    print("Networks loaded", len(network_data), flush=True)
 
 
 async def generate_experiment_sessions(config: ExperimentSettings):
