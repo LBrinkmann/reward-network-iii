@@ -15,8 +15,8 @@ export type postTrialType = {
 }
 
 
-export const getTrial = async (prolificID: string) => {
-    const {data} = await axios.get<Trial>(`${prolificID}`);
+export const getTrial = async (prolificID: string, experimentType: string) => {
+    const {data} = await axios.get<Trial>(`${experimentType}/${prolificID}`);
     // for testing error
     //const {data} = await axios.get<Trial | SessionError>(`${prolificID}?error_id=0`);
     // const {data} = await axios.get<Trial | SessionError>(`${prolificID}?error_id=1`);
