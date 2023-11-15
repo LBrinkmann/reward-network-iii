@@ -133,7 +133,16 @@ const ExperimentTrial: FC = () => {
                 payload: {
                     points: networkState.points ? networkState.points : 0,
                     // NOTE: the max number of steps is assumed to be 8
-                    missingSteps: 8 - networkState.step,
+                    missingSteps: 10 - networkState.step,
+                }
+            });
+        }
+        if ((sessionState.currentTrialType === TRIAL_TYPE.REPEAT) && !sessionState.isPractice) {
+            sessionDispatcher({
+                type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
+                payload: {
+                    points: networkState.points ? networkState.points : 0,
+                    missingSteps: 0,
                 }
             });
         }
@@ -143,7 +152,7 @@ const ExperimentTrial: FC = () => {
                 payload: {
                     points: networkState.points ? networkState.points : 0,
                     // NOTE: the max number of steps is assumed to be 8
-                    missingSteps: 8 - networkState.step,
+                    missingSteps: 10 - networkState.step,
                 }
             });
         }

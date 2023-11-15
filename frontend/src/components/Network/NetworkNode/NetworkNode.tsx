@@ -66,7 +66,7 @@ const NetworkNode: React.FC<NetworkNodeInterface> = props => {
             >
                 <circle cx={props.x} cy={props.y} r={props.Radius} key={"circle"}/>
                 <text x={props.x} y={props.y + props.Radius * 0.35} textAnchor="middle" key={"state-name"}>
-                    {props.Text}
+                    {props.Text.slice(0, 1)}
                 </text>
             </NetworkNodeStyled>
         </TutorialTip>

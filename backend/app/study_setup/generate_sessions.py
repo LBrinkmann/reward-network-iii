@@ -53,8 +53,8 @@ def reset_networks(config: ExperimentSettings):
     global network_data, solutions, solutions_myopic
     # load all networks
     network_data = json.load(open(Path(config.networks_path) / "networks.json"))
-    solutions = json.load(open(Path(config.networks_path) / "solutions_loss.json"))
-    solutions_myopic = json.load(open(Path(config.networks_path) / "solutions_myopic.json"))
+    solutions = json.load(open(Path(config.networks_path) / "solution__take_loss.json"))
+    solutions_myopic = json.load(open(Path(config.networks_path) / "solution__myopic.json"))
     # randomize the order of the networks
     random.seed(config.seed)
     random.shuffle(network_data)
@@ -244,7 +244,7 @@ def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, s
             solution_type=solution_type,
         )
 
-    n_trails = len([t for t in config.social_learning_trials if t in ['repeat', 'try_yourself']])
+    n_trails = len([t for t in config.social_learning_trials if t in ['try_yourself']])
 
     for iii in range(n_trails):
         title_postfix = "" if n_trails == 1 else f" | Trial {iii+1} of {n_trails}"
@@ -252,7 +252,7 @@ def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, s
             trial_type="individual",
             id=len(trials),
             network=net,
-            is_practice=True,
+            is_practice=False,
             solution=solution,
             social_learning_block_idx=block_idx,
             block_network_idx=network_idx,

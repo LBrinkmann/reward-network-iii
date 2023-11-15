@@ -157,7 +157,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
                 <NetworkEdge
                   reward={edge.reward}
                   edgeWidth={
-                    edge.source_num === currentNodeId
+                    (edge.source_num === currentNodeId && ~disableClick)
                       ? edgeWidth * 1.5
                       : edgeWidth
                   }

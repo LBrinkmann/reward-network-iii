@@ -2,6 +2,7 @@ import React, {FC, useCallback, useEffect, useState} from "react";
 
 import {Trial} from "../../apis/apiTypes";
 import {postTrialType} from "../../apis/TrialAPI";
+import {Typography} from "@mui/material";
 
 import Header from "../Header";
 
@@ -26,8 +27,8 @@ import {StaticNetworkEdgeInterface} from "../Network/StaticNetwork/StaticNetwork
 import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
 import Practice from "./Practice";
 
-const TIME_BETWEEN_TRIALS = 1000;
-const TIME_AFTER_LAST_STEP = 2000;
+const TIME_BETWEEN_TRIALS = 3000;
+const TIME_AFTER_LAST_STEP = 3000;
 
 
 interface ITrial {
@@ -267,6 +268,9 @@ export const IndividualTrial: FC<ITrial> = (props) => {
         return (
             <>
                 <Header title={props.data.trial_title}/>
+                <Typography variant="h4" align='center'>
+                        Choose the path with the highest rewards as indicated by the arrow colors
+                </Typography>
                 <NetworkTrial
                     playerTotalPoints={sessionState.totalPoints}
                     showTotalPoints={!sessionState.isPractice}  // show total points only in non-practice trials
@@ -308,6 +312,9 @@ export const DemonstrationTrial: FC<ITrial> = (props) => {
         return (
             <>
                 <Header title={props.data.trial_title}/>
+                <Typography variant="h4" align='center'>
+                    Show the next player how to gain the most points
+                </Typography>
                 <NetworkTrial playerTotalPoints={sessionState.totalPoints}/>
             </>
         );

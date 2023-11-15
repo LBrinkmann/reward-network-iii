@@ -219,7 +219,7 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
   if (state.isNetworkFinished || state.isNetworkDisabled) return state;
 
   const nextNode = action.payload.nodeIdx;
-  const maxStep = action.payload?.maxSteps || 8;
+  const maxStep = action.payload?.maxSteps || 10;
 
   // if node is not in possible moves, do nothing
   if (!state.possibleMoves.includes(nextNode) && !state.forceSolution) return state;

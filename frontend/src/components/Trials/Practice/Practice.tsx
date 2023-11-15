@@ -1,4 +1,5 @@
 import React, {FC, useCallback, useEffect, useState} from "react";
+import {Typography} from "@mui/material";
 import NetworkTrial from "../NetworkTrial";
 import useNetworkContext from "../../../contexts/NetworkContext";
 import TutorialTip from "../../Tutorial/TutorialTip";
@@ -53,6 +54,9 @@ const Practice: FC<IPractice> = ({onLastTutorialStep}) => {
                 {/*div in the center of the screen with width 100*/}
                 <div style={{position: "absolute", top: "30%", left: "35%"}} />
             </TutorialTip>
+            <Typography variant="h3" align='center'>
+                        Choose the path with the highest rewards as indicated by the arrow colors
+            </Typography>
             <NetworkTrial
                 showLegend={networkState.tutorialOptions.edge || networkState.tutorialStep > 3}
                 showComment={false}

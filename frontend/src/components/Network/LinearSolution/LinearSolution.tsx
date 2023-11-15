@@ -38,7 +38,7 @@ interface LinearSolutionInterface {
 
 export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
     const {
-        size = {width: 530, height: 50},
+        size = {width: 670, height: 50},
         nodeRadius = 20,
         gap = 60,
         onset = 24,
@@ -69,7 +69,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
             placement="left"
         >
             <Box>
-                {showStepsLabel && <Typography variant="h4" align='center'>
+                {showStepsLabel && <Typography variant="h4" align='left'>
                     Steps
                 </Typography>}
                 <svg width={size.width} height={size.height + gap / 2}>
