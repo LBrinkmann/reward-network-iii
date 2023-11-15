@@ -12,8 +12,8 @@ const instructions = {
         "Now you will work on the main task, for which you are on your own again. You will navigate through four different networks.",
         "Note that, now, every point you earn in the networks will be converted into a bonus payment for you – so remember what you have learned yourself and from the other player to maximize your points!"],
     pre_social_learning_gen0: [
-        "Now you will work on the main task. You will not be able to play 4 networks. For each network you will have two tries.",
-        "Only the points you earn in the second try will be converted into a bonus payment for you. Try to maximize your points!"],
+        "Now the main task begins. You will have to navigate through four different networks.",
+        "All points you collect will be converted into your bonus payment. Try to maximize your points!"],
     demonstration: [
         "Well done! You now enter the final part of the experiment. Now you will play 6 more rounds that serve as demonstrations for future players to learn from. You will not earn points directly, but the second half of your bonus payment depends on the performance of people that learn from you, so try your best!"],
     written_strategy: ["Please write down your strategy in solving the task."],

@@ -13,7 +13,7 @@ const Repeat: FC<IRepeat> = ({solution, teacherId, playerTotalPoints}) => {
     return (
         <>
             <Typography variant="h3" align='center'>
-                Repeat the solution of the previous player
+                Collect points by correctly repeating the path of player {teacherId}
             </Typography>
             <NetworkTrial showComment={true} teacherId={teacherId} playerTotalPoints={playerTotalPoints}
             showTotalPoints={false}/>

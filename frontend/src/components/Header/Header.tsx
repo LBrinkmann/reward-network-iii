@@ -1,6 +1,10 @@
 import React, {FC} from "react";
 import {AppBar, Toolbar, Typography, Box} from "@mui/material";
 import TutorialTip from "../Tutorial/TutorialTip";
+import useSessionContext from "../../contexts/SessionContext";
+import useNetworkContext from "../../contexts/NetworkContext";
+import {TRIAL_TYPE} from "../../components/Trials/ExperimentTrial";
+
 
 interface IHeader {
     showTip?: boolean;
@@ -11,6 +15,12 @@ interface IHeader {
 
 const Header: FC<IHeader> = (props) => {
     const {showTip= true, showTutorial=false, title='', onTutorialClose} = props;
+    const {sessionState, sessionDispatcher} = useSessionContext();
+    const {networkState, networkDispatcher} = useNetworkContext();
+
+    const totalPoints = sessionState.totalPoints + 
+    ([TRIAL_TYPE.INDIVIDUAL, TRIAL_TYPE.REPEAT].includes(sessionState.currentTrialType) && !sessionState.isPractice ? networkState.points : 0);
+    
 
     return (
         <Box sx={{flexGrow: 1, height: 80}}>
@@ -19,19 +29,9 @@ const Header: FC<IHeader> = (props) => {
                     <Typography variant="h6" sx={{flexGrow: 1}}>
                         {title}
                     </Typography>
-                    {/*{totalPoints &&*/}
-                    {/*    <TutorialTip*/}
-                    {/*        tutorialId={"practice_total_score"}*/}
-                    {/*        isTutorial={showTutorial}*/}
-                    {/*        isShowTip={showTip}*/}
-                    {/*        onTutorialClose={onTutorialClose}*/}
-                    {/*        placement="bottom"*/}
-                    {/*    >*/}
-                    {/*        <Typography variant="h6" sx={{mr: 2}}>*/}
-                    {/*            {totalPoints} points*/}
-                    {/*        </Typography>*/}
-                    {/*    </TutorialTip>*/}
-                    {/*}*/}
+                    <Typography variant="h6">
+                        Total Points: {totalPoints}
+                    </Typography>
                 </Toolbar>
             </AppBar>
         </Box>

@@ -42,18 +42,21 @@ export type SessionContextType = {
 };
 
 
+
 export const SessionContext = createContext<SessionContextType | null>(null);
 
-const sessionInitializer = (initialState: SessionState) => {
-    return JSON.parse(localStorage.getItem(LOCAL_STORAGE_SESSION_STATE_KEY)) || initialState;
+const sessionInitializer = (initialState: SessionState, prolificID: string) => {
+    const storageKey = `sessionState_${prolificID}`;
+    return JSON.parse(localStorage.getItem(storageKey)) || initialState;
 }
 
-export const SessionContextProvider = ({children}: any) => {
-    const [state, dispatch] = useReducer(sessionReducer, sessionInitialState, sessionInitializer);
+export const SessionContextProvider = ({children, prolificID}: any) => {
+    const [state, dispatch] = useReducer(sessionReducer, sessionInitialState, initialState => sessionInitializer(initialState, prolificID));
 
     useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_SESSION_STATE_KEY, JSON.stringify(state));
-    }, [state]);
+        const storageKey = `sessionState_${prolificID}`;
+        localStorage.setItem(storageKey, JSON.stringify(state));
+    }, [state, prolificID]);
 
     return (
         <SessionContext.Provider value={{sessionState: state, sessionDispatcher: dispatch}}>
@@ -61,6 +64,7 @@ export const SessionContextProvider = ({children}: any) => {
         </SessionContext.Provider>
     );
 };
+
 
 const useSessionContext = () => useContext(SessionContext);
 

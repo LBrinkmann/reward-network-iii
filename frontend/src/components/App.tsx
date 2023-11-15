@@ -45,7 +45,7 @@ const App: React.FC<AppProps> = ({ experimentType }) => {
                     experimentType: experimentType
                 }
             }>
-                <SessionContextProvider>
+                <SessionContextProvider prolificID={searchParams.get("PROLIFIC_PID")}>
                     <NetworkContextProvider>
                         {searchParams.get("PROLIFIC_PID") &&
                             <ExperimentTrial/>
