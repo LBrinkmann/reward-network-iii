@@ -9,17 +9,18 @@ progress_router = APIRouter(tags=["Progress"])
 
 
 # view study progress
-@progress_router.get('/')
-async def get_progress(experiment_num: int = 0,
-                       user: HTTPBasicCredentials = Depends(get_user)):
+@progress_router.get("/{experiment_type}/{experiment_num}")
+async def get_progress(
+    experiment_type: str = "",
+    experiment_num: int = 0,
+    user: HTTPBasicCredentials = Depends(get_user),
+):
     """
-    http://localhost:5000/progress
-    or
-    http://localhost:5000/progress/?experiment_num=0
+    http://localhost:5000/progress/test/0
     """
     try:
-        file_path = await create_sessions_network(experiment_num)
+        file_path = await create_sessions_network(experiment_type, experiment_num)
         # return html document with the progress graph
         return FileResponse(file_path)
     except Exception as e:
-        return {'error': str(e)}
+        return {"error": str(e)}

@@ -3,12 +3,19 @@ import ReactDOM from "react-dom";
 
 import App from "./components/App";
 import NetworkSLConnection from "./components/Streamlit/NetworkSL";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
+
+const  AppWrapper = () => {
+  let { experimentType } = useParams();
+  return <App experimentType={experimentType} />;
+}
+
+
 
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<App />}></Route>
+      <Route path="/:experimentType" element={<AppWrapper />}></Route>
       <Route
         path="/streamlit"
         element={

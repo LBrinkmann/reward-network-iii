@@ -14,7 +14,6 @@ from routes.progress import progress_router
 from routes.results import results_router
 from routes.security_utils import get_user
 from routes.session import session_router
-from study_setup.generate_sessions import generate_experiment_sessions
 
 api = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
@@ -55,9 +54,6 @@ async def get_current_trial(prolific_id: str, error_id: int) -> SessionError:
 async def startup_event():
     # initialize database
     await db_settings.initialize_database()
-
-    # generate sessions
-    await generate_experiment_sessions()
 
     # run only in development mode
     generate_frontend_types()
