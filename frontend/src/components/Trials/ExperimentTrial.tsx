@@ -7,7 +7,7 @@ import {NETWORK_ACTIONS} from "../../reducers/NetworkReducer";
 import useSessionContext from "../../contexts/SessionContext";
 import {SESSION_ACTIONS} from "../../reducers/SessionReducer";
 import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
-import {useProlificId} from "../App";
+import {useSearchParamsContext} from "../App";
 import {SessionError, Trial, TrialError, TrialSaved} from "../../apis/apiTypes";
 
 // Data
@@ -43,7 +43,7 @@ export const TRIAL_TYPE = {
 
 
 const ExperimentTrial: FC = () => {
-    const prolificId = useProlificId();
+    const {prolificId, experimentType} = useSearchParamsContext();
     const {networkState, networkDispatcher} = useNetworkContext();
     const {sessionState, sessionDispatcher} = useSessionContext();
 
@@ -152,7 +152,7 @@ const ExperimentTrial: FC = () => {
 
     const {status, data, error, refetch} = useQuery(
         "trial",
-        () => getTrial(prolificId),
+        () => getTrial(prolificId, experimentType),
         {onSuccess: onTrialStart});
 
     const mutation = useMutation(

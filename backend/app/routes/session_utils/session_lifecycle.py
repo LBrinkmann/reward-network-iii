@@ -12,7 +12,7 @@ from study_setup.generate_sessions import create_trials
 from utils.utils import estimate_average_player_score
 
 
-async def get_session(prolific_id) -> Union[Session, SessionError]:
+async def get_session(prolific_id, experiment_type=None) -> Union[Session, SessionError]:
     """Get session for the subject"""
     # check if collection Subject exists
     if await Subject.find().count() > 0:
@@ -22,9 +22,8 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
     else:
         subjects_with_id = []
 
-    print("subjects_with_id: ", subjects_with_id, flush=True)
-
     if len(subjects_with_id) == 0:
+        assert experiment_type is not None, "Experiment type is not specified"
         # subject does not exist
         # creat a new subject
         subject = Subject(prolific_id=prolific_id)
@@ -32,7 +31,7 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
         await subject.save()
         # session initialization for the subject
         # session will not be assigned to the subject if there is no available
-        await initialize_session(subject)
+        await initialize_session(subject, experiment_type=experiment_type)
     elif len(subjects_with_id) > 1:
         # if more than one subject with the same prolific id return error
         return SessionError(message=f"Prolific ID {prolific_id} already exists")
@@ -53,11 +52,10 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
     return session
 
 
-async def initialize_session(subject: Subject):
+async def initialize_session(subject: Subject, experiment_type: str):
     # find an active configuration
-    config = await ExperimentSettings.find_one(ExperimentSettings.active == True)
+    config = await ExperimentSettings.find_one(ExperimentSettings.experiment_type == experiment_type)
     
-    print("config: ", config, flush=True)
     # Check and remove expired sessions
     await replace_stale_session(config)
 
@@ -106,7 +104,7 @@ async def end_session(session):
 
     # Ensure that the expired but finished sessions are removed from the
     # session tree
-    config = await ExperimentSettings.find_one(ExperimentSettings.active == True)
+    config = await ExperimentSettings.find_one(ExperimentSettings.experiment_type == session.experiment_type)
     # Check and remove expired sessions
     await replace_stale_session(config)
 

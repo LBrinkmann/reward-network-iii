@@ -10,10 +10,23 @@ import {SessionContextProvider} from "../contexts/SessionContext";
 
 // Create a client
 const queryClient = new QueryClient()
-const ProlificIdContext = React.createContext<string | null>(null);
 
 
-const App = () => {
+
+export type SearchParamsContextType = {
+    prolificId: string | null;
+    experimentType: string | null;
+};
+
+const SearchParamsContext = React.createContext<SearchParamsContextType | null>(null);
+
+type AppProps = {
+    experimentType: string;
+  };
+  
+
+
+const App: React.FC<AppProps> = ({ experimentType }) => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
@@ -26,7 +39,12 @@ const App = () => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <ProlificIdContext.Provider value={searchParams.get("PROLIFIC_PID")}>
+            <SearchParamsContext.Provider value={
+                {
+                    prolificId: searchParams.get("PROLIFIC_PID"),
+                    experimentType: experimentType
+                }
+            }>
                 <SessionContextProvider>
                     <NetworkContextProvider>
                         {searchParams.get("PROLIFIC_PID") &&
@@ -35,11 +53,11 @@ const App = () => {
                         <ReactQueryDevtools initialIsOpen={false}/>
                     </NetworkContextProvider>
                 </SessionContextProvider>
-            </ProlificIdContext.Provider>
+            </SearchParamsContext.Provider>
         </QueryClientProvider>
     );
 };
 
 export default App;
 
-export const useProlificId = () => useContext(ProlificIdContext);
+export const useSearchParamsContext = () => useContext(SearchParamsContext);

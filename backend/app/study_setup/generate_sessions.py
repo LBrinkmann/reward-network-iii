@@ -60,16 +60,7 @@ def reset_networks(config: ExperimentSettings):
     random.shuffle(network_data)
 
 
-async def generate_experiment_sessions():
-    # find an active configuration
-    config = await ExperimentSettings.find_one(ExperimentSettings.active == True)
-    if config is None:
-        # if there are no configs in the database
-        # create a new config
-        config = ExperimentSettings()
-        config.active = True
-        await config.save()
-
+async def generate_experiment_sessions(config: ExperimentSettings):
     if config.rewrite_previous_data:
         await Session.find(Session.experiment_type == config.experiment_type).delete()
         await Subject.find(Session.experiment_type == config.experiment_type).delete()

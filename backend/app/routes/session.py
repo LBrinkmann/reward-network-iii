@@ -12,15 +12,15 @@ from .session_utils.session_lifecycle import get_session
 session_router = APIRouter(tags=["Session"])
 
 
-@session_router.get('/{prolific_id}', response_model_by_alias=False)
-async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
+@session_router.get('/{experiment_type}/{prolific_id}', response_model_by_alias=False)
+async def get_current_trial(experiment_type: str, prolific_id: str) -> Union[Trial, SessionError]:
     """
     Get current trial from the session.
     """
     print("get_current_trial", flush=True)
     # find session and trial for the subject
-    session = await get_session(prolific_id)
-
+    session = await get_session(prolific_id, experiment_type)
+    
     # return error if session is not available
     if isinstance(session, SessionError):
         return session
