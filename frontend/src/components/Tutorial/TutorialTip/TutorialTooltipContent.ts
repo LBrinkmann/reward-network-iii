@@ -21,7 +21,7 @@ export const tutorialTooltipContent = [
     {
         id: "practice_edge",
         title: "Arrow",
-        text: "Your goal is to move along the arrows to earn points. Now click on the next node.",
+        text: "Your goal is to move along the arrows to earn points. <br/> <b>Now click on the next node.</b>",
         tip: "Click a node",
     },
     {
@@ -33,14 +33,14 @@ export const tutorialTooltipContent = [
     {
         id: "practice_linear_solution",
         title: "Your Solution",
-        text: "As you proceed in the network, your progress is noted here. Now continue to move through the network.",
+        text: "As you proceed in the network, your progress is noted here. <br/> <b>Now continue to move through the network.</b>",
         tip: "Your Solution",
     },
     {
         id: "practice_multi_edge",
         title: "Your Choice",
-        text: "Like here, there will be two possible moves per circle in the later networks. Please continue by selecting one of the possibilities and making the final two moves.",
-        tip: "Click a node", 
+        text: "Like here, there will be two or more possible moves per circle in the later networks. <br/> <b>Please continue by selecting one of the possibilities and making the final two moves.</b>",
+        tip: "Click a node",
     },
     {
         id: "practice_timer",
@@ -51,7 +51,7 @@ export const tutorialTooltipContent = [
     {
         id: "practice_step_score",
         title: "Current Network Score",
-        text: "Your point-count for the current network will be displayed here.",
+        text: "Your point-count for the current network will be displayed here. The total score is displayed in the upper right corner.",
         tip: "Cumulative score",
     },
     {
