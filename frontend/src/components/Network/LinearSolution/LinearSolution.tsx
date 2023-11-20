@@ -69,8 +69,8 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
             placement="left"
         >
             <Box>
-                {showStepsLabel && <Typography variant="h4" align='left'>
-                    Steps
+                {showStepsLabel && <Typography variant="h6" align='left'>
+                    Your Moves
                 </Typography>}
                 <svg width={size.width} height={size.height + gap / 2}>
                     <g>
@@ -81,7 +81,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                                     <text
                                         x={onset + idx * gap}
                                         y={size.height / 2}
-                                        style={{fontWeight: "bold", fontSize: '25px'}}
+                                        style={{fontWeight: "bold", fontSize: '20px'}}
                                         textAnchor="middle"
                                     >
                                         {idx > 0 ? idx : ' '}

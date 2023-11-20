@@ -60,8 +60,7 @@ const TutorialTip: FC<TutorialTipInterface> = (props) => {
                     </>
                 )
             }
-            <Typography color="inherit" sx={{m: 1}}>
-                {content}
+            <Typography color="inherit" sx={{m: 1}} dangerouslySetInnerHTML={{ __html: content }}>
             </Typography>
             {(name == "Arrow") &&
                 (

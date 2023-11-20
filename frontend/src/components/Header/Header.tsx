@@ -1,6 +1,5 @@
 import React, {FC} from "react";
 import {AppBar, Toolbar, Typography, Box} from "@mui/material";
-import TutorialTip from "../Tutorial/TutorialTip";
 import useSessionContext from "../../contexts/SessionContext";
 import useNetworkContext from "../../contexts/NetworkContext";
 import {TRIAL_TYPE} from "../../components/Trials/ExperimentTrial";
@@ -18,9 +17,9 @@ const Header: FC<IHeader> = (props) => {
     const {sessionState, sessionDispatcher} = useSessionContext();
     const {networkState, networkDispatcher} = useNetworkContext();
 
-    const totalPoints = sessionState.totalPoints + 
+    const totalPoints = sessionState.totalPoints +
     ([TRIAL_TYPE.INDIVIDUAL, TRIAL_TYPE.REPEAT].includes(sessionState.currentTrialType) && !sessionState.isPractice ? networkState.points : 0);
-    
+
 
     return (
         <Box sx={{flexGrow: 1, height: 80}}>
