@@ -34,7 +34,7 @@ services:
         "--reload",
       ]
     ports:
-      - "5000:5000"
+      - "5050:5000"
     depends_on:
       - database
 
@@ -54,20 +54,13 @@ services:
       - ./frontend/gen_config.js:/frontend/gen_config.js
       - ./frontend/.storybook:/frontend/.storybook
     environment:
-      BACKEND_URL: "http://0.0.0.0:5000"
+      BACKEND_URL: "http://0.0.0.0:5050"
     stdin_open: true
     tty: true
     command: ["npm", "run", "start"] # start app only
     # command: ["npm", "run", "start:both"] # start storybook and app
     depends_on:
       - backend
-
-  frontend-prod: # frontend
-    build:
-      context: .
-      dockerfile: setup/docker/Dockerfile-frontend
-    ports:
-      - "9090:80"
 
   streamlit:
     build:
@@ -87,6 +80,13 @@ services:
     command: streamlit run streamlit/app/app.py --server.port=5050 --server.address=0.0.0.0 --server.fileWatcherType=watchdog
     depends_on:
       - frontend
+
+  frontend-prod: # frontend
+    build:
+      context: .
+      dockerfile: setup/docker/Dockerfile-frontend
+    ports:
+      - "9090:80"
 
   streamlit-prod:
     build:
