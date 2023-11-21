@@ -27,7 +27,7 @@ export const tutorialTooltipContent = [
     {
         id: "general_points",
         title: "Score & Step",
-        text: "You always make 8 moves per network. Your goal is to collect the maximum number of points in these 8 moves.",
+        text: "You always make 10 moves per network. Your goal is to collect the maximum number of points in these 10 moves.",
         tip: "Current step and cumulative score",
     },
     {
