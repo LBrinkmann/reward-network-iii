@@ -91,6 +91,7 @@ const TutorialTip: FC<TutorialTipInterface> = (props) => {
     const renderTip = () => {
         if (!(text && title && tip)) return children;
         if (isTutorial) {
+            console.log(setTitleAndContent(title, text), placement, arrow, open, title, text, tip)
             return (
                 <Tooltip
                     title={setTitleAndContent(title, text)}

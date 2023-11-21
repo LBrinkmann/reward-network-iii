@@ -23,9 +23,9 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|jp2|webp)$/,
-        loader: 'file-loader',
+        loader: "file-loader",
         options: {
-          name: '[name].[ext]',
+          name: "[name].[ext]",
         },
       },
       {
@@ -57,7 +57,6 @@ module.exports = {
     historyApiFallback: true,
     allowedHosts: "all",
   },
-  plugins: [
-      new webpack.HotModuleReplacementPlugin()
-  ],
+  devtool: "source-map",
+  plugins: [new webpack.HotModuleReplacementPlugin()],
 };
