@@ -308,7 +308,7 @@ export const IndividualTrial: FC<ITrial> = (props) => {
       <>
         <Header title={props.data.trial_title} />
         <Typography variant="h4" align="center">
-          Collect points based on arrow colors
+          Now please make your 10 moves through the network
         </Typography>
         <NetworkTrial
           playerTotalPoints={sessionState.totalPoints}
