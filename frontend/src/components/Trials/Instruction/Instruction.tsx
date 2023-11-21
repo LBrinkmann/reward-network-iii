@@ -62,7 +62,7 @@ const Welcome: FC = () => {
         <Grid container direction="row">
           <Grid item xs={6}>
             <Typography variant="body1" align="justify" paragraph>
-              You will be working on a task where your goal is navigate through
+              You will be working on a task where your goal is to navigate through
               a series of networks like the one depicted on the right. Depending
               on the moves you choose, you can earn more or less points. These
               points will be converted into bonus payments, so your decisions in
