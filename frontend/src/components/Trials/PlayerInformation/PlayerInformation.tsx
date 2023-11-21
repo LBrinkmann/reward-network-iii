@@ -49,22 +49,41 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
   } = props;
   return (
     <Stack spacing={0} sx={{ paddingTop: "20px" }}>
-      {showCumulativePoints && (
+      {(showCumulativePoints || showTotalPoints) && (
         <>
-          <TutorialTip
-            tutorialId={"practice_step_score"}
-            isTutorial={showTutorialScore}
-            isShowTip={false}
-            onTutorialClose={props.onTutorialClose}
-            placement={"right"}
-          >
-            <Typography variant="h5" component="div">
-              {props.cumulativePoints} Points
-            </Typography>
-            <Typography variant="subtitle1" component="div">
-              on this network
-            </Typography>
-          </TutorialTip>
+          {showCumulativePoints && (
+            <PlayerInfoItem>
+              <TutorialTip
+                tutorialId={"practice_step_score"}
+                isTutorial={showTutorialScore}
+                isShowTip={false}
+                onTutorialClose={props.onTutorialClose}
+                placement={"right"}
+              >
+                <Typography variant="h5" component="div">
+                  {props.cumulativePoints} Points
+                </Typography>
+              </TutorialTip>
+              <Typography variant="subtitle1" component="div">
+                on current Network
+              </Typography>
+            </PlayerInfoItem>
+          )}
+          {/* {showTotalPoints && (
+            <PlayerInfoItem>
+              <TutorialTip
+                tutorialId={"practice_total_score"}
+                isTutorial={showTutorialTotalScore}
+                isShowTip={false}
+                onTutorialClose={props.onTutorialClose}
+                placement={"right"}
+              >
+                <Typography variant="subtitle1" component="div">
+                  Total: {props.totalScore}
+                </Typography>
+              </TutorialTip>
+            </PlayerInfoItem>
+          )} */}
         </>
       )}
       {showComment ? (
