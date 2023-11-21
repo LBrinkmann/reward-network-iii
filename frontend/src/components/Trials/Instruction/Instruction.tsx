@@ -69,7 +69,7 @@ const Welcome: FC = () => {
               the main task will have real financial consequences for you.
             </Typography>
             <Typography variant="body1" align="justify" paragraph>
-              To prepare you for the main task, we will now explain the network
+              To prepare you for the main task, we will now explain the networks
               in more detail.
             </Typography>
           </Grid>
