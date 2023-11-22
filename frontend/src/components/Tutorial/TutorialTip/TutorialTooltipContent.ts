@@ -39,7 +39,7 @@ export const tutorialTooltipContent = [
     {
         id: "practice_multi_edge",
         title: "Your Choice",
-        text: "Like here, there will be two or more possible moves per circle in the later networks. <br/> <b>Please continue by selecting one of the possibilities and making the final two moves.</b>",
+        text: "Like here, there will be two or more possible moves per circle in the later networks. <br/> <b>Please continue by selecting one of the possibilities.</b>",
         tip: "Click a node",
     },
     {
