@@ -28,7 +28,7 @@ const Observation: FC<IObservation> = (props) => {
                             payload: {
                                 source: solution[networkState.step],
                                 target: solution[networkState.step + 1],
-                                edgeStyle: "highlighted"
+                                edgeStyle: "animated"
                             }
                         }
                     );

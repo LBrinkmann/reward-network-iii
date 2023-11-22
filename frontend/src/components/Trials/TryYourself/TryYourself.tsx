@@ -95,7 +95,7 @@ const TryYourself: FC<ITryYour> = ({
             ) : (
                 <>
                     <Typography variant="h4" align='center'>
-                        Choose the path with the highest rewards as indicated by the arrow colors
+                        Now please make your 10 moves through the network
                     </Typography>
                     <NetworkTrial playerTotalPoints={playerTotalPoints} showTotalPoints={false}/>
                 </>
