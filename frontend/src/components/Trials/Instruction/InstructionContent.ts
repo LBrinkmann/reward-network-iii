@@ -6,9 +6,8 @@ const instructions = {
         "Before you start with the main task, you have the opportunity to learn from the solutions submitted by previous players.",
         "Note that your solutions in the main task might also be presented to future players so that they can learn from them."],
     pre_social_learning: [
-        "Good choice! You will be able to learn from the selected player on four different networks.",
-        "You will first see a demonstration by the selected player. You then have to repeat the demonstration yourself. Thereby you can earn points, by correctly repeating the demonstration. These points will be converted into a bonus payment for you.",
-        "Finally, you will be able to solve the network yourself. Thereby you can earn points corresponding to the colors of the arrows. These points will also be converted into a bonus payment for you."],
+        "You will first see a demonstration by the selected player. You then have to solve the network from the demonstration yourself. You can earn points by correctly repeating the moves demonstrated by the selected player. These points will be converted into a bonus payment for you.",
+        "Afterwards, you have to solve the network by yourself. This time, the number of points you earn will depend not on correctly copying the selected players move, but solely on the moves you choose to make (they could be the same as the ones demonstrated by the selected player, or different). These points will also be converted into a bonus payment for you."],
     pre_social_learning_gen0: [
         "Now the main task begins. You will have to navigate through four different networks.",
         "All points you collect will be converted into your bonus payment. Try to maximize your points!"],
@@ -20,3 +19,5 @@ const instructions = {
 
 
 export default instructions;
+
+

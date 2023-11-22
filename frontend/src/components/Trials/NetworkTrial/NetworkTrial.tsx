@@ -147,6 +147,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                 networkState.isNetworkFinished ? null : networkState.currentNode
               }
               possibleMoves={networkState.possibleMoves}
+              allowedMoves={networkState.allowedMoves}
               onNodeClickHandler={NodeClickHandler}
               disableClick={networkState.isNetworkDisabled}
               showEdgeTutorial={networkState.tutorialOptions.edge}

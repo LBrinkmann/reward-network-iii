@@ -25,6 +25,7 @@ export type NetworkState = {
     timer: timerState;
     currentNode: number;
     possibleMoves: number[];
+    allowedMoves: number[];
     isNetworkDisabled: boolean;
     isNetworkFinished: boolean;
     isPractice: boolean;
@@ -68,6 +69,7 @@ export const networkInitialState: NetworkState = {
     },
     currentNode: undefined,
     possibleMoves: undefined,
+    allowedMoves: undefined,
     isNetworkDisabled: false,
     network: undefined,
     solution: undefined,

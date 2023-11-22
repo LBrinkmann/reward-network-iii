@@ -186,13 +186,15 @@ const setNetworkReducer = (state: NetworkState, action: any) => {
   const startNode = nodes.filter(
     (node: StaticNetworkNodeInterface) => node.starting_node
   )[0].node_num;
-  const possibleMoves = action.payload.forceSolution ? [action.payload.solution.moves[1]] : selectPossibleMoves(edges, startNode);
+  const possibleMoves = selectPossibleMoves(edges, startNode);
+  const allowedMoves = action.payload.forceSolution ? [action.payload.solution.moves[1]] : possibleMoves;
 
   return {
     ...networkInitialState,
     network: action.payload.network,
     currentNode: startNode,
     possibleMoves: possibleMoves,
+    allowedMoves: allowedMoves,
     moves: [startNode],
     isNetworkDisabled: false,
     isNetworkFinished: false,
@@ -222,7 +224,7 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
   const maxStep = action.payload?.maxSteps || 10;
 
   // if node is not in possible moves, do nothing
-  if (!state.possibleMoves.includes(nextNode) && !state.forceSolution) return state;
+  if (!state.allowedMoves.includes(nextNode) && !state.forceSolution) return state;
 
   // find the current edge
   const currentEdges = state.network.edges.filter(
@@ -245,6 +247,7 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
 
   if (state.forceSolution) {
     const nextSolutionNode = state.solution.moves[state.step + 1];
+    const possibleMoves = selectPossibleMoves(state.network.edges, nextSolutionNode);
     const correct = nextSolutionNode === nextNode;
     if (correct) {
       return {
@@ -255,7 +258,8 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
         currentReward: state.correctRepeatReward,
         rewardIdx: state.rewardIdx + 1,
         step: state.step + 1,
-        possibleMoves: [state.solution.moves[state.step + 2]],
+        allowedMoves: [state.solution.moves[state.step + 2]],
+        possibleMoves,
         isNetworkDisabled: state.step + 1 >= maxStep,
         isNetworkFinished: state.step + 1 >= maxStep,
       };
@@ -268,7 +272,8 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
       currentReward: state.wrongRepeatPunishment,
       rewardIdx: state.rewardIdx + 1,
       step: state.step + 1,
-      possibleMoves: [state.solution.moves[state.step + 2]],
+      allowedMoves: [state.solution.moves[state.step + 2]],
+      possibleMoves,
       isNetworkDisabled: state.step + 1 >= maxStep,
       isNetworkFinished: state.step + 1 >= maxStep,
     };
@@ -279,6 +284,7 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
     //   rewardIdx: state.rewardIdx + 1,
     // };
   }
+  const possibleMoves = selectPossibleMoves(state.network.edges, nextNode);
   return {
     ...state,
     currentNode: nextNode,
@@ -287,7 +293,8 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
     currentReward: currentEdge.reward,
     rewardIdx: state.rewardIdx + 1,
     step: state.step + 1,
-    possibleMoves: selectPossibleMoves(state.network.edges, nextNode),
+    allowedMoves: possibleMoves,
+    possibleMoves,
     isNetworkDisabled: state.step + 1 >= maxStep,
     isNetworkFinished: state.step + 1 >= maxStep,
   };
@@ -307,7 +314,7 @@ const highlightEdgeToRepeatReducer = (state: NetworkState, action: any) => {
 
   if (edgeToFollow) {
     edgeToFollow.edgeStyle = edgeStyle;
-    return { ...state, possibleMoves: [target] };
+    return { ...state, possibleMoves: [target], allowedMoves: [target] };
   } else return state;
 };
 
