@@ -45,6 +45,8 @@ export interface StaticNetworkInterface {
   currentNodeId: number;
   /** Node indices that could be potential next move (have connection through edge) */
   possibleMoves: number[];
+  /*** Node indices that are allowed to be clicked */
+  allowedMoves?: number[];
   /** size of the SVG component */
   size?: number;
   /** Show reward text on the edges */
@@ -72,6 +74,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
     onNodeClickHandler,
     currentNodeId = null,
     possibleMoves = [],
+    allowedMoves = [],
     size = 470,
     nodeSize = 20,
     edgeWidth = 2.5,
@@ -99,6 +102,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
     },
     [possibleMoves, disableClick, blur]
   );
+  console.log(allowedMoves, possibleMoves)
 
   const setNextNodeColor = useCallback(
     (node_num: number) => {
@@ -133,7 +137,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
                 Radius={nodeSize}
                 onNodeClick={onNodeClickHandler}
                 status={setNodeStatus(isActive, node.node_num)}
-                isValidMove={possibleMoves.includes(node.node_num)}
+                isValidMove={allowedMoves.includes(node.node_num)}
                 key={"node-" + idx}
                 showTutorial={showNodeTutorial && isActive}
                 onTutorialClose={props.onTutorialClose}
