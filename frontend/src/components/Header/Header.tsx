@@ -18,7 +18,7 @@ const Header: FC<IHeader> = (props) => {
     const {networkState, networkDispatcher} = useNetworkContext();
 
     const totalPoints = sessionState.totalPoints +
-    ([TRIAL_TYPE.INDIVIDUAL, TRIAL_TYPE.REPEAT].includes(sessionState.currentTrialType) && !sessionState.isPractice ? networkState.points : 0);
+    ([TRIAL_TYPE.INDIVIDUAL, TRIAL_TYPE.REPEAT, TRIAL_TYPE.TRY_YOURSELF].includes(sessionState.currentTrialType) && !sessionState.isPractice ? networkState.points : 0);
 
 
     return (

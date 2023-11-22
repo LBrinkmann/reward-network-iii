@@ -127,32 +127,13 @@ const ExperimentTrial: FC = () => {
 
     const onTrialEnd = (data: TrialSaved | TrialError) => {
         // TODO: handle error
-        if ((sessionState.currentTrialType === TRIAL_TYPE.INDIVIDUAL) && !sessionState.isPractice) {
+        if ([TRIAL_TYPE.INDIVIDUAL, TRIAL_TYPE.TRY_YOURSELF, TRIAL_TYPE.REPEAT].includes(sessionState.currentTrialType)) {
             sessionDispatcher({
-                type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
+                type: sessionState.isPractice ? SESSION_ACTIONS.UPDATE_PRACTICE_POINTS : SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
                 payload: {
                     points: networkState.points ? networkState.points : 0,
                     // NOTE: the max number of steps is assumed to be 8
-                    missingSteps: 10 - networkState.step,
-                }
-            });
-        }
-        if ((sessionState.currentTrialType === TRIAL_TYPE.REPEAT) && !sessionState.isPractice) {
-            sessionDispatcher({
-                type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
-                payload: {
-                    points: networkState.points ? networkState.points : 0,
-                    missingSteps: 0,
-                }
-            });
-        }
-        if ((sessionState.currentTrialType === TRIAL_TYPE.INDIVIDUAL) && sessionState.isPractice) {
-            sessionDispatcher({
-                type: SESSION_ACTIONS.UPDATE_PRACTICE_POINTS,
-                payload: {
-                    points: networkState.points ? networkState.points : 0,
-                    // NOTE: the max number of steps is assumed to be 8
-                    missingSteps: 10 - networkState.step,
+                    missingSteps: sessionState.currentTrialType === TRIAL_TYPE.REPEAT ? 0 : 10 - networkState.step,
                 }
             });
         }
