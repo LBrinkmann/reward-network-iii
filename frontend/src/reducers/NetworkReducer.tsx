@@ -1,7 +1,9 @@
 import {
   StaticNetworkEdgeInterface,
+  StaticNetworkInterface,
   StaticNetworkNodeInterface,
 } from "../components/Network/StaticNetwork/StaticNetwork";
+import { NetworkEdgeStyle } from "../components/Network/NetworkEdge/NetworkEdge";
 import { networkInitialState, NetworkState } from "../contexts/NetworkContext";
 
 export const NETWORK_ACTIONS = {
@@ -187,11 +189,25 @@ const setNetworkReducer = (state: NetworkState, action: any) => {
     (node: StaticNetworkNodeInterface) => node.starting_node
   )[0].node_num;
   const possibleMoves = selectPossibleMoves(edges, startNode);
-  const allowedMoves = action.payload.forceSolution ? [action.payload.solution.moves[1]] : possibleMoves;
+  const allowedMoves =
+    action.payload.trialType === "repeat"
+      ? [action.payload.solution.moves[1]]
+      : possibleMoves;
+
+  const animatedMoves =
+    action.payload.trialType === "demonstration"
+      ? [action.payload.solution.moves[1]]
+      : [];
+  const highlightedMoves = possibleMoves.filter(
+    (move) => !animatedMoves.includes(move)
+  );
 
   return {
     ...networkInitialState,
-    network: action.payload.network,
+    network: highlightEdges(action.payload.network, startNode, {
+      animated: animatedMoves,
+      highlighted: highlightedMoves,
+    }),
     currentNode: startNode,
     possibleMoves: possibleMoves,
     allowedMoves: allowedMoves,
@@ -212,7 +228,7 @@ const setNetworkReducer = (state: NetworkState, action: any) => {
     solution: action.payload.solution,
     wrongRepeatPunishment: action.payload.wrongRepeatPunishment,
     correctRepeatReward: action.payload.correctRepeatReward,
-    forceSolution: action.payload.forceSolution,
+    trialType: action.payload.trialType,
   };
 };
 
@@ -224,7 +240,7 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
   const maxStep = action.payload?.maxSteps || 10;
 
   // if node is not in possible moves, do nothing
-  if (!state.allowedMoves.includes(nextNode) && !state.forceSolution) return state;
+  if (!state.possibleMoves.includes(nextNode)) return state;
 
   // find the current edge
   const currentEdges = state.network.edges.filter(
@@ -245,53 +261,74 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
   )
     return state;
 
-  if (state.forceSolution) {
+  if (state.trialType === "repeat") {
     const nextSolutionNode = state.solution.moves[state.step + 1];
-    const possibleMoves = selectPossibleMoves(state.network.edges, nextSolutionNode);
-    const correct = nextSolutionNode === nextNode;
-    if (correct) {
+    if (nextSolutionNode === nextNode) {
+      const possibleMoves = selectPossibleMoves(
+        state.network.edges,
+        nextSolutionNode
+      );
       return {
         ...state,
-        currentNode: nextSolutionNode,
-        moves: state.moves.concat([nextSolutionNode]),
-        points: state.points + state.correctRepeatReward,
-        currentReward: state.correctRepeatReward,
-        rewardIdx: state.rewardIdx + 1,
+        network: highlightEdges(state.network, nextNode, {
+          highlighted: possibleMoves,
+        }),
+        currentNode: nextNode,
+        wrongRepeat: false,
+        moves: state.moves.concat([nextNode]),
+        correctRepeats: state.correctRepeats.concat([!state.wrongRepeat]),
+        points: state.wrongRepeat
+          ? state.points
+          : state.points + state.correctRepeatReward,
+        currentReward: state.wrongRepeat
+          ? state.currentReward
+          : state.correctRepeatReward,
+        rewardIdx: state.wrongRepeat ? state.rewardIdx : state.rewardIdx + 1,
         step: state.step + 1,
         allowedMoves: [state.solution.moves[state.step + 2]],
-        possibleMoves,
+        possibleMoves: possibleMoves,
         isNetworkDisabled: state.step + 1 >= maxStep,
         isNetworkFinished: state.step + 1 >= maxStep,
       };
     }
+    if (state.wrongRepeat) return state;
     return {
       ...state,
-      currentNode: nextSolutionNode,
-      moves: state.moves.concat([nextSolutionNode]),
+      network: highlightEdges(state.network, state.currentNode, {
+        dashed: [nextSolutionNode],
+      }),
+      wrongRepeat: true,
       points: state.points + state.wrongRepeatPunishment,
       currentReward: state.wrongRepeatPunishment,
       rewardIdx: state.rewardIdx + 1,
-      step: state.step + 1,
-      allowedMoves: [state.solution.moves[state.step + 2]],
-      possibleMoves,
-      isNetworkDisabled: state.step + 1 >= maxStep,
-      isNetworkFinished: state.step + 1 >= maxStep,
     };
-    // return {
-    //   ...state,
-    //   points: state.points + state.wrongRepeatPunishment,
-    //   currentReward: state.wrongRepeatPunishment,
-    //   rewardIdx: state.rewardIdx + 1,
-    // };
   }
-  const possibleMoves = selectPossibleMoves(state.network.edges, nextNode);
+
+  const possibleMoves =
+    state.trialType === "demonstration"
+      ? [action.nextMove]
+      : selectPossibleMoves(state.network.edges, nextNode);
+  const collectReward = state.trialType === "demonstration" ? false : true;
+
+  const animatedMoves =
+    state.trialType === "demonstration"
+      ? [state.solution.moves[state.step + 2]]
+      : [];
+  const highlightedMoves = possibleMoves.filter(
+    (move) => !animatedMoves.includes(move)
+  );
+
   return {
     ...state,
+    network: highlightEdges(state.network, nextNode, {
+      animated: animatedMoves,
+      dashed: highlightedMoves,
+    }),
     currentNode: nextNode,
     moves: state.moves.concat([nextNode]),
-    points: state.points + currentEdge.reward,
-    currentReward: currentEdge.reward,
-    rewardIdx: state.rewardIdx + 1,
+    points: collectReward ? state.points + currentEdge.reward : state.points,
+    currentReward: collectReward ? currentEdge.reward : state.currentReward,
+    rewardIdx: collectReward ? state.rewardIdx + 1 : state.rewardIdx,
     step: state.step + 1,
     allowedMoves: possibleMoves,
     possibleMoves,
@@ -300,26 +337,30 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
   };
 };
 
-const highlightEdgeToRepeatReducer = (state: NetworkState, action: any) => {
-  const { source, target, edgeStyle } = action.payload;
-  const edgeToFollow = state.network.edges.filter(
-    (edge: StaticNetworkEdgeInterface) =>
-      edge.source_num === source && edge.target_num === target
-  )[0];
-
-  // set all edges to default style
-  state.network.edges.forEach(
-    (edge: StaticNetworkEdgeInterface) => (edge.edgeStyle = "normal")
-  );
-
-  if (edgeToFollow) {
-    edgeToFollow.edgeStyle = edgeStyle;
-    return { ...state, possibleMoves: [target], allowedMoves: [target] };
-  } else return state;
+const highlightEdges = (
+  network: {
+    nodes: StaticNetworkNodeInterface[];
+    edges: StaticNetworkEdgeInterface[];
+  },
+  sourceNode: number,
+  styleTargets: { [key: string]: number[] }
+) => {
+  const edges = network.edges.map((edge: StaticNetworkEdgeInterface) => {
+    if (edge.source_num === sourceNode)
+      for (const style in styleTargets) {
+        if (styleTargets[style].includes(edge.target_num)) {
+          edge.edgeStyle = style as NetworkEdgeStyle;
+          return edge;
+        }
+      }
+    edge.edgeStyle = "normal";
+    return edge;
+  });
+  return { ...network, edges };
 };
 
 const networkReducer = (state: NetworkState, action: any) => {
-  console.log(state)
+  console.log(state);
   switch (action.type) {
     case NETWORK_ACTIONS.SET_NETWORK:
       return setNetworkReducer(state, action);
@@ -339,12 +380,6 @@ const networkReducer = (state: NetworkState, action: any) => {
         ...state,
         isNetworkDisabled: true,
       };
-    case NETWORK_ACTIONS.HIGHLIGHT_EDGE_TO_CHOOSE:
-      return highlightEdgeToRepeatReducer(state, action);
-    case NETWORK_ACTIONS.RESET_EDGE_STYLES:
-      const resetEdges = state.network.edges;
-      resetEdges.forEach((edge: any) => (edge.edgeStyle = "normal"));
-      return { ...state, network: { ...state.network, edges: resetEdges } };
     default:
       return state;
   }

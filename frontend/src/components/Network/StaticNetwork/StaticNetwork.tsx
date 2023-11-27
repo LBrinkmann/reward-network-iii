@@ -102,7 +102,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
     },
     [possibleMoves, disableClick, blur]
   );
-  console.log(allowedMoves, possibleMoves)
+  console.log(allowedMoves, possibleMoves);
 
   const setNextNodeColor = useCallback(
     (node_num: number) => {
@@ -125,7 +125,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
       </defs>
       {/* apply filter to the network to hide it if 'blur' is true */}
       <g filter={blur ? "url(#static-network-blur)" : ""}>
-      <g>
+        <g>
           {nodes.map((node: StaticNetworkNodeInterface, idx: number) => {
             const isActive = currentNodeId === node.node_num;
             return (
@@ -160,11 +160,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
               return (
                 <NetworkEdge
                   reward={edge.reward}
-                  edgeWidth={
-                    (edge.source_num === currentNodeId && ~disableClick)
-                      ? edgeWidth * 1.5
-                      : edgeWidth
-                  }
+                  edgeWidth={edgeWidth}
                   edgeStyle={edge.edgeStyle}
                   idx={idx}
                   showRewardText={showRewardText}
@@ -183,7 +179,6 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
               );
             })}
         </g>
-
       </g>
     </svg>
   );
