@@ -162,6 +162,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                 edges={networkState.network.edges}
                 nodes={networkState.network.nodes}
                 moves={networkState.moves}
+                correctRepeats={networkState.correctRepeats}
                 showTutorial={networkState.tutorialOptions.linearSolution}
               />
             )}
@@ -210,7 +211,7 @@ const FlashingReward: FC = () => {
   if (networkState.currentReward === undefined) {
     color = "white";
     text = "";
-  } else if (networkState.forceSolution) {
+  } else if (networkState.trialType === "repeat") {
     color = networkState.currentReward > 0 ? colors[2] : colors[0];
     text = networkState.currentReward > 0 ? "Correct" : "Wrong";
   } else {
