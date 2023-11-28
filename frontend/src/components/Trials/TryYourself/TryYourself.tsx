@@ -41,7 +41,9 @@ const TryYourself: FC<ITryYour> = ({
                         {/*    Player {teacherId} comment:*/}
                         {/*</Typography>*/}
                         <Typography variant="h3" gutterBottom align={'center'}>
-                           You gained {absolutePointDifference} points {pointDifference > 0 ? 'MORE' : 'LESS'} than player {teacherId}
+                        {absolutePointDifference === 0 ? 
+                            <>You gained the same amount of points as player {teacherId}</> :
+                           <>You gained {absolutePointDifference} points {pointDifference > 0 ? 'MORE' : 'LESS'} than player {teacherId}</>}
                         </Typography>
 
                         <Grid container direction="row" justifyContent="center" alignItems="center">
