@@ -24,6 +24,9 @@ const TryYourself: FC<ITryYour> = ({
                                    }) => {
     const {networkState} = useNetworkContext();
 
+    const pointDifference = networkState.points - teacherTotalScore;
+    const absolutePointDifference = Math.abs(pointDifference);
+
     return (
         <>
             {networkState.isNetworkFinished ? (
@@ -37,13 +40,13 @@ const TryYourself: FC<ITryYour> = ({
                         {/*<Typography variant="h6" gutterBottom align={'left'}>*/}
                         {/*    Player {teacherId} comment:*/}
                         {/*</Typography>*/}
-                        {/*<Typography variant="body1" gutterBottom align={'justify'}>*/}
-                        {/*    {teacherWrittenSolution}*/}
-                        {/*</Typography>*/}
+                        <Typography variant="h3" gutterBottom align={'center'}>
+                           You gained {absolutePointDifference} points {pointDifference > 0 ? 'MORE' : 'LESS'} than player {teacherId}
+                        </Typography>
 
                         <Grid container direction="row" justifyContent="center" alignItems="center">
                             <Grid item xs={2}>
-                                <Typography variant="h6" align={'left'}>
+                                <Typography variant="h4" align={'left'}>
                                     Player {teacherId}
                                 </Typography>
                             </Grid>
@@ -57,14 +60,14 @@ const TryYourself: FC<ITryYour> = ({
                                 />
                             </Grid>
                             <Grid item xs={2}>
-                                <Typography variant="h6" align={'left'}>
+                                <Typography variant="h4" align={'left'}>
                                     Total score: {teacherTotalScore}
                                 </Typography>
                             </Grid>
                         </Grid>
                         <Grid container direction="row" justifyContent="center" alignItems="center">
                             <Grid item xs={2}>
-                                <Typography variant="h6" align={'left'}>
+                                <Typography variant="h4" align={'left'}>
                                     You
                                 </Typography>
                             </Grid>
@@ -79,7 +82,7 @@ const TryYourself: FC<ITryYour> = ({
                                 />
                             </Grid>
                             <Grid item xs={2}>
-                                <Typography variant="h6" align={'left'}>
+                                <Typography variant="h4" align={'left'}>
                                     Total score: {networkState.points}
                                 </Typography>
                             </Grid>
