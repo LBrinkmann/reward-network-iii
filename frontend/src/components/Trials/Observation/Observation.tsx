@@ -25,16 +25,17 @@ const Observation: FC<IObservation> = (props) => {
   } = props;
 
   useEffect(() => {
+    console.log("Observation: useEffect: step", networkState.step);
     if (playAnimation) {
       setTimeout(() => {
         networkDispatcher({
           type: NETWORK_ACTIONS.NEXT_NODE,
           payload: {
             nodeIdx: solution[networkState.step + 1],
-            nextMove:
-              networkState.step < solution.length
-                ? solution[networkState.step + 2]
-                : null,
+            // nextMove:
+            //   networkState.step < solution.length
+            //     ? solution[networkState.step + 2]
+            //     : null,
           },
         });
       }, delayBetweenMoves);

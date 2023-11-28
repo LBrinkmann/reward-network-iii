@@ -111,7 +111,7 @@ async def save_social_learning_selection(body: Advisor, session: Session, trial:
 
     assert (
         len(ad_demo_trials) == sl_idx_max + 1
-    ), f"{len(ad_demo_trials)} == {sl_idx_max}"
+    ), f"{len(ad_demo_trials)} == {sl_idx_max + 1}"
 
     ad_written_strategies = [
         t.written_strategy for t in ad_trials if t.trial_type == "written_strategy"
