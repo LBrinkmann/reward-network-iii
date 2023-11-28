@@ -202,7 +202,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
       // wait for 60 seconds before submitting the results to give participant time to compare the solutions
       const timer1 = setTimeout(() => {
         setIsTimeoutAfterLastMoveDone(true);
-      }, 1000 * 1000);
+      }, 60 * 1000);
 
       return () => clearTimeout(timer1);
     } else {
