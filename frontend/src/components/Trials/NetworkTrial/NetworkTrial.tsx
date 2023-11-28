@@ -127,6 +127,17 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
           justifyContent="space-around"
           alignItems="center"
         >
+          <Grid item sx={{ marginTop: "20px", marginBottom: "50px", width: "100%" }}>
+            {showLinearNetwork && (
+              <LinearSolution
+                edges={networkState.network.edges}
+                nodes={networkState.network.nodes}
+                moves={networkState.moves}
+                correctRepeats={networkState.correctRepeats}
+                showTutorial={networkState.tutorialOptions.linearSolution}
+              />
+            )}
+          </Grid>
           <Grid
             item
             style={{
@@ -156,15 +167,11 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
               blur={networkState.tutorialOptions.comment}
             />
           </Grid>
-          <Grid item sx={{ marginTop: "10px", width: "100%" }}>
-            {showLinearNetwork && (
-              <LinearSolution
-                edges={networkState.network.edges}
-                nodes={networkState.network.nodes}
-                moves={networkState.moves}
-                correctRepeats={networkState.correctRepeats}
-                showTutorial={networkState.tutorialOptions.linearSolution}
-              />
+          <Grid item sx={{ marginTop: "20px", marginBottom: "50px", width: "100%" }}>
+            {networkState.wrongRepeat && (
+              <Typography variant="h6" align="center">
+                You chose the wrong path. Please select the correct path, highlighted here. You will not earn points for this choice.
+              </Typography>
             )}
           </Grid>
         </Grid>
