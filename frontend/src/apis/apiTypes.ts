@@ -12,6 +12,7 @@ export interface Advisor {
 }
 export interface Solution {
   moves: number[];
+  correctRepeats?: boolean[];
   score?: number;
   trial_id?: number;
   finished_at?: string;
