@@ -32,7 +32,7 @@ const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({endTrial, type = "
                     <Typography variant="h5" component="div">
                         {type === "start" ?
                             "Please think about how you approached the task and write down the strategy you used in trying to maximize points." :
-                            "Please write down your strategy in solving the task."
+                            "Please think about how you approached the task and write down the strategy you used in trying to maximize points."
                         }
                     </Typography>
                 </Grid>

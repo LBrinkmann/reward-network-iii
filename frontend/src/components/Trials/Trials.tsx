@@ -164,7 +164,7 @@ export const RepeatTrial: FC<ITrial> = (props) => {
   useEffect(() => {
     if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone) {
       const timer2 = setTimeout(() => {
-        props.endTrial({ moves: networkState.moves });
+        props.endTrial({ moves: networkState.moves, correctRepeats: networkState.correctRepeats });
       }, TIME_BETWEEN_TRIALS);
       return () => clearTimeout(timer2);
     }
@@ -199,10 +199,10 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
 
   useEffect(() => {
     if (networkState.isNetworkFinished) {
-      // wait for 30 seconds before submitting the results to give participant time to compare the solutions
+      // wait for 60 seconds before submitting the results to give participant time to compare the solutions
       const timer1 = setTimeout(() => {
         setIsTimeoutAfterLastMoveDone(true);
-      }, 30 * 1000);
+      }, 1000 * 1000);
 
       return () => clearTimeout(timer1);
     } else {

@@ -382,13 +382,13 @@ def create_trials(
             else:
                 trials = add_social_learning_network(trials, block_idx, network_idx, config)
 
+    trials = add_written_strategy_trail(trials, None if is_human else WrittenStrategy(strategy=""))
     if is_human:
         trials = add_instruction_trail(trials, "demonstration", "Demonstration Phase")
 
     for network_idx in range(config.n_demonstration_trials):
         trials = add_demonstration_trail(trials, is_human, simulated_subject, network_idx, config)
 
-    trials = add_written_strategy_trail(trials, None if is_human else WrittenStrategy(strategy=""))
     if is_human:
         trials = add_exit_trails(trials, config)
 
