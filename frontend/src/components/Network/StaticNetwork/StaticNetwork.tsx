@@ -102,8 +102,6 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
     },
     [possibleMoves, disableClick, blur]
   );
-  console.log(allowedMoves, possibleMoves);
-
   const setNextNodeColor = useCallback(
     (node_num: number) => {
       const reward = edges.find(

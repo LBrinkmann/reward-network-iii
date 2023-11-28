@@ -195,7 +195,7 @@ const setNetworkReducer = (state: NetworkState, action: any) => {
       : possibleMoves;
 
   const animatedMoves =
-    action.payload.trialType === "demonstration"
+    action.payload.trialType === "observation"
       ? [action.payload.solution.moves[1]]
       : [];
   const highlightedMoves = possibleMoves.filter(
@@ -304,25 +304,27 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
     };
   }
 
-  const possibleMoves =
-    state.trialType === "demonstration"
-      ? [action.nextMove]
-      : selectPossibleMoves(state.network.edges, nextNode);
-  const collectReward = state.trialType === "demonstration" ? false : true;
+  const possibleMoves = selectPossibleMoves(state.network.edges, nextNode);
+  const collectReward = state.trialType === "observation" ? false : true;
 
   const animatedMoves =
-    state.trialType === "demonstration"
+    state.trialType === "observation"
       ? [state.solution.moves[state.step + 2]]
       : [];
   const highlightedMoves = possibleMoves.filter(
     (move) => !animatedMoves.includes(move)
   );
+  console.log("highlightedMoves", highlightedMoves)
+  console.log("animatedMoves", animatedMoves)
+  console.log("possibleMoves", possibleMoves)
+  console.log("nextNode", nextNode)
+  console.log(state.step)
 
   return {
     ...state,
     network: highlightEdges(state.network, nextNode, {
       animated: animatedMoves,
-      dashed: highlightedMoves,
+      highlighted: highlightedMoves,
     }),
     currentNode: nextNode,
     moves: state.moves.concat([nextNode]),
@@ -360,7 +362,6 @@ const highlightEdges = (
 };
 
 const networkReducer = (state: NetworkState, action: any) => {
-  console.log(state);
   switch (action.type) {
     case NETWORK_ACTIONS.SET_NETWORK:
       return setNetworkReducer(state, action);
