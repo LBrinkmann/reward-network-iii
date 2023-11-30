@@ -63,7 +63,7 @@ https://rn-iii-frontend.eks-test-default.mpg-chm.com/<experiment_type>?PROLIFIC_
 
 ### Admin panel
 
-https://rn-iii-backend.eks-test-default.mpg-chm.com/progress/<experiment_type>
+https://rn-iii-backend.eks-test-default.mpg-chm.com/progress/<experiment_type>/<tree_idx>
 
 ### Links when the docker-compose.yml is running
 
