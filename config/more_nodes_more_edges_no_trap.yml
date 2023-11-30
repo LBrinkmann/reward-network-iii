@@ -1,0 +1,104 @@
+n_networks: 10
+seed: 1
+edges:
+  - from_level: 0
+    rewards:
+      - 1
+      - 2
+      - 3
+    to_levels:
+      - 0
+  - from_level: 0
+    rewards:
+      - 0
+    to_levels:
+      - 1
+  - from_level: 1
+    rewards:
+      - 3
+    to_levels:
+      - 0
+  - from_level: 1
+    rewards:
+      - 2
+    to_levels:
+      - 1
+  - from_level: 1
+    rewards:
+      - 0
+    to_levels:
+      - 2
+  - from_level: 2
+    rewards:
+      - 3
+    to_levels:
+      - 0
+  # - from_level: 2
+  #   rewards:
+  #     - 1
+  #     - 2
+  #     - 3
+  #   to_levels:
+  #     - 1
+  # - from_level: 2
+  #   rewards:
+  #     - 2
+  #   to_levels:
+  #     - 2
+  - from_level: 2
+    rewards:
+      - 0
+    to_levels:
+      - 3
+  - from_level: 3
+    rewards:
+      - 4
+    to_levels:
+      - 3
+  - from_level: 3
+    rewards:
+      - 3
+    to_levels:
+      - 2
+levels:
+  - color: white
+    idx: 0
+    is_start: true
+    max_n_nodes: 5
+    min_n_nodes: 5
+    n_nodes: 5
+  - color: paleturquoise
+    idx: 1
+    is_start: null
+    max_n_nodes: 2
+    min_n_nodes: 2
+  - color: lightskyblue
+    idx: 2
+    is_start: null
+    max_n_nodes: 2
+    min_n_nodes: 2
+  - color: royalblue
+    idx: 3
+    is_start: null
+    max_n_nodes: 3
+    min_n_nodes: 3
+n_edges_per_node: 2.5
+n_nodes: 12
+n_steps: 10
+n_losses: 5
+rewards:
+  - color: red
+    idx: 0
+    reward: -50
+  - color: coral
+    idx: 1
+    reward: 0
+  - color: lightgrey
+    idx: 2
+    reward: 100
+  - color: lightgreen
+    idx: 3
+    reward: 200
+  - color: green
+    idx: 4
+    reward: 400
