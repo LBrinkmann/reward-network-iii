@@ -46,6 +46,7 @@ def save_individual_demonstration_trial(trial: Trial, body: Solution):
 
     trial.solution = Solution(
         moves=body.moves,
+        correctRepeats=body.correctRepeats,
         score=estimate_solution_score(trial.network, body.moves),
         trial_id=trial.id,
         finished_at=datetime.now(),

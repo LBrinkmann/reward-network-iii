@@ -1,0 +1,21 @@
+session_id,trial_id,text,session_idx,ws_idx
+6568f759464e933804a0fb4a,6,I mostly aimed for the darkest green arrows and tried to avoid the red arrows. I also was tripped up slightly when I didn't realize some arrows were only ingoing and not outgoing.,8,0
+6568f759464e933804a0fb4a,22,"Finding the dark red spots first usually led to a few dark green spots, which is counterintuitive given that red spots lead to a loss at first. I definitely needed a few rounds to learn this!",8,1
+6568f759464e933804a0fb4b,6,I observed that going back and forth between the green arrows made sure that you only gained instead of risking going off and losing points.,9,0
+6568f759464e933804a0fb4b,22,You choose four letters at the beginning that may be losses at first and then you find the letter that gives you the maximum points and go back and forth between the two.,9,1
+6568f759464e933804a0fb4c,6,Nothing. It was very confusing. I found myself clicking randomly to get points.,10,0
+6568f759464e933804a0fb4c,22,Nothing. Why wouldn't someone try to click on greens mostly if they are most points?,10,1
+6568f759464e933804a0fb4d,6,Going back to the networks that kept me in the positive points wise.,11,0
+6568f759464e933804a0fb4d,22,following the instructions of the person who did the puzzle first.,11,1
+6568f759464e933804a0fb4e,6,"I found a gain stricture that I was content with, without losing too much points. ",12,0
+6568f759464e933804a0fb4e,22,Finding the strongest green gain points first and use those in the most effective manner.,12,1
+6568f759464e933804a0fb4f,6,Going to the green colors for more points and avoiding the pink colors for negative points.,13,0
+6568f759464e933804a0fb4f,22,"I tried to avoid pink and chose green, but it wasn't always successful.",13,1
+6568f759464e933804a0fb50,6,Avoid red arrows and act quickly to avoid running out of time.,14,0
+6568f759464e933804a0fb50,22,Copy the teacher that has it down to a science.,14,1
+6568f759464e933804a0fb51,6,bouncing between the green colors seemed to work. I did not find the 400 whihc i think might be hiding beyond a -50 or 0,15,0
+6568f759464e933804a0fb51,22,following the -50 first to find the 400,15,1
+6568f75b464e933804a0fb5a,6,Sometimes you have to lose points at first in order to put yourself in a position to gain max points,24,0
+6568f75b464e933804a0fb5a,22,The first 3 moves lose 50 points then select all dark green and go back and forth between two letters.,24,1
+6568f75b464e933804a0fb5b,6,"dark pink is always the last resort, pick dark green as much as possible",25,0
+6568f75b464e933804a0fb5b,22,dark pink gets you to more dark greens,25,1

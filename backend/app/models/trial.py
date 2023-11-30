@@ -12,7 +12,7 @@ from pydantic import BaseModel
 
 class Solution(BaseModel):
     moves: List[int]
-    correctRepeats: Optional[List[bool]]
+    correctRepeats: Optional[List[bool]] = None
     score: Optional[int]  # solution score
     trial_id: Optional[int]  # trial number in session
     finished_at: Optional[datetime.datetime]

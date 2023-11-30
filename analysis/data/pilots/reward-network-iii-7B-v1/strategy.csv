@@ -1,4 +1,4 @@
-session_id,trail_id,text,session_idx,ws_idx
+session_id,trial_id,text,session_idx,ws_idx
 656628b3668ebdf5919e97a5,6,to avoid dark pink as much as possible,8,0
 656628b3668ebdf5919e97a5,22,Took the pink first to find the dark green quicker,8,1
 656628b3668ebdf5919e97a6,6,"There really is only one strategy: try to discern which paths yield the most points as they reveal themselves,",9,0
