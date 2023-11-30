@@ -29,10 +29,10 @@ const SelectionOneCard: React.FC<SocialLearningSelectionOneCardProps> = (props) 
         >
             <Card sx={{width: 230, alignItems: 'center', justifyContent: 'center'}}>
                 <CardContent sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                    <PersonIcon sx={{height: 120, width: 120}} color="action"/>
                     <Typography gutterBottom variant="h5" component="div">
                         {props.personInx === -1 ? "You" : "Player " + props.personInx}
                     </Typography>
+                    <PersonIcon sx={{height: 120, width: 120}} color="action"/>
                     <Typography variant="h6">
                         Average Score: {props.averageScore}
                     </Typography>
