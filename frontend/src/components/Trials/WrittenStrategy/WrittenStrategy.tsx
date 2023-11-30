@@ -31,8 +31,8 @@ const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({endTrial, type = "
                 <Grid item style={{textAlign: "center"}}>
                     <Typography variant="h5" component="div">
                         {type === "start" ?
-                            "Please think about how you approached the task and write down the strategy you used in trying to maximize points." :
-                            "Please think about how you approached the task and write down the strategy you used in trying to maximize points."
+                            "Please think about a strategy for the network task that maximizes points. What did you observed as successful?" :
+                            "Please think about a strategy for the network task that maximizes points. What did you observed as successful?"
                         }
                     </Typography>
                 </Grid>
