@@ -1,0 +1,24 @@
+session_id,trail_id,text,session_idx,ws_idx
+655c7aba7cb69f5cd300575d,6,there wasnt a strategy as yet,0,0
+655c7aba7cb69f5cd300575d,17,i really didnt have one as the time was going so quickly,0,1
+655c7aba7cb69f5cd300575e,6,I haven't done the task yet?,1,0
+655c7aba7cb69f5cd300575e,17,You just follow the green arrows around,1,1
+655c7aba7cb69f5cd300575f,6,went with the strongest green colours if possible,2,0
+655c7aba7cb69f5cd300575f,17,"if greens not available to go for neutral
+",2,1
+655c7aba7cb69f5cd3005760,6,I just followed an arbitrary strategy. I aimed for creating as many connections in the remaining time as possible.,3,0
+655c7aba7cb69f5cd3005760,17,"The same strategy as the previous round. Making as many connections as possible.
+",3,1
+655c7aba7cb69f5cd3005761,6,The green line is worth the most but may not always be the best at navigating the network so I am trying to hedge my bets and take other paths that lead to better payoffs.,4,0
+655c7aba7cb69f5cd3005761,17,"Honestly, just pot luck...",4,1
+655c7aba7cb69f5cd3005762,6,Clicked on the letter with green arrows,5,0
+655c7aba7cb69f5cd3005762,17,"Once again followed the green arrows where possible
+",5,1
+655c7abb7cb69f5cd3005763,6,"I just tried to follow the points were suggested and if there was a green path I followed that, but sometimes I could not click on the one I wanted to chose.",6,0
+655c7abb7cb69f5cd3005763,17,I tried to follow the green path,6,1
+655c7abb7cb69f5cd3005765,6,I just tried to aim for the green arrows.,7,0
+655c7abb7cb69f5cd3005765,17,"I tried to go for green arrows, occasionally diverting along 'neutral' arrows to see if any higher scores could be obtained.",7,1
+655c7abb7cb69f5cd3005766,6,I tried to aim for the highest points available to me based on the options i was presented with. ,8,0
+655c7abb7cb69f5cd3005766,17,Again i was looking to make the most points based on the points that i had available to me. I didn't tend to try new options ,8,1
+655c7abb7cb69f5cd3005767,6,"At first I wasn't too sure if revisiting nodes was a good idea, but on the second go I just picked the route with the most points possible each time even if it meant revisiting a node multiple times",9,0
+655c7abb7cb69f5cd3005767,17,Overall I tried to choose only the most profitable lines,9,1

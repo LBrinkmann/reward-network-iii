@@ -1,0 +1,21 @@
+session_id,trail_id,text,session_idx,ws_idx
+656628b3668ebdf5919e97a5,6,to avoid dark pink as much as possible,8,0
+656628b3668ebdf5919e97a5,22,Took the pink first to find the dark green quicker,8,1
+656628b3668ebdf5919e97a6,6,"There really is only one strategy: try to discern which paths yield the most points as they reveal themselves,",9,0
+656628b3668ebdf5919e97a6,22,"This time around, an obvious pattern in the routes emerged and I attempted to memorise and replicate them ",9,1
+656628b4668ebdf5919e97a7,6,It's quite hard to understand the concept of it!  I just keep looking for the green lines or the lesser purple lines to minimise losses,10,0
+656628b4668ebdf5919e97a7,22,The example moves so fast its nearly impossible to memorise what the other player did! I just try to look for the green or neutral arrows and follow them,10,1
+656628b4668ebdf5919e97a8,6,Looking for green lines and continuing on them even if it meant not moving forwards,11,0
+656628b4668ebdf5919e97a8,22,Tried to look for a better route but worked out badly,11,1
+656628b4668ebdf5919e97a9,6,using the green arrows,12,0
+656628b4668ebdf5919e97a9,22,trying to follow what the other player did,12,1
+656628b5668ebdf5919e97b2,6,focusing on green arrows,21,0
+656628b5668ebdf5919e97b2,22,"First tried to explore on my own, but then just copied player 5",21,1
+656628b5668ebdf5919e97b4,6,I tried to prioritize green arrows where it deemed the most logical step,22,0
+656628b5668ebdf5919e97b4,22,I was learning from the best 🤡,22,1
+656628b5668ebdf5919e97b5,6,"Choose the path with the highest points. If there are similar paths, pick one that is connected to another node by a green path",23,0
+656628b5668ebdf5919e97b5,22,Endure some costly paths at the start to try and find the most profitable loop and then stay there,23,1
+656628b5668ebdf5919e97b6,6,I just went for the best (highest earning) route at all times.,24,0
+656628b5668ebdf5919e97b6,22,A couple of times I tried to learn if there qwas a better route than player 4 took. Both times I found the route I chose earned less,24,1
+656628b5668ebdf5919e97b7,6,I learned to look at the next arrows one step beyond the choice.,25,0
+656628b5668ebdf5919e97b7,22,It took a while but I finally learned to simply duplicate the prior player's moves rather than emulate them.,25,1

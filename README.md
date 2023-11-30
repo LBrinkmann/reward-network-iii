@@ -20,10 +20,28 @@ docker compose up streamlit
 docker compose run common python common/generate/generation.py -i data/23_11_13/networks.yml -o data/23_11_13/networks.json
 ```
 
+```bash
+docker compose run common python common/generate/generation.py -i data/23_11_30/networks.yml -o data/23_11_30/networks.json
+```
+
 ### Generate Solutions
 
 ```bash
 docker compose run common python common/solve/rule_based.py -c data/23_11_13/solution.yml -n data/23_11_13/networks.json -o data/23_11_13/solution
+```
+
+```bash
+docker compose run common python common/solve/rule_based.py -c data/23_11_30/solution.yml -n data/23_11_30/networks.json -o data/23_11_30/solution
+```
+
+### Setup Environment for analysis
+
+```bash
+python3.10 -m venv .venv
+. .venv/bin/activate
+pip install --upgrade pip
+pip install wheel
+pip install -e ".[viz,dev]"
 ```
 
 ## Deployments
