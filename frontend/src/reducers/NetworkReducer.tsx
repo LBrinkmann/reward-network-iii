@@ -83,7 +83,7 @@ const nextTutorialStepReducer = (state: NetworkState, action: any) => {
     };
   }
 
-  if (state.tutorialOptions.linearSolution && state.moves.length === 9) {
+  if (state.tutorialOptions.linearSolution && state.moves.length === 11) {
     return {
       ...state,
       tutorialStep: state.tutorialStep + 1,
@@ -101,9 +101,10 @@ const nextTutorialStepReducer = (state: NetworkState, action: any) => {
         node: true,
       },
     };
-  } else if (state.tutorialOptions.linearSolution && state.moves.length < 9) {
+  } else if (state.tutorialOptions.linearSolution && state.moves.length < 11) {
     return {
       ...state,
+      tutorialStep: state.tutorialStep + 1,
       tutorialOptions: {
         ...networkInitialState.tutorialOptions,
         linearSolution: true,
@@ -314,11 +315,11 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
   const highlightedMoves = possibleMoves.filter(
     (move) => !animatedMoves.includes(move)
   );
-  console.log("highlightedMoves", highlightedMoves)
-  console.log("animatedMoves", animatedMoves)
-  console.log("possibleMoves", possibleMoves)
-  console.log("nextNode", nextNode)
-  console.log(state.step)
+  console.log("highlightedMoves", highlightedMoves);
+  console.log("animatedMoves", animatedMoves);
+  console.log("possibleMoves", possibleMoves);
+  console.log("nextNode", nextNode);
+  console.log(state.step);
 
   return {
     ...state,
