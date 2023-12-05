@@ -1,6 +1,5 @@
 #!/bin/bash -l
 #
-#SBATCH --workdir=.
 #SBATCH --output={log_file}
 #SBATCH --job-name={job_name}
 #SBATCH --cpus-per-task 2
