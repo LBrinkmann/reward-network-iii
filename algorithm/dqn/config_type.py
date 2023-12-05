@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 class Config(BaseModel):
     model_type: str = "RNN"
@@ -21,3 +22,4 @@ class Config(BaseModel):
     memory_size: int = 500
     exploration_rate_decay: float = 0.99
     nn_update_frequency: int = 200
+    rewards: List[int] = []

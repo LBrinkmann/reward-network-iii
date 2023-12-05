@@ -18,3 +18,4 @@ nn_hidden_layer_size: 15
 memory_size: 500
 exploration_rate_decay: 0.99
 nn_update_frequency: 200
+rewards: [-50, 0, 100, 200, 400]

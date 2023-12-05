@@ -29,7 +29,7 @@ from config_type import Config
 
 
 # change string to compare os.environ with to enable ("enabled") or disable wandb
-WANDB_ENABLED = os.environ.get("WANDB_MODE", "enabled") == "enabled"
+WANDB_ENABLED = os.environ.get("WANDB_MODE", "enabled") == "disabled"
 
 
 def train():
@@ -619,13 +619,12 @@ class Agent:
 
         return td_est.mean().item(), loss
 
-    def solve_loop(self, e: int, model_type: str, n_rounds: int, train_mode: bool, exp_mode: bool, env, logger, obs, mem=None):
+    def solve_loop(self, episode: int, n_rounds: int, train_mode: bool, exp_mode: bool, env, logger, mem=None):
         """
         This function solves all networks in a loop over n_rounds
 
         Args:
             e: (int) current episode number
-            model_type: (str) the type of general strategy model to use, between NNs and strategies like myopic or loss
             n_rounds: (int) the number of steps to solve networks in
             env: (Environment object)
             train_mode: bool flag to signal if we are training or testing
@@ -638,76 +637,38 @@ class Agent:
             Saves metrics in logger object
         """
 
+        # reset env(s)
+        env.reset()
+        # obtain first observation of the env(s)
+        # obs = env.observe()
+        obs = env.observe()
+        print(f"observation shape: {obs['obs'].shape}")
+        print(f"observation mask shape: {obs['mask'].shape}")
+
+
         if exp_mode:
             actions = th.full((self.n_networks, self.n_steps), 0)
 
         for round_num in range(n_rounds):
-            print(f"ROUND {round_num}")
-            # choose action to perform in environment(s)
-            if model_type not in ["myopic", "take_loss", "random"]:
-                if model_type == 'dqn':
-                    if round_num == 0:
-                        action, step_q_values = self.act(obs, greedy_only=False, first_call=True, episode_number=e)
-                    else:
-                        action, step_q_values = self.act(obs, greedy_only=False, episode_number=e)
+            action, step_q_values = self.act(obs, greedy_only=train_mode, first_call=round_num == 0, episode_number=episode)
 
-                elif model_type == 'dqn_test':
-                    if round_num == 0:
-                        action, step_q_values = self.act(obs, greedy_only=True, first_call=True, episode_number=e)
-                    else:
-                        action, step_q_values = self.act(obs, greedy_only=True, episode_number=e)
-            else:
-                action = self.act_rule_based(obs, model_type)
-
-            # if we are in the last step we only need reward, else output also the next state
-            # if round_num != 7:
-            #     next_obs, reward = env.step(action, round_num)
-            # else:
-            #     reward = env.step(action, round_num)
-            #     # since this is the last step, reset the loss counter
-            #     if model_type == "take_loss":
-            #         self.reset_loss_counter()
-
-            # if we are in the last step we only need reward, else output also the next state
-            if round_num != 7:
-                if train_mode:
-                    # next_obs, reward = env.step(action, round_num, train_subset=True) (original line with no level)
-                    next_obs, reward, level = env.step(action, round_num, train_subset=True)
-                else:
-                    # next_obs, reward = env.step(action, round_num) (original line with no level)
-                    next_obs, reward, level = env.step(action, round_num)
-            else:
-                if train_mode:
-                    # reward = env.step(action, round_num, train_subset=True)
-                    reward, level = env.step(action, round_num, train_subset=True)
-                else:
-                    # reward = env.step(action, round_num)
-                    reward, level = env.step(action, round_num)
-
-                # since this is the last step, reset the loss counter
-                if model_type == "take_loss":
-                    self.reset_loss_counter()
-
+            next_obs, reward, level, is_done = env.step(action)
+            
             # remember transitions in memory if a mem object is passed during function call
             # (that is, if we are in dqn)
             if mem is not None:
                 mem.store(round_num, reward=reward, action=action, **obs)
 
-            if round_num != 7:
+            if not is_done:
                 obs = next_obs
 
-            # Logging (step)
-            if model_type not in ["myopic", "take_loss", "random"]:
-                # logger.log_step(round_num, reward, step_q_values)
-                logger.log_step(round_num, reward, level, step_q_values)
-            else:
-                # logger.log_step(round_num, reward)
-                logger.log_step(round_num, reward, level)
+
+            logger.log_step(round_num, reward, level, step_q_values)
 
             if exp_mode:
                 actions[:, round_num] = action
 
-            if env.is_done:
+            if is_done:
                 break
 
             print('\n')
@@ -745,34 +706,10 @@ def train_agent(config=None):
 
     # ---------Start analysis------------------------------
     # initialize environment(s)
-    env = Reward_Network(networks_train,
-                         config.observation_shape,
-                         config.observation_type,
-                         config.train_batch_size,
-                         DEVICE)
+    env = Reward_Network(networks_train, config, DEVICE)
 
-    env_test = Reward_Network(networks_test,
-                              config.observation_shape,
-                              config.observation_type,
-                              config.train_batch_size,
-                              DEVICE)
+    env_test = Reward_Network(networks_test, config, DEVICE)
 
-    # new!
-    env_myopic = Reward_Network(networks_train,
-                                config.observation_shape,
-                                config.observation_type,
-                                config.train_batch_size,
-                                DEVICE)
-    env_loss = Reward_Network(networks_train,
-                              config.observation_shape,
-                              config.observation_type,
-                              config.train_batch_size,
-                              DEVICE)
-
-    env_random = Reward_Network(networks_train,
-    config.observation_shape,
-    config.observation_type,
-    config.train_batch_size, DEVICE)
 
     # initialize Agent(s)
     AI_agent = Agent(
@@ -782,55 +719,7 @@ def train_agent(config=None):
         save_dir=config.save_dir,
         device=DEVICE,
     )
-
-    AI_agent_myopic = Agent(
-        obs_dim=2,
-        config=config,
-        action_dim=env.action_space_idx.shape,
-        save_dir=config.save_dir,
-        device=DEVICE,
-    )
-
-    AI_agent_myopic_test = Agent(
-        obs_dim=2,
-        config=config,
-        action_dim=env_test.action_space_idx.shape,
-        save_dir=config.save_dir,
-        device=DEVICE,
-    )
-
-    AI_agent_take_loss = Agent(
-        obs_dim=2,
-        config=config,
-        action_dim=env.action_space_idx.shape,
-        save_dir=config.save_dir,
-        device=DEVICE,
-    )
-
-    AI_agent_take_loss_test = Agent(
-        obs_dim=2,
-        config=config,
-        action_dim=env_test.action_space_idx.shape,
-        save_dir=config.save_dir,
-        device=DEVICE,
-    )
-
-    AI_agent_random = Agent(
-        obs_dim=2,
-        config=config,
-        action_dim=env.action_space_idx.shape,
-        save_dir=config.save_dir,
-        device=DEVICE,
-    )
-
-    AI_agent_random_test = Agent(
-        obs_dim=2,
-        config=config,
-        action_dim=env_test.action_space_idx.shape,
-        save_dir=config.save_dir,
-        device=DEVICE,
-    )
-
+    
     # initialize Memory buffer
     Mem = Memory(
         device=DEVICE, size=config.memory_size, n_rounds=config.n_rounds
@@ -843,89 +732,33 @@ def train_agent(config=None):
     logger_test = MetricLogger(
         "dqn_test", config.save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
     )
-    logger_myopic = MetricLogger(
-        "myopic", config.save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
-    )
-    logger_myopic_test = MetricLogger(
-        "myopic", config.save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
-    )
-    logger_loss = MetricLogger(
-        "take_loss", config.save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
-    )
-    logger_loss_test = MetricLogger(
-        "take_loss", config.save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
-    )
-    logger_random = MetricLogger(
-        "random", config.save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
-    )
-    logger_random_test = MetricLogger(
-        "random", config.save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
-    )
-
 
     metrics_df_list = []
 
     for e in range(config.n_episodes):
         print(f"----EPISODE {e + 1}---- \n")
 
-        # reset env(s)
-        env.reset()
-        # obtain first observation of the env(s)
-        # obs = env.observe()
-        obs = env.observe(train_subset=True)
-        print(f"observation shape: {obs['obs'].shape}")
-        print(f"observation mask shape: {obs['mask'].shape}")
-
-        # new! double env to keep track of rule based steps
-        env_myopic.reset()
-        # obtain first observation of the env(s)
-        # obs_myopic = env_myopic.observe()
-        obs_myopic = env_myopic.observe(train_subset=True)
-
-        env_random.reset()
-        # # # obtain first observation of the env(s)
-        obs_random = env_random.observe(train_subset=True)
-
-        env_loss.reset()
-        # obtain first observation of the env(s)
-        # obs_loss = env_loss.observe()
-        obs_loss = env_loss.observe(train_subset=True)
 
         # train networks
-        AI_agent.solve_loop(e, "dqn", config.n_rounds, True, False ,env, logger, obs, Mem)
+        AI_agent.solve_loop(
+            episode=e,
+            n_rounds=config.n_rounds,
+            train_mode=True,
+            exp_mode=False,
+            env=env,
+            logger=logger,
+            mem=Mem,
+        )
         # new! learning rate scheduler
         AI_agent.scheduler.step()
-
-        AI_agent_myopic.solve_loop(e, "myopic", config.n_rounds, True, False ,env_myopic, logger_myopic, obs_myopic)
-
-        AI_agent_take_loss.set_rule_based_objects(config.train_batch_size)
-        AI_agent_take_loss.solve_loop(e, "take_loss", config.n_rounds, True,False , env_loss, logger_loss, obs_loss)
-
-        AI_agent_random.solve_loop(e, "random", config.n_rounds,True,False , env_random, logger_random, obs_random)
 
         # --END OF EPISODE--
         Mem.finish_episode()
         logger.log_episode()
-        logger_myopic.log_episode()
-        logger_loss.log_episode()
-        logger_random.log_episode()
 
         # prepare logging info that all model types share
         metrics_log = {"episode": e + 1,
                        "avg_reward_all_envs": logger.episode_metrics['reward_episode_all_envs'][-1],
-                       "avg_reward_rule_based_myopic_all_envs":
-                           logger_myopic.episode_metrics['reward_episode_all_envs'][-1],
-                       "avg_reward_rule_based_3losses_all_envs":
-                           logger_loss.episode_metrics['reward_episode_all_envs'][-1],
-                       "avg_level_all_envs": logger.episode_metrics['level_episode_all_envs'][-1],
-                       "avg_level_rule_based_myopic_all_envs":
-                           logger_myopic.episode_metrics['level_episode_all_envs'][-1],
-                       "avg_level_rule_based_3losses_all_envs":
-                           logger_loss.episode_metrics['level_episode_all_envs'][-1],
-                       "avg_reward_rule_based_random_all_envs":
-                          logger_random.episode_metrics['reward_episode_all_envs'][-1],
-                       "avg_level_rule_based_random_all_envs":
-                           logger_random.episode_metrics['level_episode_all_envs'][-1],
                        }
         for s in range(config.n_rounds):
             metrics_log[f'q_mean_step_{s + 1}'] = logger.episode_metrics[f'q_mean_step_{s + 1}'][-1]
@@ -934,72 +767,24 @@ def train_agent(config=None):
         # test networks (every 100 episodes)
         if (e + 1) % 100 == 0:
             print("<<<<TESTING!>>>>")
-            # reset env(s) test
-            env_test.reset()
-            # obtain first observation of the env(s)
-            obs_test = env_test.observe()
-            # print("TEST RESET STEP COUNTER: ", env_test.step_counter[:10])
-            AI_agent.solve_loop(e, "dqn_test", config.n_rounds, False, False, env_test, logger_test, obs_test)
-
-            # reset env(s) test
-            env_test.reset()
-            # obtain first observation of the env(s)
-            obs_test = env_test.observe()
-
-            AI_agent_take_loss_test.set_rule_based_objects(config.n_networks)
-            AI_agent_take_loss_test.solve_loop(e, "take_loss", config.n_rounds, False,False, env_test, logger_loss_test,
-                                               obs_test)
-
-            # reset env(s) test
-            env_test.reset()
-            # obtain first observation of the env(s)
-            obs_test = env_test.observe()
-
-            AI_agent_myopic_test.solve_loop(e, "myopic", config.n_rounds, False, False, env_test,
-                                               logger_myopic_test,
-                                               obs_test)
-
-            # reset env(s) test
-            env_test.reset()
-            # obtain first observation of the env(s)
-            obs_test = env_test.observe()
-
-            AI_agent_random_test.solve_loop(e, "random", config.n_rounds, False, False, env_test,
-                                            logger_random_test,
-                                            obs_test)
-
+            AI_agent.solve_loop(
+                episode=e,
+                n_rounds=config.n_rounds,
+                train_mode=False,
+                exp_mode=False,
+                env=env_test,
+                logger=logger_test,
+            )
             logger_test.log_episode()
-            logger_loss_test.log_episode()
 
-            logger_myopic_test.log_episode()
-            logger_random_test.log_episode()
 
             # add test rewards to wandb metrics
-            # print('logger test: ', logger_test.episode_metrics['reward_episode_all_envs'][-1])
             metrics_log["test_avg_reward_all_envs"] = logger_test.episode_metrics['reward_episode_all_envs'][-1]
-            metrics_log["test_avg_reward_rule_based_3losses_all_envs"] = \
-                logger_loss_test.episode_metrics['reward_episode_all_envs'][-1]
             # add test levels to wandb metrics
             metrics_log["test_avg_level_all_envs"] = logger_test.episode_metrics['level_episode_all_envs'][-1]
-            metrics_log["test_avg_level_rule_based_3losses_all_envs"] = \
-                logger_loss_test.episode_metrics['level_episode_all_envs'][-1]
-
-            metrics_log["test_avg_reward_rule_based_myopic_all_envs"] = logger_myopic_test.episode_metrics['reward_episode_all_envs'][-1]
-            metrics_log["test_avg_reward_rule_based_random_all_envs"] = logger_random_test.episode_metrics['reward_episode_all_envs'][-1]
-            metrics_log["test_avg_level_rule_based_myopic_all_envs"] = logger_myopic_test.episode_metrics['level_episode_all_envs'][-1]
-            metrics_log["test_avg_level_rule_based_random_all_envs"] = logger_random_test.episode_metrics['level_episode_all_envs'][-1]
-
         else:
             metrics_log["test_avg_reward_all_envs"] = float("nan")
-            metrics_log["test_avg_reward_rule_based_3losses_all_envs"] = float('nan')
-
             metrics_log["test_avg_level_all_envs"] = float("nan")
-            metrics_log["test_avg_level_rule_based_3losses_all_envs"] = float('nan')
-
-            metrics_log["test_avg_reward_rule_based_myopic_all_envs"] = float('nan')
-            metrics_log["test_avg_reward_rule_based_random_all_envs"] = float('nan')
-            metrics_log["test_avg_level_rule_based_myopic_all_envs"] = float('nan')
-            metrics_log["test_avg_level_rule_based_random_all_envs"] = float('nan')
 
         # take memory sample!
         sample = Mem.sample(config.batch_size, device=DEVICE)
@@ -1027,9 +812,7 @@ def train_agent(config=None):
 
     # SAVE MODEL
     AI_agent.save()
-    # NEW HEATMAP PLOT
-    lineplot = logger.lineplot(config.figures_dir)
-    lineplot_test = logger_test.lineplot(config.figures_dir, test=True)
+    
     # Dataframe of all metrics
     metrics_df = pd.DataFrame(metrics_df_list)
     metrics_table = wandb.Table(dataframe=metrics_df)
@@ -1049,7 +832,6 @@ if __name__ == "__main__":
         with wandb.init(project='reward-networks-iii', entity="chm-hci"):
             train_agent(config)
     else:
-        config = Config()
         train_agent(config)
 
 
