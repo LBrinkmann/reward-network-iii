@@ -14,6 +14,7 @@ build
 
 # Ignore html generated in backend folder
 backend/**/*.html
+algorithm/wandb
 
 venv
 

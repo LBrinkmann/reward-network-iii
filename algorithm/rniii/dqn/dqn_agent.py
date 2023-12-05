@@ -8,49 +8,24 @@
 # Center for Humans and Machines, MPIB Berlin
 ###############################################
 
-import datetime
+import yaml
 import json
-# filesystem and log file specific imports
 import os
-import pickle
-import time
 
-import matplotlib.pyplot as plt
-import numpy as np
+import argparse
 import einops
 import pandas as pd
 import torch
 import torch as th
-from torch.nn.utils.rnn import PackedSequence
 import wandb
-from pydantic import BaseModel
 
-# import the custom reward network environment class
 from environment_vect import Reward_Network
 from memory import Memory
 from nn import DQN, RNN
 from logger import MetricLogger
+from config_type import Config
 
 
-class Config(BaseModel):
-    model_type: str = "RNN"
-    observation_type: str = "no_level_loss_counter"
-    observation_shape: str = "concatenated"
-    train_data_name: str = "networks_train.json"
-    test_data_name: str = "networks_test.json"
-    n_episodes: int = 2000
-    n_networks: int = 1000
-    train_batch_size: int = 100
-    n_rounds: int = 8
-    n_nodes: int = 10
-    learning_rate: float = 1.e-3
-    lr_scheduler_step: int = 500
-    lr_scheduler_gamma: int = 0.8
-    batch_size: int = 16
-    nn_hidden_layer_size: int = 15
-    memory_size: int = 500
-    exploration_rate_decay: float = 0.99
-    nn_update_frequency: int = 200
 
 
 # change string to compare os.environ with to enable ("enabled") or disable wandb
@@ -66,24 +41,10 @@ def train():
         config = Config()
         train_agent(config)
 
-
-# def log(data, table=None):
-#     if WANDB_ENABLED:
-#         wandb.log(data)
-#         if table:
-#             table.add_data(v for k, v in data.items())
-#         wandb.log({"metrics_table": table})
-#     else:
-#         print(" | ".join(f"{k}: {v}" for k, v in data.items()))
-
 def log(data, table=None, model=False):
     if WANDB_ENABLED:
         if table is not None:
             wandb.log({"metrics_table": table})
-        # elif model:
-        #     artifact = wandb.Artifact("model_checkpoint", type="model")
-        #     artifact.add_file("model_checkpoint/")
-        #     wandb.log_artifact(model)
         else:
             wandb.log(data)
     else:
@@ -125,10 +86,10 @@ class Agent:
         # 21 with all info, 15 with no level info and 14 with no level and loss counter info
         self.observation_shape = config.observation_shape
         self.observation_type = config.observation_type
-        self.observation_final_size = {'default': {'full': 21, 'no_level': 15, 'no_level_loss_counter': 14},
+        self.observation_final_size = {'default': {'full': 21, 'no_level': 15, 'no_level_loss_counter': 16},
                                        'concatenated': {'full': 21 * config.n_nodes,
                                                         'no_level': 15 * config.n_nodes,
-                                                        'no_level_loss_counter': 14 * config.n_nodes}}
+                                                        'no_level_loss_counter': 16 * config.n_nodes}}
         # check model type from config
         self.model_type = config.model_type
         if config.model_type == 'DQN':
@@ -766,23 +727,21 @@ def train_agent(config=None):
                        flag to run or not run hyperparameter tuning
     """
 
-    # Initialize a new wandb run
-    # with wandb.init(config=config):
-    #    config = wandb.config
-
     # ---------Loading of the networks---------------------
-    print(f"Loading train networks from file: {os.path.join(data_dir, config.train_data_name)}")
+
+    print(f"Loading train networks from file: {config.train_data_name}")
     # Load networks (train)
-    with open(os.path.join(data_dir, config.train_data_name)) as json_file:
+    with open(config.train_data_name) as json_file:
         networks_train = json.load(json_file)
     print(f"Number of networks loaded: {len(networks_train)}")
     # Load networks (test)
-    with open(os.path.join(data_dir, config.test_data_name)) as json_file:
+    with open(config.test_data_name) as json_file:
         networks_test = json.load(json_file)
     print(f"Number of networks loaded: {len(networks_test)}")
 
     # ---------Specify device (cpu or cuda)----------------
     DEVICE = th.device("cuda" if th.cuda.is_available() else "cpu")
+    print(f"Device: {DEVICE}")
 
     # ---------Start analysis------------------------------
     # initialize environment(s)
@@ -820,7 +779,7 @@ def train_agent(config=None):
         obs_dim=2,
         config=config,
         action_dim=env.action_space_idx.shape,
-        save_dir=save_dir,
+        save_dir=config.save_dir,
         device=DEVICE,
     )
 
@@ -828,7 +787,7 @@ def train_agent(config=None):
         obs_dim=2,
         config=config,
         action_dim=env.action_space_idx.shape,
-        save_dir=save_dir,
+        save_dir=config.save_dir,
         device=DEVICE,
     )
 
@@ -836,7 +795,7 @@ def train_agent(config=None):
         obs_dim=2,
         config=config,
         action_dim=env_test.action_space_idx.shape,
-        save_dir=save_dir,
+        save_dir=config.save_dir,
         device=DEVICE,
     )
 
@@ -844,7 +803,7 @@ def train_agent(config=None):
         obs_dim=2,
         config=config,
         action_dim=env.action_space_idx.shape,
-        save_dir=save_dir,
+        save_dir=config.save_dir,
         device=DEVICE,
     )
 
@@ -852,7 +811,7 @@ def train_agent(config=None):
         obs_dim=2,
         config=config,
         action_dim=env_test.action_space_idx.shape,
-        save_dir=save_dir,
+        save_dir=config.save_dir,
         device=DEVICE,
     )
 
@@ -860,7 +819,7 @@ def train_agent(config=None):
         obs_dim=2,
         config=config,
         action_dim=env.action_space_idx.shape,
-        save_dir=save_dir,
+        save_dir=config.save_dir,
         device=DEVICE,
     )
 
@@ -868,7 +827,7 @@ def train_agent(config=None):
         obs_dim=2,
         config=config,
         action_dim=env_test.action_space_idx.shape,
-        save_dir=save_dir,
+        save_dir=config.save_dir,
         device=DEVICE,
     )
 
@@ -879,28 +838,28 @@ def train_agent(config=None):
 
     # initialize Logger(s) n_networks or train_batch_size from config
     logger = MetricLogger(
-        "dqn", save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
+        "dqn", config.save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
     )
     logger_test = MetricLogger(
-        "dqn_test", save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
+        "dqn_test", config.save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
     )
     logger_myopic = MetricLogger(
-        "myopic", save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
+        "myopic", config.save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
     )
     logger_myopic_test = MetricLogger(
-        "myopic", save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
+        "myopic", config.save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
     )
     logger_loss = MetricLogger(
-        "take_loss", save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
+        "take_loss", config.save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
     )
     logger_loss_test = MetricLogger(
-        "take_loss", save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
+        "take_loss", config.save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
     )
     logger_random = MetricLogger(
-        "random", save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
+        "random", config.save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
     )
     logger_random_test = MetricLogger(
-        "random", save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
+        "random", config.save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
     )
 
 
@@ -1069,8 +1028,8 @@ def train_agent(config=None):
     # SAVE MODEL
     AI_agent.save()
     # NEW HEATMAP PLOT
-    lineplot = logger.lineplot(figures_dir)
-    lineplot_test = logger_test.lineplot(figures_dir, test=True)
+    lineplot = logger.lineplot(config.figures_dir)
+    lineplot_test = logger_test.lineplot(config.figures_dir, test=True)
     # Dataframe of all metrics
     metrics_df = pd.DataFrame(metrics_df_list)
     metrics_table = wandb.Table(dataframe=metrics_df)
@@ -1079,29 +1038,19 @@ def train_agent(config=None):
 
 if __name__ == "__main__":
 
-    # --------Specify paths--------------------------
-    current_dir = os.getcwd()
-    print(f"Current working directory: {current_dir}")
-    root_dir = os.sep.join(current_dir.split(os.sep)[:2])
+    # Load config parameter from yaml file specified in command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", type=str, default="config.yaml", help="Configuration file to use")
+    args = parser.parse_args()
+    with open(args.config) as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+    config = Config(**config)
+    if WANDB_ENABLED:
+        with wandb.init(project='reward-networks-iii', entity="chm-hci"):
+            train_agent(config)
+    else:
+        config = Config()
+        train_agent(config)
 
-    # Specify directories depending on system (local vs cluster)
-    if root_dir == "/mnt":
-        user_name = os.sep.join(current_dir.split(os.sep)[4:5])
-        home_dir = f"/mnt/beegfs/home/{user_name}"
-        project_dir = os.path.join(home_dir, "CHM", "reward_networks_III")
-        code_dir = os.path.join(project_dir, "reward-network-iii-algorithm")
-        data_dir = os.path.join(code_dir, "data")
-        save_dir = os.path.join(project_dir, "results")
-        figures_dir = os.path.join(project_dir, "figures")
 
-    elif root_dir == "/Users":
-        # Specify directories (local)
-        project_folder = os.path.split(os.getcwd())[0]
-        print(os.getcwd())
-        data_dir = os.path.join(os.getcwd(), "..", "..", "data")
-        out_dir = os.path.join(data_dir, "log")
-        save_dir = os.path.join(os.getcwd(), "..", "..", "..", "results")
-        figures_dir = os.path.join(os.getcwd(), "..", "..", "..", "figures")
 
-    # train
-    train()
