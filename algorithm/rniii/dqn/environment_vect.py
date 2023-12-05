@@ -7,6 +7,7 @@
 ###############################################
 import torch
 import torch.nn.functional as F
+from config_type import Config
 import os
 import json
 
@@ -48,8 +49,35 @@ def extract_level(network):
     return level
 
 
+
+
+# class Config(BaseModel):
+#     model_type: str = "RNN"
+#     observation_type: str = "no_level_loss_counter"
+#     observation_shape: str = "concatenated"
+#     train_data_name: str = "networks_train.json"
+#     test_data_name: str = "networks_test.json"
+#     save_dir: str = "models"
+#     figures_dir: str = "figures"
+#     n_episodes: int = 2000
+#     n_networks: int = 1000
+#     train_batch_size: int = 100
+#     n_rounds: int = 8
+#     n_nodes: int = 10
+#     learning_rate: float = 1.e-3
+#     lr_scheduler_step: int = 500
+#     lr_scheduler_gamma: float = 0.8
+#     batch_size: int = 16
+#     nn_hidden_layer_size: int = 15
+#     memory_size: int = 500
+#     exploration_rate_decay: float = 0.99
+#     nn_update_frequency: int = 200
+
+
+
+
 class Reward_Network:
-    def __init__(self, network, observation_shape: str, observation_type: str, train_batch_size: int, device):
+    def __init__(self, network, config: Config, observation_shape: str, observation_type: str, train_batch_size: int, device):
         """
         Initializes a reward network object given network(s) info in JSON format
 
@@ -84,9 +112,9 @@ class Reward_Network:
         # initial reward and step values
         self.INIT_REWARD = 0
         self.INIT_STEP = 0
-        self.MAX_STEP = 8
+        self.MAX_STEP = config.
         self.N_REWARD_IDX = 6  # (5 valid rewards + one to indicate no reward possible)
-        self.N_NODES = 10
+        self.N_NODES = 12
         # self.N_LEVELS = 5  # (4 valid levels + one to indicate no level possible)
         self.N_LEVELS = 6  # (5 valid levels + one to indicate no level possible)
         self.N_NETWORKS = len(self.network)
@@ -201,7 +229,7 @@ class Reward_Network:
         # print(f"- current node of shape {self.current_node.shape}")
         # print("\n")
 
-    def step(self, action, round_number: int, train_subset: bool = False):
+    def step(self, action, round_number: int):
         """
         Take a step in all environments given an action for each env;
         here action is given in the form of node index for each env
@@ -212,8 +240,6 @@ class Reward_Network:
             round_number (int): current round number at which the step is applied.
                             Relevant to decide if the next observation of envs after action
                             also needs to be returned or not
-            train_subset (bool): flag to signal that we are taking a step for a subset of the networks, a subset
-                                 os size train_batch_size
 
         Returns:
             rewards (th.tensor): tensor of size n_networks x 1 with the corresponding reward obtained
@@ -225,77 +251,36 @@ class Reward_Network:
 
         action = action.to(self.device)
 
-        if train_subset:
-            self.source_node = self.current_node[self.idx]
+        self.source_node = self.current_node[self.idx]
 
-            # extract reward indices for each env
-            rewards_idx = torch.unsqueeze(
-                self.action_space_idx[self.network_idx[self.idx], self.current_node[self.idx], action], dim=-1
-            ).to(self.device)
+        # extract reward indices for each env
+        rewards_idx = torch.unsqueeze(
+            self.action_space_idx[self.network_idx[self.idx], self.current_node[self.idx], action], dim=-1
+        ).to(self.device)
 
-            # new! extract level indices for each env
-            levels = torch.unsqueeze(
-                self.level_space[self.network_idx[self.idx], self.current_node[self.idx], action], dim=-1
-            ).to(self.device)
+        # new! extract level indices for each env
+        levels = torch.unsqueeze(
+            self.level_space[self.network_idx[self.idx], self.current_node[self.idx], action], dim=-1
+        ).to(self.device)
 
-            # add to big loss counter if 1 present in rewards_idx
-            self.big_loss_counter[self.idx] = torch.add(
-                self.big_loss_counter[self.idx], (rewards_idx == 1).int()
-            )
+        # add to big loss counter if 1 present in rewards_idx
+        self.big_loss_counter[self.idx] = torch.add(
+            self.big_loss_counter[self.idx], (rewards_idx == 1).int()
+        )
 
-            # obtain numerical reward value corresponding to reward indices
-            # rewards = self.reward_map[rewards_idx] (not normalized)
-            rewards = self.reward_norm_map[rewards_idx]  # (normalized)
-            # add rewards to reward balance
-            self.reward_balance[self.idx] = torch.add(self.reward_balance[self.idx], rewards)
-            #self.reward_balance[self.idx] = torch.add(self.reward_balance[self.idx], rewards)
+        # obtain numerical reward value corresponding to reward indices
+        # rewards = self.reward_map[rewards_idx] (not normalized)
+        rewards = self.reward_norm_map[rewards_idx]  # (normalized)
+        # add rewards to reward balance
+        self.reward_balance[self.idx] = torch.add(self.reward_balance[self.idx], rewards)
+        #self.reward_balance[self.idx] = torch.add(self.reward_balance[self.idx], rewards)
 
-            # update the current node for all envs
-            self.current_node[self.idx] = action
-            # update step counter
-            self.step_counter[self.idx] = torch.add(self.step_counter[self.idx], 1)
-            if torch.all(self.step_counter[self.idx] == 8):
-                self.is_done = True
-
-
-        else:
-            self.source_node = self.current_node
-
-            # extract reward indices for each env
-            rewards_idx = torch.unsqueeze(
-                self.action_space_idx[self.network_idx, self.current_node, action], dim=-1
-            )
-
-            # new! extract level indices for each env
-            levels = torch.unsqueeze(
-                self.level_space[self.network_idx, self.current_node, action], dim=-1
-            ).to(self.device)
-
-            # add to big loss counter if 1 present in rewards_idx
-            self.big_loss_counter = torch.add(
-                self.big_loss_counter, (rewards_idx == 1).int()
-            )
-
-            # obtain numerical reward value corresponding to reward indices
-            # rewards = self.reward_map[rewards_idx] (not normalized)
-            rewards = self.reward_norm_map[rewards_idx]  # (normalized)
-            # add rewards to reward balance
-            self.reward_balance = torch.add(self.reward_balance, rewards)
-
-            # update the current node for all envs
-            self.current_node = action
-            # update step counter
-            self.step_counter = torch.add(self.step_counter, 1)
-            if torch.all(self.step_counter == 8):
-                self.is_done = True
-
-        # (relevant for DQN) if we are in the last step return only rewards,
-        # else return also observation after action has been taken
-        # if round_number != 7:
-        #     next_obs = self.observe()
-        #     return next_obs, rewards
-        # else:
-        #     return rewards
+        # update the current node for all envs
+        self.current_node[self.idx] = action
+        # update step counter
+        self.step_counter[self.idx] = torch.add(self.step_counter[self.idx], 1)
+        if torch.all(self.step_counter[self.idx] == 8):
+            self.is_done = True
 
         if round_number != 7:
             next_obs = self.observe(train_subset)
@@ -486,45 +471,3 @@ class Reward_Network:
                 return {"mask": self.next_nodes,
                         "obs": self.observation_matrix[:, :, :-7].reshape(
                             [self.network_size_dict[train_subset], (self.N_NODES * (self.N_REWARD_IDX + self.MAX_STEP))])}
-                # "obs": self.observation_matrix[:, :, :-7].reshape( [self.N_NETWORKS, (self.N_NODES*(self.N_REWARD_IDX + self.MAX_STEP))] )}
-
-    # For quick testing purposes, comment out if not needed
-# with open('../../data/networks_test.json') as json_file:
-
-# with open('../../data/networks_train.json') as json_file:
-#     test = json.load(json_file)
-# env_test = Reward_Network(test[10:15], observation_shape='default', observation_type='full', train_batch_size=5, device="cpu")
-# print('starting nodes:', env_test.starting_nodes)
-# print('rewards mapping (normalized):', env_test.reward_norm_map)
-# print(env_test.action_space_idx[0,:,:])
-# print(f"\n")
-
-# env_test.reset()
-# print("FIRST RESET")
-# print("reward balance: ", env_test.reward_balance)
-# print("step counter: ", env_test.step_counter)
-# print("big loss counter: ", env_test.big_loss_counter)
-# print("is done: ", env_test.is_done)
-# print("current node: ", env_test.current_node)
-# print("training random network idx: ", env_test.idx)
-# print(f"\n")
-#
-# obs = env_test.observe(train_subset=True)
-# print("FIRST OBSERVE")
-# print("observation: ", obs["obs"].shape)
-# print("mask: ", obs["mask"].shape)
-# # print("observation: ", obs["obs"][0,:,:])
-# # print("observation: ", obs["mask"][0,:])
-# next_obs, rewards, levels = env_test.step(torch.tensor([2,8,2,8,2]), 0, train_subset=True)
-# # print(next_obs['obs'].shape)
-# print("rewards: ", rewards[:,0])
-# print("levels: ", levels[:,0])
-
-#observation_matrix_conc = obs["obs"].reshape([env_test.N_NETWORKS, env_test.N_NODES*21])
-#print(observation_matrix_conc.shape)
-#print(observation_matrix_conc[0,:-42])
-
-#next_obs, rewards = env_test.step(torch.tensor([2,8,3]), 0)
-#print(next_obs['obs'][:,:,:-6].shape)
-#print(rewards)
-#print(env_test.observe())
