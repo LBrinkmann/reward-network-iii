@@ -99,6 +99,7 @@ const nextTutorialStepReducer = (state: NetworkState, action: any) => {
       tutorialOptions: {
         ...networkInitialState.tutorialOptions,
         node: true,
+        linearSolution: true,
       },
     };
   } else if (state.tutorialOptions.linearSolution && state.moves.length < 11) {
