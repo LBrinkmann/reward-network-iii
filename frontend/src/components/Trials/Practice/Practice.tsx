@@ -26,7 +26,7 @@ const Practice: FC<IPractice> = ({ onLastTutorialStep }) => {
       // wait for 3 seconds and end the practice
       const timer = setTimeout(() => {
         onLastTutorialStep();
-      }, 1000);
+      }, 3000);
 
       return () => {
         clearTimeout(timer);
@@ -75,7 +75,7 @@ const Practice: FC<IPractice> = ({ onLastTutorialStep }) => {
         }
         showTotalPoints={
           networkState.tutorialOptions.totalScore ||
-          networkState.tutorialStep > 8
+          networkState.tutorialStep > 10
         }
       />
     </>
