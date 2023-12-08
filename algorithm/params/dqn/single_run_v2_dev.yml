@@ -8,12 +8,13 @@ figures_dir: "data/23_11_30/figures/"
 n_episodes: 32
 n_networks: 1000
 train_batch_size: 100
+test_period: 16
 n_rounds: 10
 n_nodes: 12
 learning_rate: 1.e-3
 lr_scheduler_step: 2000
 lr_scheduler_gamma: 0.8
-batch_size: 16
+batch_size: 8
 nn_hidden_layer_size: 15
 memory_size: 500
 exploration_rate_decay: 0.99

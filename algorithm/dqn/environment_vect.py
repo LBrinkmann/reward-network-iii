@@ -8,6 +8,7 @@
 import torch
 import torch.nn.functional as F
 from config_type import Config
+from typing import Optional
 
 
 def restructure_edges(network):
@@ -48,7 +49,7 @@ def extract_level(network):
 
 
 class Reward_Network:
-    def __init__(self, network, config: Config, device):
+    def __init__(self, network, batch_size: Optional[int], config: Config, device):
         """
         Initializes a reward network object given network(s) info in JSON format
 
@@ -76,12 +77,12 @@ class Reward_Network:
         self.N_REWARD_IDX = len(self.REWARDS) + 1  # (5 valid rewards + one to indicate no reward possible)
         self.N_NODES = config.n_nodes
         self.N_NETWORKS = len(self.network)
-        self.TRAIN_BATCH_SIZE = config.train_batch_size
-        assert self.TRAIN_BATCH_SIZE <= len(network), f'Batch size must be smaller or same as total number of networks'
+        # self.TRAIN_BATCH_SIZE = config.train_batch_size
+        # assert self.TRAIN_BATCH_SIZE <= len(network), f'Batch size must be smaller or same as total number of networks'
 
         self.observation_shape = (self.N_NODES * self.N_REWARD_IDX)
 
-        self.network_size_dict = {False: self.N_NETWORKS , True: self.TRAIN_BATCH_SIZE}
+        self.batch_size = batch_size
 
         # define node numbers (from 0 to x)
         self.nodes = torch.stack([torch.arange(self.N_NODES)] * self.N_NETWORKS, dim=0).to(self.device)
@@ -169,7 +170,11 @@ class Reward_Network:
         self.big_loss_counter = torch.zeros((self.N_NETWORKS, 1), dtype=torch.long).to(self.device)
         self.is_done = False
         self.current_node = self.starting_nodes.clone()
-        self.idx = torch.randint(0, self.N_NETWORKS, (self.TRAIN_BATCH_SIZE,)).to(self.device)
+        if self.batch_size is None:
+            self.idx = torch.arange(self.N_NETWORKS, dtype=torch.long).to(self.device)
+            self.batch_size = self.N_NETWORKS
+        else:
+            self.idx = torch.randint(0, self.N_NETWORKS, (self.batch_size,)).to(self.device)
 
 
     def step(self, action):
@@ -260,7 +265,7 @@ class Reward_Network:
 
         self.observation_matrix = torch.zeros(
             (
-                self.TRAIN_BATCH_SIZE,
+                self.batch_size,
                 self.N_NODES,
                 self.N_REWARD_IDX,
             ),
@@ -287,4 +292,4 @@ class Reward_Network:
         )
         return {"mask": self.next_nodes,
                 "obs": self.observation_matrix.reshape(
-                    [self.TRAIN_BATCH_SIZE, (self.N_NODES * self.N_REWARD_IDX)])}
+                    [self.batch_size, (self.N_NODES * self.N_REWARD_IDX)])}

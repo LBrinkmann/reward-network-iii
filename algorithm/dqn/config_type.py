@@ -12,6 +12,7 @@ class Config(BaseModel):
     n_episodes: int = 2000
     n_networks: int = 1000
     train_batch_size: int = 100
+    test_period: int = 100
     n_rounds: int = 8
     n_nodes: int = 10
     learning_rate: float = 1.e-3
