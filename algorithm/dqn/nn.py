@@ -38,9 +38,7 @@ class RNN(nn.Module):
     def forward(self, obs):
         # evaluate q values
         i = obs.float()
-        print("RNN dimension of i: ", i.shape)
         x = F.relu(self.linear1(i))
-        print("RNN dimension of x: ", x.shape)
         h, self.hidden = self.gru(x, self.hidden)
         q = self.linear2(h)
         return q

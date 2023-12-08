@@ -5,62 +5,46 @@ import numpy as np
 import torch as th
 import matplotlib.pyplot as plt
 import seaborn as sns
+from config_type import Config
 
 
 class MetricLogger:
-    def __init__(self, model_type: str, save_dir: str, n_networks: int, n_episodes: int, n_nodes: int, device):
+    def __init__(self, log_name, n_networks, config: Config, device):
         """
         Initialize logger object
 
         Args:
-            model_type (str): type of model for which the logger stores metrics
-            (one between `dqn`,`loss`,`myopic`,`random`)
-            save_dir (str): path to folder where logged metrics will be saved
-            n_networks (int): number of networks
-            n_episodes (int): number of episodes
-            n_nodes (int): number of nodes in one network
+            log_name (str): name of the logger (train/test)
+            n_networks (int): number of networks in the environment
             device: torch device
         """
 
-        self.model_type = model_type
-        self.save_dir = save_dir
+        self.save_dir = config.save_dir
+        self.log_name = log_name
 
         # params
         self.n_networks = n_networks
-        self.n_episodes = n_episodes
-        self.n_nodes = n_nodes
-        self.n_steps = 8
+        self.n_episodes = config.n_episodes
+        self.n_nodes = config.n_nodes
+        self.n_steps = config.n_rounds
         self.device = device
 
-
-        if model_type == "dqn":
-            # self.q_step_log = th.zeros(n_steps, n_networks, n_nodes)
-
-            self.episode_metrics = {
+        self.episode_metrics = {
                 "reward_steps": [],
                 "reward_episode": [],
                 "reward_episode_all_envs": [],
-                "loss": [],
-                "q_learn": [],
                 "level_steps": [],
                 "level_episode": [],
                 "level_episode_all_envs": []
             }
+
+        if self.log_name == "train":
+            self.episode_metrics["loss"] = []
+            self.episode_metrics["q_learn"] = []
             # add step-wise q values tracker
             for i in range(self.n_steps):
                 self.episode_metrics[f'q_mean_step_{i + 1}'] = []
                 self.episode_metrics[f'q_max_step_{i + 1}'] = []
-
-        else:
-            # Episode metrics
-            self.episode_metrics = {
-                "reward_steps": [],
-                "reward_episode": [],
-                "reward_episode_all_envs": [],
-                "level_steps": [],
-                "level_episode": [],
-                "level_episode_all_envs": []
-            }
 
         # number of episodes to consider to calculate mean episode {current_metric}
         self.take_n_episodes = 5
@@ -80,7 +64,7 @@ class MetricLogger:
 
         self.level_step_log = th.zeros(self.n_steps, self.n_networks).to(self.device)
 
-        if self.model_type == "dqn":
+        if self.log_name == "train":
             self.curr_ep_loss = 0.0
             self.curr_ep_q = 0.0
             self.curr_ep_loss_length = 0
@@ -117,19 +101,8 @@ class MetricLogger:
         level_adjusted = th.sub(level, ones, alpha=1)
         self.level_step_log[step_number, :] = level_adjusted[:, 0]
 
-        if self.model_type == "dqn" and q_step is not None:
+        if self.log_name == 'train' and q_step is not None:
             self.q_step_log[step_number, :, :] = q_step[:, :, 0].detach()
-
-        # self.curr_ep_reward += reward
-        # self.reward_step_log[step_number, :] = reward[:, 0]
-        # self.q_step_log[step_number, :, :] = q_step[:, :, 0].detach()
-        #
-        # self.curr_ep_reward_rule_based["myopic"] += reward2["myopic"]
-        # self.curr_ep_reward_rule_based["take_loss"] += reward2["take_loss"]
-        # self.curr_ep_reward_rule_based["random"] += reward2["random"]
-        # self.reward_rule_based_step_log["myopic"][step_number, :] = reward2["myopic"][:, 0]
-        # self.reward_rule_based_step_log["take_loss"][step_number, :] = reward2["take_loss"][:, 0]
-        # self.reward_rule_based_step_log["random"][step_number, :] = reward2["random"][:, 0]
 
     def log_episode(self):
         """
@@ -158,7 +131,7 @@ class MetricLogger:
         # log the loss value in the episode for each of the networks TODO: adapt to store when Learn method is called
         # self.episode_metrics['loss'].append(loss)
 
-        if self.model_type == "dqn":
+        if self.log_name == "train":
             # log the mean, min and max q value in the episode over all envs but FOR EACH STEP SEPARATELY
             # since we are mainly interested in the mean min and max of VALID actions we first get a mask to index
             # the valid actions in q_step_log
@@ -177,27 +150,6 @@ class MetricLogger:
                 self.episode_metrics[f'q_mean_step_{s + 1}'].append(q_mean_steps[s].item())
                 self.episode_metrics[f'q_max_step_{s + 1}'].append(q_max_steps[s].item())
 
-            # print(th.nonzero(mask_valid[0,:,:].int()).shape)
-            # indices = th.masked_fill(th.cumsum(mask_valid.int(), dim=0), ~mask_valid, 0)
-            # prova = th.scatter(input=th.zeros_like(self.q_step_log), dim=1, index=indices, src=self.q_step_log)
-
-            # self.episode_metrics["q_mean_steps"].append(th.mean(self.q_step_log, dim=0))
-            # self.episode_metrics["q_min_steps"].append(th.amin(self.q_step_log, dim=(1, 2)))
-            # self.episode_metrics["q_mean_steps"].append(q_mean_steps)
-            # self.episode_metrics["q_min_steps"].append(q_min_steps)
-            # self.episode_metrics["q_max_steps"].append(q_max_steps)
-            # self.episode_metrics["q_max_steps"].append(th.amax(self.q_step_log, dim=(1, 2)))
-
-            # log the average of mean, min and max q value in the episode ACROSS ALL STEPS
-            # self.episode_metrics["q_mean"].append(
-            #    th.mean(self.episode_metrics["q_mean_steps"][-1])
-            # )
-            # self.episode_metrics["q_min"].append(
-            #    th.mean(self.episode_metrics["q_min_steps"][-1])
-            # )
-            # self.episode_metrics["q_max"].append(
-            #    th.mean(self.episode_metrics["q_max_steps"][-1])
-            # )
 
         # reset values to zero
         self.init_episode()

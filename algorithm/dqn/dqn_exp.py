@@ -98,8 +98,6 @@ if __name__ == "__main__":
     env.reset()
     # obtain first observation of the env(s)
     obs = env.observe()
-    print(f"observation shape: {obs['obs'].shape}")
-    print(f"observation mask shape: {obs['mask'].shape}")
 
     # solve all networks at once in one go ("1 episode")
     for e in range(1):
@@ -116,8 +114,6 @@ if __name__ == "__main__":
     for i in range(len(network_ids)):
         solutions.append({'network_id': network_ids[i],
                           'moves': moves[i,:].tolist()})
-
-    print(solutions)
 
 
 

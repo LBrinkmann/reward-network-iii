@@ -48,12 +48,15 @@ def log(data, table=None, model=False):
         else:
             wandb.log(data)
     else:
-        print(" | ".join(f"{k}: {v}" for k, v in data.items()))
+        if table is not None:
+            pass
+        else:
+            print(" | ".join(f"{k}: {v}" for k, v in data.items()))
 
 
 class Agent:
     def __init__(
-            self, obs_dim: int, config: dict, action_dim: tuple, save_dir: str, device
+            self, observation_shape: int, config: dict, action_dim: tuple, save_dir: str, device
     ):
         """
         Initializes an object of class Agent
@@ -69,9 +72,8 @@ class Agent:
         """
 
         # specify environment parameters
-        self.obs_dim = obs_dim
         self.action_dim = action_dim
-        self.n_networks = config.n_networks
+        self.observation_shape = observation_shape
         self.n_nodes = config.n_nodes
         self.batch_size = config.batch_size
         self.n_steps = config.n_rounds
@@ -79,80 +81,27 @@ class Agent:
         # torch device
         self.device = device
 
-        # specify DNNs used by the agent in training and learning Q(s,a) from experience
-        # to predict the most optimal action - we implement this in the Learn section
-        # two DNNs - policy net with Q_{online} and target net with Q_{target}- that
-        # independently approximate the optimal action-value function.
-        # 21 with all info, 15 with no level info and 14 with no level and loss counter info
-        self.observation_shape = config.observation_shape
-        self.observation_type = config.observation_type
-        self.observation_final_size = {'default': {'full': 21, 'no_level': 15, 'no_level_loss_counter': 16},
-                                       'concatenated': {'full': 21 * config.n_nodes,
-                                                        'no_level': 15 * config.n_nodes,
-                                                        'no_level_loss_counter': 16 * config.n_nodes}}
         # check model type from config
         self.model_type = config.model_type
-        if config.model_type == 'DQN':
 
-            if config.observation_shape == 'default':
-                input_size = (
-                    config.n_networks,
-                    config.n_nodes,
-                    self.observation_final_size[config.observation_shape][config.observation_type],
-                )
-                hidden_size = (
-                    config.n_networks,
-                    config.n_nodes,
-                    config.nn_hidden_layer_size,
-                )
-                # one q value for each action
-                output_size = (
-                    config.n_networks,
-                    config.n_nodes,
-                    1,
-                )
-
-            elif config.observation_shape == 'concatenated':
-                input_size = (
-                    config.n_networks,
-                    self.observation_final_size[config.observation_shape][config.observation_type],
-                )
-                hidden_size = (
-                    config.n_networks,
-                    config.n_nodes * config.nn_hidden_layer_size
-                )
-                # one q value for each action
-                output_size = (
-                    config.n_networks,
-                    config.n_nodes
-                )
-
-            self.policy_net = DQN(input_size, output_size, hidden_size)
-            self.policy_net = self.policy_net.to(self.device)
-            self.target_net = DQN(input_size, output_size, hidden_size)
-            self.target_net = self.target_net.to(self.device)
-
-        elif config.model_type == 'RNN':
-
-            input_size = (
-                config.n_networks,
-                1,
-                self.observation_final_size[config.observation_shape][config.observation_type],
-            )
-            hidden_size = (
-                config.n_networks,
-                config.n_nodes * config.nn_hidden_layer_size
-            )
-            # one q value for each action
-            output_size = (
-                config.n_networks,
-                config.n_nodes
-            )
-            print(input_size[-1], hidden_size[-1], output_size[-1])
-            self.policy_net = RNN(input_size, output_size, hidden_size)
-            self.policy_net = self.policy_net.to(self.device)
-            self.target_net = RNN(input_size, output_size, hidden_size)
-            self.target_net = self.target_net.to(self.device)
+        input_size = (
+            config.n_networks,
+            1,
+            observation_shape,
+        )
+        hidden_size = (
+            config.n_networks,
+            config.n_nodes * config.nn_hidden_layer_size
+        )
+        # one q value for each action
+        output_size = (
+            config.n_networks,
+            config.n_nodes
+        )
+        self.policy_net = RNN(input_size, output_size, hidden_size)
+        self.policy_net = self.policy_net.to(self.device)
+        self.target_net = RNN(input_size, output_size, hidden_size)
+        self.target_net = self.target_net.to(self.device)
 
         # specify \epsilon greedy policy exploration parameters (relevant in exploration)
         self.exploration_rate = 1
@@ -183,10 +132,6 @@ class Agent:
         # specify output directory
         self.save_dir = save_dir
 
-        # specify parameters for rule based
-        # self.loss_counter = th.zeros(config.n_networks).int()
-        # self.n_losses = th.full((config.n_networks,), 3).int()
-
     @staticmethod
     def apply_mask(q_values, mask):
         """
@@ -203,89 +148,6 @@ class Agent:
 
         q_values[~mask] = th.finfo(q_values.dtype).min
         return q_values
-
-    def set_rule_based_objects(self, n):
-        """
-
-        """
-        # specify parameters for rule based
-        self.loss_counter = th.zeros(n).int()
-        self.n_losses = th.full((n,), 3).int()
-
-    def reset_loss_counter(self):
-        """
-        this method resets the loss counter at the end of each episode for the "take_loss" strategy
-        """
-        self.loss_counter = th.zeros(self.n_networks).int()
-
-    def act_rule_based(self, obs, strategy: str):
-        """
-        Given a observation, choose an action (explore) according to a solving strategy with no
-        DQN involved
-
-        Args: obs (dict with values of th.tensor): observation from the env(s) comprising of one hot encoded
-        reward+step counter+ big loss counter and a valid action mask
-
-        Returns:
-            action (th.tensor): node index representing next nodes to move to for all envs
-            strategy (string): name of rule based strategy to use, one between ["myopic","take_loss","random"]
-        """
-
-        obs['mask'] = obs['mask'].to(self.device)
-
-        n = obs['obs'].shape[0]
-        print('act rule based n: ', n)
-
-        # reshape the observation appropriately (self.n_networks <-> n)
-        if self.observation_shape == 'concatenated':
-            obs["obs"] = obs['obs'].reshape(
-                [n, self.n_nodes, self.observation_final_size['default'][self.observation_type]]).to(
-                self.device)
-        else:
-            obs["obs"] = obs["obs"].to(self.device)
-
-        # get the reward indices for each of the 10 nodes within each environment
-        # current_possible_reward_idx = th.zeros((self.n_networks, 10)).type(th.long)
-        current_possible_reward_idx = th.zeros((n, 10)).type(th.long)
-        # TODO: check that the :6 is there to not incldue level and loss counter information
-        splitted = th.split(th.nonzero(obs["obs"][:, :, :6]), 10)
-        for i in range(len(splitted)):
-            current_possible_reward_idx[i, :] = splitted[i][:, 2]
-
-        if strategy == "myopic":
-            action = th.unsqueeze(th.argmax(current_possible_reward_idx, dim=1), dim=-1)
-
-        elif strategy == "take_loss":
-            action = th.unsqueeze(th.argmax(current_possible_reward_idx, dim=1), dim=-1)
-            # print(f'loss counter shape: {self.loss_counter.shape}')
-            # print(f'losses shape: {self.n_losses.shape}')
-            # that is, if there are still envs where loss counter < 3
-            if not th.equal(self.loss_counter, self.n_losses):
-
-                loss_envs = (self.loss_counter != self.n_losses).nonzero()
-                # print(f"environments where loss counter is still <2", loss_envs.shape)
-                if loss_envs is not None:
-                    envs_where_loss_present = th.unique(
-                        (current_possible_reward_idx[loss_envs[:, 0], :] == 1).nonzero()[:, 0])
-                    # print("environment with loss counter <2 where there is a loss", envs_where_loss_present.shape)
-                    indices_selected_losses = th.multinomial(
-                        (current_possible_reward_idx[loss_envs[:, 0], :] == 1)[envs_where_loss_present, :].float(), 1)
-                    # print("indices of selected loss actions", indices_selected_losses.shape)
-                    loss_actions = current_possible_reward_idx[loss_envs[:, 0], :].gather(1, indices_selected_losses)
-                    # print("actual actions", loss_actions.shape)
-                    action[envs_where_loss_present, 0] = indices_selected_losses[:, 0]
-
-                    indices_loss_counter = loss_envs[:, 0][th.isin(loss_envs[:, 0], envs_where_loss_present)]
-                    # indices_loss_counter2 = th.arange(self.n_networks)[
-                    #    th.isin(th.arange(self.n_networks), indices_loss_counter)]
-                    indices_loss_counter2 = th.arange(n)[th.isin(th.arange(n), indices_loss_counter)]
-                    # print("indices of envs to make +1 on loss counter", indices_loss_counter2.shape)
-                    self.loss_counter[indices_loss_counter2] += 1
-
-        elif strategy == "random":
-            action = th.multinomial(obs["mask"].type(th.float), 1)
-
-        return action[:, 0]
 
     def act(self, obs, greedy_only=False, first_call=False, episode_number=None):
         """
@@ -313,53 +175,20 @@ class Agent:
         # new! n (can be 1000 - n_networks - or train_batch_size of 100)
         n = obs["obs"].shape[0]
 
-        print(f"START act method obs {str.upper(self.observation_shape)} shape:", obs["obs"].shape)
-        print(f"START act method mask {str.upper(self.observation_shape)} shape:", obs["mask"].shape)
-
         # EXPLORE (select random action from the action space)
         random_actions = th.multinomial(obs["mask"].type(th.float), 1)
-        # print(f'random actions {th.squeeze(random_actions,dim=-1)}')
 
         # reset hidden state for GRU!
-        if self.model_type == 'RNN' and first_call:
+        if first_call:
             self.policy_net.reset_hidden()
 
-        # EXPLOIT (select greedy action)
-        # return Q values for each action in the action space A | S=s
-        # (the policy net has already been initialized with correct obs['obs'] shape)
-        if self.model_type == 'DQN':
-            action_q_values = self.policy_net(obs["obs"])
-            if self.observation_shape == 'concatenated':
-                # here we reshape to add final dimension (either self.n_networks or n)
-                action_q_values = action_q_values.reshape([n, self.n_nodes, 1])
-            print("action q values DQN shape:", action_q_values.shape)
-
-
-        elif self.model_type == 'RNN':
-
-            if self.observation_shape == 'default':
-                print(f"obs {str.upper(self.observation_shape)} shape before rearrange: ", obs['obs'].shape)
-                obs['obs'] = einops.rearrange(obs['obs'], '(i n) o f -> n i (o f)', i=1)
-                print(f"obs {str.upper(self.observation_shape)} shape after rearrange: ", obs['obs'].shape)
-                action_q_values = self.policy_net(obs["obs"]).reshape([n, self.n_nodes, 1])
-
-            if self.observation_shape == 'concatenated':
-                print(f"obs {str.upper(self.observation_shape)} shape before rearrange: ", obs['obs'].shape)
-                obs['obs'] = einops.rearrange(obs['obs'], '(i n) a -> n i a', i=1)
-                print(f"obs {str.upper(self.observation_shape)} shape after rearrange: ", obs['obs'].shape)
-                action_q_values = self.policy_net(obs["obs"]).reshape([n, self.n_nodes, 1])
-            print("ACT STEP Q VALUES RNN shape:", action_q_values.shape)
-
-        # if self.observation_shape == 'concatenated':
-        #    # here we reshape to add final dimension
-        #    action_q_values = action_q_values.reshape([self.n_networks,self.n_nodes,1])
+        obs['obs'] = einops.rearrange(obs['obs'], '(i n) a -> n i a', i=1)
+        action_q_values = self.policy_net(obs["obs"]).reshape([n, self.n_nodes, 1])
 
         # apply masking to obtain Q values for each VALID action (invalid actions set to very low Q value)
         action_q_values = self.apply_mask(action_q_values, obs["mask"])
-        print(action_q_values.shape)
         # select action with highest Q value
         greedy_actions = th.argmax(action_q_values, dim=1).to(self.device)
-        print(f'greedy actions {greedy_actions.shape}')
 
         # select between random or greedy action in each env
         select_random = (
@@ -403,35 +232,18 @@ class Agent:
         state = state.to(self.device)
         if len(state.shape) > 3:
             n = state.shape[2]
-        print("td estimate state shape: ", state.shape)
-        print("td estimate state mask shape: ", state_mask.shape)
 
-        if self.model_type == 'DQN':
+        # reset hidden state
+        self.policy_net.reset_hidden()
 
-            td_est = self.policy_net(state)
-            print('td est after model: ', td_est.shape)
-
-            if self.observation_shape == 'concatenated':
-                td_est = th.unsqueeze(td_est, -1)
-            print("td est final shape", td_est.shape)
-
-        if self.model_type == 'RNN':
-            # reset hidden state
-            self.policy_net.reset_hidden()
-
-            # reshape the state to (batch,sequence,features)
-            state = einops.rearrange(state, 'b r n o f -> (b n) r (o f)')
-            print('td est state reshaped before model: ', state.shape)
-
-            td_est = self.policy_net(state)
-            print('td est after model: ', td_est.shape)
-
-            td_est = einops.rearrange(td_est, '(b n) r o -> b r n o',
-                                      b=self.batch_size,
-                                      r=self.n_steps,
-                                      n=n,  # self.n_networks,
-                                      o=self.n_nodes)
-            print("td est final reshape RNN", td_est.shape)
+        # reshape the state to (batch,sequence,features)
+        state = einops.rearrange(state, 'b r n o f -> (b n) r (o f)')
+        td_est = self.policy_net(state)
+        td_est = einops.rearrange(td_est, '(b n) r o -> b r n o',
+                                    b=self.batch_size,
+                                    r=self.n_steps,
+                                    n=n,  # self.n_networks,
+                                    o=self.n_nodes)
 
         # apply masking (invalid actions set to very low Q value)
         td_est = self.apply_mask(td_est, state_mask)
@@ -461,54 +273,28 @@ class Agent:
         state = state.to(self.device)
         if len(state.shape) > 3:
             n = state.shape[2]
-        # state has dimensions batch_size,n_steps,n_networks,n_nodes,
-        # length of one hot encoded observation info
-        print('\n')
-        print(f"td target state shape -> {state.shape}")
-        print(f"td target state mask shape -> {state_mask.shape}")
-        print(f"td target reward shape -> {reward.shape}")
 
         next_max_Q2 = th.zeros(state.shape[:3], device=self.device)
-        print(f"td target next_max_Q2 shape -> {next_max_Q2.shape}")
 
-        if self.model_type == 'DQN':
-            # target q has dimensions batch_size,n_steps,n_networks,n_nodes,1
-            target_Q = self.target_net(state)
-            if self.observation_shape == 'concatenated':
-                target_Q = th.unsqueeze(target_Q, -1)
+        # reset hidden state
+        self.target_net.reset_hidden()
+        # change state dimensions
+        state = einops.rearrange(state, 'b r n o f -> (b n) r (o f)')
 
-        # reset hidden state for GRU!
-        if self.model_type == 'RNN':
-            # reset hidden state
-            self.target_net.reset_hidden()
-            # change state dimensions
-            state = einops.rearrange(state, 'b r n o f -> (b n) r (o f)')
-            print('td target state reshaped before model: ', state.shape)
-
-            target_Q = self.target_net(state)
-            print('td target targetQ: ', target_Q.shape)
-            target_Q = einops.rearrange(target_Q, '(b n) r o -> b r n o',
-                                        b=self.batch_size,
-                                        r=self.n_steps,
-                                        n=n,  # self.n_networks,
-                                        o=self.n_nodes)
-            print("target_Q final reshape RNN", target_Q.shape)
-
-        # # target q has dimensions batch_size,n_steps,n_networks,n_nodes,1
-        # target_Q = self.target_net(state)
-        # if self.observation_shape == 'concatenated':
-        #     target_Q = th.unsqueeze(target_Q, -1)
+        target_Q = self.target_net(state)
+        target_Q = einops.rearrange(target_Q, '(b n) r o -> b r n o',
+                                    b=self.batch_size,
+                                    r=self.n_steps,
+                                    n=n,  # self.n_networks,
+                                    o=self.n_nodes)
 
         target_Q = self.apply_mask(target_Q, state_mask)
-        print(f"target_Q masked shape -> {target_Q.shape}")
         # next_Q has dimensions batch_size,(n_steps -1),n_networks,n_nodes,1
         # (we skip the first observation and set the future value for the terminal state to 0)
         next_Q = target_Q[:, 1:]
-        print(f"next_Q shape -> {next_Q.shape}")
 
         # next_max_Q has dimension batch,steps,networks
         next_max_Q = th.squeeze(next_Q).max(-1)[0].detach()
-        print(f"next_max_Q shape -> {next_max_Q.shape}")
 
         next_max_Q2[:, :-1, :] = next_max_Q
 
@@ -612,9 +398,6 @@ class Agent:
         # Get TD Target
         td_tgt = self.td_target(memory_sample["reward"], memory_sample["obs"], memory_sample["mask"])
 
-        print(f"LEARN method td_est shape {td_est.shape}")
-        print(f"LEARN method td_tgt shape {td_est.shape}")
-
         loss = self.update_Q_online(td_est, td_tgt)
 
         return td_est.mean().item(), loss
@@ -642,18 +425,16 @@ class Agent:
         # obtain first observation of the env(s)
         # obs = env.observe()
         obs = env.observe()
-        print(f"observation shape: {obs['obs'].shape}")
-        print(f"observation mask shape: {obs['mask'].shape}")
 
 
         if exp_mode:
-            actions = th.full((self.n_networks, self.n_steps), 0)
+            actions = th.full((obs.shape[0], self.n_steps), 0)
 
         for round_num in range(n_rounds):
             action, step_q_values = self.act(obs, greedy_only=train_mode, first_call=round_num == 0, episode_number=episode)
 
             next_obs, reward, level, is_done = env.step(action)
-            
+
             # remember transitions in memory if a mem object is passed during function call
             # (that is, if we are in dqn)
             if mem is not None:
@@ -670,8 +451,6 @@ class Agent:
 
             if is_done:
                 break
-
-            print('\n')
 
         if exp_mode:
             return actions
@@ -713,13 +492,13 @@ def train_agent(config=None):
 
     # initialize Agent(s)
     AI_agent = Agent(
-        obs_dim=2,
+        observation_shape=env.observation_shape,
         config=config,
         action_dim=env.action_space_idx.shape,
         save_dir=config.save_dir,
         device=DEVICE,
     )
-    
+
     # initialize Memory buffer
     Mem = Memory(
         device=DEVICE, size=config.memory_size, n_rounds=config.n_rounds
@@ -727,10 +506,10 @@ def train_agent(config=None):
 
     # initialize Logger(s) n_networks or train_batch_size from config
     logger = MetricLogger(
-        "dqn", config.save_dir, config.train_batch_size, config.n_episodes, config.n_nodes, DEVICE
+        'train', config.train_batch_size, config, DEVICE
     )
     logger_test = MetricLogger(
-        "dqn_test", config.save_dir, config.n_networks, config.n_episodes, config.n_nodes, DEVICE
+        'test', config.n_networks, config, DEVICE
     )
 
     metrics_df_list = []
@@ -806,13 +585,12 @@ def train_agent(config=None):
                 log(metrics_log)
 
             print(f"Skip episode {e + 1}")
-        print("\n")
 
         metrics_df_list.append(metrics_log)
 
     # SAVE MODEL
     AI_agent.save()
-    
+
     # Dataframe of all metrics
     metrics_df = pd.DataFrame(metrics_df_list)
     metrics_table = wandb.Table(dataframe=metrics_df)

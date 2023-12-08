@@ -61,7 +61,6 @@ class Reward_Network:
         # observation shape from model config (determines whether to return obs in default format
         # or concatenating nodes features all in one dimension)
         self.observation_type = config.observation_type
-        self.observation_shape = config.observation_shape
 
         # reward network information from json file (can be just one network or multiple networks)
         self.network = network
@@ -79,6 +78,8 @@ class Reward_Network:
         self.N_NETWORKS = len(self.network)
         self.TRAIN_BATCH_SIZE = config.train_batch_size
         assert self.TRAIN_BATCH_SIZE <= len(network), f'Batch size must be smaller or same as total number of networks'
+
+        self.observation_shape = (self.N_NODES * self.N_REWARD_IDX)
 
         self.network_size_dict = {False: self.N_NETWORKS , True: self.TRAIN_BATCH_SIZE}
 
