@@ -1,11 +1,11 @@
 model_type: "RNN"
 observation_type: "no_level_loss_counter"
 observation_shape: "concatenated"
-train_data_name: "../data/23_11_30/networks_train.json"
-test_data_name: "../data/23_11_30/networks_train.json"
-save_dir: "../data/23_11_30_model/"
-figures_dir: "../data/23_11_30_figures/"
-n_episodes: 10
+train_data_name: "data/23_11_30/networks_train.json"
+test_data_name: "data/23_11_30/networks_train.json"
+save_dir: "data/23_11_30/model/"
+figures_dir: "data/23_11_30/figures/"
+n_episodes: 32
 n_networks: 1000
 train_batch_size: 100
 n_rounds: 10
