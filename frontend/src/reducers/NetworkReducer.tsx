@@ -130,6 +130,7 @@ const nextTutorialStepReducer = (state: NetworkState, action: any) => {
       tutorialStep: state.tutorialStep + 1,
       tutorialOptions: {
         ...networkInitialState.tutorialOptions,
+        node: true,
         totalScore: true,
       },
     };
@@ -140,6 +141,7 @@ const nextTutorialStepReducer = (state: NetworkState, action: any) => {
     return {
       ...state,
       tutorialStep: state.tutorialStep + 1,
+      node: true,
       tutorialOptions: networkInitialState.tutorialOptions,
     };
   }
