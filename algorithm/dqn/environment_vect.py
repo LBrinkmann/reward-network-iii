@@ -103,8 +103,7 @@ class Reward_Network:
             rewards_norm = 2 * rewards_norm - 1
 
         # define possible rewards along with corresponding reward index
-        rewards_cuda = torch.tensor(self.REWARDS).to(self.device)
-        self.possible_rewards = {rewards_cuda[r].item(): r + 1 for r in range(len(rewards_cuda))}
+        self.possible_rewards = {r: i + 1 for i, r in enumerate(self.REWARDS)}
 
         # initialize action space ("reward index adjacency matrix")
         # 0 here means that no edge is present, all other indices from 1 to 5 indicate a reward
@@ -130,8 +129,6 @@ class Reward_Network:
             target = torch.tensor(new_edges[n]["target_num"]).long().to(self.device)
             reward = torch.tensor(new_edges[n]["reward"]).long().to(self.device)
             reward_idx = torch.tensor([self.possible_rewards[x.item()] for x in reward]).to(self.device)
-            #reward.apply_(lambda val: self.possible_rewards.get(val, 0))
-            #buffer_action_space[source, target] = reward
             buffer_action_space[source, target] = reward_idx
             self.action_space_idx[n, :, :] = buffer_action_space
 
