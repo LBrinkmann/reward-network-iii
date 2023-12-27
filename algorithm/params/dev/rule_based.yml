@@ -1,2 +1,0 @@
-project_folder: ../..
-solution_columns: ['network_id','strategy','step','source_node','current_node','reward','total_reward']
