@@ -17,6 +17,9 @@ build
 backend/**/*.html
 algorithm/wandb
 algorithm/rniii/wandb
+algorithm/slurm_logs/*.out
+data/dev/
+wandb
 
 venv
 
