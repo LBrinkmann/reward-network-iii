@@ -29,11 +29,11 @@ from config_type import Config
 
 
 # change string to compare os.environ with to enable ("enabled") or disable wandb
-WANDB_ENABLED = os.environ.get("WANDB_MODE", "enabled") == "disabled"
+USE_WANDB = os.environ.get("USE_WANDB", "false") == "true"
 
 
 def train():
-    if WANDB_ENABLED:
+    if USE_WANDB:
         with wandb.init():
             config = Config(**wandb.config)
             train_agent(wandb.config)
@@ -42,7 +42,7 @@ def train():
         train_agent(config)
 
 def log(data, table=None, model=False):
-    if WANDB_ENABLED:
+    if USE_WANDB:
         if table is not None:
             wandb.log({"metrics_table": table})
         else:
@@ -104,9 +104,9 @@ class Agent:
         self.target_net = self.target_net.to(self.device)
 
         # specify \epsilon greedy policy exploration parameters (relevant in exploration)
-        self.exploration_rate = 1
+        self.exploration_rate = config.exploration_rate
         self.exploration_rate_decay = config.exploration_rate_decay
-        self.exploration_rate_min = 0.1
+        self.exploration_rate_min = config.exploration_rate_min
         self.curr_step = 0
 
         # specify \gamma parameter (how far-sighted our agent is, 0.9 was default)
@@ -129,8 +129,14 @@ class Agent:
                                                       verbose=False)
         self.loss_fn = th.nn.SmoothL1Loss(reduction="none")
 
+        if save_dir is not None:
+            # make directory to save models
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+
         # specify output directory
         self.save_dir = save_dir
+        self.config = config
 
     @staticmethod
     def apply_mask(q_values, mask):
@@ -340,11 +346,11 @@ class Agent:
 
     def save(self):
         """
-        This function saves model checkpoints
+        This function saves the model
         """
         save_path = os.path.join(
             self.save_dir,
-            f"Reward_network_iii_model_{int(self.curr_step // self.save_every)}.chkpt",
+            f"{self.config.name}_{self.config.seed}.pt",
         )
         th.save(
             dict(
@@ -353,9 +359,7 @@ class Agent:
             ),
             save_path,
         )
-        print(
-            f"Reward_network_iii_model checkpoint saved to {save_path} at step {self.curr_step}"
-        )
+        print(f"Model saved to {save_path}")
 
     def load_model(self, checkpoint_path: str):
         """
@@ -428,10 +432,10 @@ class Agent:
 
 
         if exp_mode:
-            actions = th.full((obs.shape[0], self.n_steps), 0)
+            actions = []
 
         for round_num in range(n_rounds):
-            action, step_q_values = self.act(obs, greedy_only=train_mode, first_call=round_num == 0, episode_number=episode)
+            action, step_q_values = self.act(obs, greedy_only=not train_mode, first_call=round_num == 0, episode_number=episode)
 
             next_obs, reward, level, is_done = env.step(action)
 
@@ -443,16 +447,17 @@ class Agent:
             if not is_done:
                 obs = next_obs
 
-
-            logger.log_step(round_num, reward, level, step_q_values)
+            if logger is not None:
+                logger.log_step(round_num, reward, level, step_q_values)
 
             if exp_mode:
-                actions[:, round_num] = action
+                actions.append(action)
 
             if is_done:
                 break
 
         if exp_mode:
+            actions = th.stack(actions, dim=1)
             return actions
 
 #######################################
@@ -482,6 +487,9 @@ def train_agent(config=None):
     # ---------Specify device (cpu or cuda)----------------
     DEVICE = th.device("cuda" if th.cuda.is_available() else "cpu")
     print(f"Device: {DEVICE}")
+
+    # set seed
+    th.manual_seed(config.seed)
 
     # ---------Start analysis------------------------------
     # initialize environment(s)
@@ -535,6 +543,7 @@ def train_agent(config=None):
         # prepare logging info that all model types share
         metrics_log = {"episode": e + 1,
                        "avg_reward_all_envs": logger.episode_metrics['reward_episode_all_envs'][-1],
+                       "exploration_rate": AI_agent.exploration_rate,
                        }
         for s in range(config.n_rounds):
             metrics_log[f'q_mean_step_{s + 1}'] = logger.episode_metrics[f'q_mean_step_{s + 1}'][-1]
@@ -542,7 +551,7 @@ def train_agent(config=None):
 
         # test networks (every 100 episodes)
         if (e + 1) % config.test_period == 0:
-            print(f"----EPISODE {e + 1}---- \n")
+            print(f"----EPISODE {e + 1}---- \n", flush=True)
             AI_agent.solve_loop(
                 episode=e,
                 n_rounds=config.n_rounds,
@@ -590,6 +599,7 @@ def train_agent(config=None):
     # Dataframe of all metrics
     metrics_df = pd.DataFrame(metrics_df_list)
     metrics_table = wandb.Table(dataframe=metrics_df)
+    metrics_df.to_csv(os.path.join(config.save_dir, f"{config.name}_{config.seed}.csv"))
     log([], table=metrics_table)
 
 
@@ -602,8 +612,8 @@ if __name__ == "__main__":
     with open(args.config) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     config = Config(**config)
-    if WANDB_ENABLED:
-        with wandb.init(project='reward-networks-iii', entity="chm-hci"):
+    if USE_WANDB:
+        with wandb.init(project='reward-networks-iii', entity="chm-hci", config=config, tags=config.tags):
             train_agent(config)
     else:
         train_agent(config)

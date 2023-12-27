@@ -18,4 +18,4 @@ export USE_WANDB="true"
 
 echo "Entered environment"
 
-python algorithm/dqn/dqn_agent.py --config algorithm/params/seed_0.yml
+python algorithm/dqn/dqn_agent.py --config algorithm/params/legacy.yml

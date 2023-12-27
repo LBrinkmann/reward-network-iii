@@ -16,6 +16,10 @@ from utils.utils import estimate_solution_score, estimate_average_player_score
 network_data = None
 solutions = None
 solutions_myopic = None
+solutions_m1 = None
+solutions_m2 = None
+solutions_m3 = None
+machine_idx = 0
 
 # load all ai solutions
 
@@ -39,8 +43,16 @@ def get_net_solution(solution_type="loss"):
     # get the solution for the network
     if solution_type == "loss":
         moves = [s for s in solutions if s["network_id"] == network.network_id]
+    elif solution_type == "machine_1":
+        moves = [s for s in solutions_m1 if s["network_id"]
+                 == network.network_id]
+    elif solution_type == "machine_2":
+        moves = [s for s in solutions_m2 if s["network_id"]
+                 == network.network_id]
+    elif solution_type == "machine_3":
+        moves = [s for s in solutions_m3 if s["network_id"]
+                 == network.network_id]
     else:
-        # myopic solution
         moves = [s for s in solutions_myopic if s["network_id"]
                  == network.network_id]
 
@@ -51,11 +63,14 @@ def get_net_solution(solution_type="loss"):
 
 
 def reset_networks(config: ExperimentSettings):
-    global network_data, solutions, solutions_myopic
+    global network_data, solutions, solutions_myopic, solutions_m1, solutions_m2, solutions_m3
     # load all networks
     network_data = json.load(open(Path(config.networks_path) / "networks.json"))
     solutions = json.load(open(Path(config.networks_path) / "solution__take_loss.json"))
     solutions_myopic = json.load(open(Path(config.networks_path) / "solution__myopic.json"))
+    solutions_m1 = json.load(open(Path(config.networks_path) / "mode_nodes_more_steps_0.json"))
+    solutions_m2 = json.load(open(Path(config.networks_path) / "mode_nodes_more_steps_1.json"))
+    solutions_m3 = json.load(open(Path(config.networks_path) / "mode_nodes_more_steps_2.json"))
     # randomize the order of the networks
     random.seed(config.seed)
     random.shuffle(network_data)
@@ -293,7 +308,10 @@ def add_demonstration_trail(trials, is_human, simulated_subject, network_idx, co
         net, _ = get_net_solution()
         solution = None
     else:
-        solution_type = "myopic" if simulated_subject else "loss"
+        if simulated_subject:
+            solution_type = "myopic"
+        else:
+            solution_type = f"machine_{machine_idx}"
         net, moves = get_net_solution(solution_type)
         solution = Solution(
             moves=moves,
@@ -408,4 +426,6 @@ def create_trials(
     )
     if is_ai:
         session.average_score = estimate_average_player_score(session)
+        global machine_idx
+        machine_idx += 1
     return session

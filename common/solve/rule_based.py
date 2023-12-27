@@ -116,60 +116,65 @@ class RuleAgent:
         Args:
             network (Reward_Network object): a network with info on nodes,edges
         """
-        self.solutions = []
+        solutions = []
 
         for network in self.networks:
 
             if self.strategy == "take_loss":
                 self.loss_counter = 0  # to reset!
 
-            # solution variables
-            solution = []
-
             # network environment variables
             self.environment = Reward_Network(network, self.params)
             self.environment.reset()
 
             while not self.environment.is_done:
-                s = []
                 obs = self.environment.observe()
                 a = self.select_action(
                     obs["actions_available"], obs["next_possible_rewards"]
                 )
                 step = self.environment.step(a)
-                s.append(self.environment.id)
-                s.append(self.strategy)
-                s.append(step["n_steps"])
-                s.append(step["source_node"])
-                s.append(step["current_node"])
-                s.append(step["reward"])
-                s.append(step["total_reward"])
-                solution.append(s)
-            solution_df = pd.DataFrame(
-                solution, columns=self.params["solution_columns"]
-            )
-            self.solutions.append(solution_df)
-
-        return pd.concat(self.solutions, ignore_index=True)
+                solutions.append(
+                    {
+                        "network_id": self.environment.id,
+                        "strategy": self.strategy,
+                        "n_steps": step["n_steps"],
+                        "source_node": step["source_node"],
+                        "current_node": step["current_node"],
+                        "level": step["level"],
+                        "max_level": step["max_level"],
+                        "reward": step["reward"],
+                        "total_reward": step["total_reward"],
+                    }
+                )
+        self.solutions = pd.DataFrame.from_records(solutions)
 
     def save_solutions_frontend(self):
         """
         This method saves the selected strategy solution of the networks to be used in the experiment frontend;
         solutions are saved in a JSON file with network id and associated list of moves
         """
-        df = pd.concat(self.solutions, ignore_index=True)
+        df = self.solutions
 
         def construct_moves(df):
-            return [int(df['source_node'].iloc[0])] + df["current_node"].tolist()
+            return {
+                'moves': [int(df['source_node'].iloc[0])] + df["current_node"].tolist(),
+                'network_id': df['network_id'].iloc[0],
+                'max_level': int(df['max_level'].iloc[-1]),
+                'total_reward': int(df['total_reward'].iloc[-1])
+            }
 
-        s = (
+        s = [
+            construct_moves(df)
+            for _, df in
             df.groupby(["network_id"])
-            .apply(construct_moves)
-            .reset_index(name="moves")
-        )
-        obj = s.to_dict("records")
-
-        return json.dumps(obj)
+        ]
+        # s = (
+        #     df.groupby(["network_id"])
+        #     .apply(construct_moves)
+        # )
+        # print(s)
+        # obj = s.to_dict("records")
+        return json.dumps(s)
 
 
 if __name__ == "__main__":
