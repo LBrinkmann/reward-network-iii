@@ -485,9 +485,9 @@ def train_agent(config=None):
 
     # ---------Start analysis------------------------------
     # initialize environment(s)
-    env = Reward_Network(networks_train, batch_size=config.train_batch_size, config=config, device=DEVICE)
+    env = Reward_Network(networks_train, network_batch=config.network_batch, config=config, device=DEVICE)
 
-    env_test = Reward_Network(networks_test, batch_size=None, config=config, device=DEVICE)
+    env_test = Reward_Network(networks_test, network_batch=None, config=config, device=DEVICE)
 
 
     # initialize Agent(s)
@@ -504,9 +504,9 @@ def train_agent(config=None):
         device=DEVICE, size=config.memory_size, n_rounds=config.n_rounds
     )
 
-    # initialize Logger(s) n_networks or train_batch_size from config
+    # initialize Logger(s) n_networks or network_batch from config
     logger = MetricLogger(
-        'train', config.train_batch_size, config, DEVICE
+        'train', config.network_batch, config, DEVICE
     )
     logger_test = MetricLogger(
         'test', config.n_networks, config, DEVICE
