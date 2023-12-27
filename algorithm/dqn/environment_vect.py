@@ -49,7 +49,7 @@ def extract_level(network):
 
 
 class Reward_Network:
-    def __init__(self, network, batch_size: Optional[int], config: Config, device):
+    def __init__(self, network, network_batch: Optional[int], config: Config, device):
         """
         Initializes a reward network object given network(s) info in JSON format
 
@@ -82,7 +82,7 @@ class Reward_Network:
 
         self.observation_shape = (self.N_NODES * self.N_REWARD_IDX)
 
-        self.batch_size = batch_size
+        self.network_batch = network_batch
 
         # define node numbers (from 0 to x)
         self.nodes = torch.stack([torch.arange(self.N_NODES)] * self.N_NETWORKS, dim=0).to(self.device)
@@ -167,11 +167,11 @@ class Reward_Network:
         self.big_loss_counter = torch.zeros((self.N_NETWORKS, 1), dtype=torch.long).to(self.device)
         self.is_done = False
         self.current_node = self.starting_nodes.clone()
-        if self.batch_size is None:
+        if self.network_batch is None:
             self.idx = torch.arange(self.N_NETWORKS, dtype=torch.long).to(self.device)
-            self.batch_size = self.N_NETWORKS
+            self.network_batch = self.N_NETWORKS
         else:
-            self.idx = torch.randint(0, self.N_NETWORKS, (self.batch_size,)).to(self.device)
+            self.idx = torch.randint(0, self.N_NETWORKS, (self.network_batch,)).to(self.device)
 
 
     def step(self, action):
@@ -262,7 +262,7 @@ class Reward_Network:
 
         self.observation_matrix = torch.zeros(
             (
-                self.batch_size,
+                self.network_batch,
                 self.N_NODES,
                 self.N_REWARD_IDX,
             ),
@@ -289,4 +289,4 @@ class Reward_Network:
         )
         return {"mask": self.next_nodes,
                 "obs": self.observation_matrix.reshape(
-                    [self.batch_size, (self.N_NODES * self.N_REWARD_IDX)])}
+                    [self.network_batch, (self.N_NODES * self.N_REWARD_IDX)])}
