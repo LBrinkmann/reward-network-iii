@@ -6,7 +6,7 @@ test_data_name: "data/23_11_30/networks_train.json"
 save_dir: "data/23_11_30_model/"
 n_episodes: 20000
 n_networks: 1000
-train_batch_size: 100
+network_batch: 100
 n_rounds: 10
 n_nodes: 12
 learning_rate: 1.e-3

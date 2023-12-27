@@ -11,7 +11,7 @@ class Config(BaseModel):
     figures_dir: str = "figures"
     n_episodes: int = 2000
     n_networks: int = 1000
-    train_batch_size: int = 100
+    network_batch: int = 100
     test_period: int = 100
     n_rounds: int = 8
     n_nodes: int = 10
