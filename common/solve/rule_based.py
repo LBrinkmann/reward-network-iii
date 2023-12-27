@@ -145,7 +145,6 @@ class RuleAgent:
                 s.append(step["reward"])
                 s.append(step["total_reward"])
                 solution.append(s)
-
             solution_df = pd.DataFrame(
                 solution, columns=self.params["solution_columns"]
             )
@@ -160,17 +159,14 @@ class RuleAgent:
         """
         df = pd.concat(self.solutions, ignore_index=True)
 
-        def add_source(x):
-            a = x
-            a.insert(0, 0)
-            return a
+        def construct_moves(df):
+            return [int(df['source_node'].iloc[0])] + df["current_node"].tolist()
 
         s = (
-            df.groupby(["network_id"])["current_node"]
-            .apply(list)
+            df.groupby(["network_id"])
+            .apply(construct_moves)
             .reset_index(name="moves")
         )
-        s["moves"] = s["moves"].apply(add_source)
         obj = s.to_dict("records")
 
         return json.dumps(obj)
@@ -198,7 +194,7 @@ if __name__ == "__main__":
 
     with open(args.networks) as json_file:
         networks = json.load(json_file)
-        
+
     for strategy in ["myopic", "take_loss", "random"]:
         A = RuleAgent(networks, strategy, solve_params)
         A.solve()
