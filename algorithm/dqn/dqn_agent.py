@@ -126,7 +126,7 @@ class Agent:
         self.scheduler = th.optim.lr_scheduler.StepLR(self.optimizer,
                                                       step_size=config.lr_scheduler_step,
                                                       gamma=config.lr_scheduler_gamma,
-                                                      verbose=True)
+                                                      verbose=False)
         self.loss_fn = th.nn.SmoothL1Loss(reduction="none")
 
         # specify output directory
@@ -515,9 +515,6 @@ def train_agent(config=None):
     metrics_df_list = []
 
     for e in range(config.n_episodes):
-        print(f"----EPISODE {e + 1}---- \n")
-
-
         # train networks
         AI_agent.solve_loop(
             episode=e,
@@ -545,7 +542,7 @@ def train_agent(config=None):
 
         # test networks (every 100 episodes)
         if (e + 1) % config.test_period == 0:
-            print("<<<<TESTING!>>>>")
+            print(f"----EPISODE {e + 1}---- \n")
             AI_agent.solve_loop(
                 episode=e,
                 n_rounds=config.n_rounds,
@@ -568,7 +565,6 @@ def train_agent(config=None):
         # take memory sample!
         sample = Mem.sample(config.batch_size, device=DEVICE)
         if sample is not None:
-            print(f"MEMORY SAMPLE! Shape of memory sample obs -> {sample['obs'].shape}\n")
             # Learning step
             q, loss = AI_agent.learn(sample)
 
@@ -601,7 +597,7 @@ if __name__ == "__main__":
 
     # Load config parameter from yaml file specified in command line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, default="config.yaml", help="Configuration file to use")
+    parser.add_argument("--config", type=str, default="algorithm/params/dqn/single_run_v2.yml", help="Configuration file to use")
     args = parser.parse_args()
     with open(args.config) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
