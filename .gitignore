@@ -6,6 +6,7 @@ __pycache__
 *~
 build
 *.egg-info
+*.chkpt
 
 # Ignore JetBrains files
 # .idea
@@ -14,6 +15,11 @@ build
 
 # Ignore html generated in backend folder
 backend/**/*.html
+algorithm/wandb
+algorithm/rniii/wandb
+algorithm/slurm_logs/*.out
+data/dev/
+wandb
 
 venv
 

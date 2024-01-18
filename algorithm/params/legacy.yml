@@ -1,0 +1,23 @@
+name: legacy
+tags: [legacy]
+model_type: "RNN"
+observation_type: "no_level_loss_counter"
+observation_shape: "concatenated"
+train_data_name: "data/legacy/networks_train.json"
+test_data_name: "data/legacy/networks_train.json"
+save_dir: "data/legacy/model/"
+n_episodes: 20000
+n_networks: 1000
+network_batch: 100
+n_rounds: 8
+n_nodes: 10
+learning_rate: 1.e-3
+lr_scheduler_step: 2000
+lr_scheduler_gamma: 0.8
+batch_size: 16
+nn_hidden_layer_size: 15
+memory_size: 500
+exploration_rate_decay: 0.99
+nn_update_frequency: 200
+rewards: [-50, 0, 100, 200, 400]
+test_period: 25

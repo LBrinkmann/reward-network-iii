@@ -23,7 +23,7 @@ class Reward_Network:
 
         # reward network information from json file
         self.network = network
-        
+
         # initial reward and step values
         self.INIT_REWARD = 0
         self.INIT_STEP = 0
@@ -32,7 +32,7 @@ class Reward_Network:
 
         # network info
         self.id = self.network["network_id"]
-        self.nodes = [n["node_num"] for n in self.network["nodes"]]
+        self.nodes = self.network["nodes"]
         self.action_space = self.network["edges"]
         self.possible_rewards = list(set([e["reward"] for e in self.network["edges"]]))
         self.reward_range = (
@@ -44,6 +44,7 @@ class Reward_Network:
         # Reset the state of the environment to an initial state
         self.reward_balance = self.INIT_REWARD
         self.step_counter = self.INIT_STEP
+        self.max_level = 0
         self.is_done = False
 
         # Set the current step to the starting node of the graph
@@ -60,6 +61,9 @@ class Reward_Network:
         self.reward_balance += action["reward"]
         self.current_node = action["target_num"]
         self.step_counter += 1
+        node = self.nodes[self.current_node]
+        level = node["level"]
+        self.max_level = max(self.max_level, level)
 
         if self.step_counter == self.MAX_STEP:  # 8:
             self.is_done = True
@@ -69,6 +73,8 @@ class Reward_Network:
             "current_node": self.current_node,
             "reward": action["reward"],
             "total_reward": self.reward_balance,
+            "level": level,
+            "max_level": self.max_level,
             "n_steps": self.step_counter,
             "done": self.is_done,
         }
