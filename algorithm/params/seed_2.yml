@@ -1,0 +1,28 @@
+name: mode_nodes_more_steps
+tags: [mode_nodes_more_steps, slow_decay]
+model_type: "RNN"
+observation_type: "no_level_loss_counter"
+observation_shape: "concatenated"
+train_data_name: "data/23_11_30/networks_train.json"
+test_data_name: "data/23_11_30/networks_train.json"
+exp_data_name: "data/23_11_30/networks.json"
+solutions_dir: "data/23_11_30/solutions/"
+save_dir: "data/23_11_30/model/"
+n_episodes: 5000
+n_networks: 1000
+network_batch: 100
+n_rounds: 10
+n_nodes: 12
+learning_rate: 1.e-4
+lr_scheduler_step: 2000
+lr_scheduler_gamma: 0.8
+batch_size: 16
+nn_hidden_layer_size: 15
+memory_size: 500
+exploration_rate: 1.
+exploration_rate_min: 1.
+exploration_rate_decay: 0.999
+nn_update_frequency: 200
+rewards: [-50, 0, 100, 200, 400]
+test_period: 10
+seed: 2

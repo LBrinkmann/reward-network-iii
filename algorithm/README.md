@@ -1,4 +1,4 @@
-# Reward Network III
+# Reward Network III - Algorithm
 
 ## Install required packages
 
@@ -6,55 +6,25 @@ Here Python 3.10.8 was used
 
 ```bash
 python3 -m venv .venv
-# Mac/Linux
 . .venv/bin/activate 
-# Windows
-# source .venv/Scripts/Activate 
-
-
 pip install --upgrade pip
 pip install wheel
 pip install -r requirements.txt
 ```
 
+## Quick start
+
+### Train locally
+
+```bash
+python dqn/dqn_agent.py
+```
+
 ## Repo organization
-* **rniii** is the project folder where all python scripts are found, in particular inside this folder we find
-  * **generate**: includes `.py` scripts to generate reward networks, as well as pydantic models to validate the generated networks structure
-  * **solve**: includes `.py` scripts to solve networks according to rule-based strategies
-  * **dqn**: includes `.py` files used for solving networks through deep reinforcement learning, as well as `.sh`files used to submit dqn runs on cluster
+
+* **dqn** is the project folder where all python scripts are found. It includes `.py` files used for solving networks through deep reinforcement learning, as well as `.sh`files used to submit dqn runs on cluster
 * **params**: includes `.yml` files relevant to each subfolder (generate, solve, dqn)
-* **rn**: includes utilities used in the scripts in `notebooks` folder
-* **data**: includes json files where all generated reward networks used in the experiment are stored. The `_viz` suffix in the file names indicate those data files that have additional node location information (for frontend vizualization purposes)
 
-## Workflow
-
-### Network generation
-
-```mermaid
-
-flowchart TD
-
-subgraph Generation
-A(params/generate/generation.yml) --> B(generate/generation.py)
-W(generate/network.py) --> B(generate/generation.py)
-H(generate/environment.py) --> B(generate/generation.py)
-B(generate/generation.py) --> C(data/networks.json)
-end
-```
-
-### Rule-based strategy comparisons
-
-```mermaid
-
-flowchart TD
-
-subgraph Rule-based
-A(params/rule_based_solve/environment.yml) --> L(solve/rule_based.py)
-G(solve/environment.py) --> L(solve/rule_based.py)
-L(solve/rule_based.py) --> B(data/solutions.json)
-L(solve/rule_based.py) --> D(data/solutions.csv)
-end
-```
 
 ### DQN + Wandb
 
