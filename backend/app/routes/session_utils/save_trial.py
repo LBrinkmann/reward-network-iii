@@ -36,6 +36,9 @@ async def save_trial(body, session, trial, trial_type):
     elif trial_type in ["consent", "practice", "debriefing", "instruction"]:
         save_empty_trial(trial)
 
+    if trial.solution is not None:
+        score = estimate_solution_score(trial.network, trial.solution.moves, 10)
+        assert score > -100_000, "invalid move sequence"
     # update session with the trial
     session.trials[session.current_trial_num] = trial
 
