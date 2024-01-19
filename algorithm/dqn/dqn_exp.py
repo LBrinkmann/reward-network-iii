@@ -19,7 +19,8 @@ from environment_vect import Reward_Network
 from logger import MetricLogger
 from dqn_agent import Agent
 from config_type import Config
-
+from common.utils.utils import estimate_solution_score
+from common.models.network import Network
 
 
 def compute_solutions(config):
@@ -51,20 +52,22 @@ def compute_solutions(config):
             logger=None
         )
 
-    print('moves', moves.shape)
-
     solutions = []
     for i, n in enumerate(networks_exp):
-        solutions.append({'network_id': n["network_id"],
-                          'moves': [*moves[i,:].tolist()]})
+        solution = {'network_id': n["network_id"],
+                    'moves': [*moves[i,:].tolist()]}
+        score = estimate_solution_score(Network(**n), solution['moves'], n_steps=10)
+        assert score > -100_000, "invalid move sequence"
+        solutions.append(solution)
+    
+
 
     # save solutions as json
-    with open(os.path.join(config.solutions_dir, f"{config.name}_{config.seed}.json"), 'w') as outfile:
+    with open(os.path.join(config.solutions_dir, f"{config.seed}.json"), 'w') as outfile:
         json.dump(solutions, outfile)
 
 
 if __name__ == "__main__":
-
     # Load config parameter from yaml file specified in command line arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=str, default="algorithm/params/dqn/single_run_v2.yml", help="Configuration file to use")

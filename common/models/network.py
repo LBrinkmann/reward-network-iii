@@ -14,7 +14,7 @@ class Node(BaseModel):
     @validator("node_num")
     def max_ten_nodes(cls, n):
         if n < 0 or n > 19:
-            raise ValueError("node number must be a number between 0 and 9")
+            raise ValueError("node number must be a number between 0 and 19")
         return n
 
     @validator("level")
@@ -53,13 +53,13 @@ class Edge(BaseModel):
     @validator("source_num")
     def check_source(cls, n):
         if n < 0 or n > 19:
-            raise ValueError("source node number must be a number between 0 and 9")
+            raise ValueError("source node number must be a number between 0 and 19")
         return n
 
     @validator("target_num")
     def check_target(cls, n):
         if n < 0 or n > 19:
-            raise ValueError("target node number must be a number between 0 and 9")
+            raise ValueError("target node number must be a number between 0 and 19")
         return n
 
     @validator("arc_type")
