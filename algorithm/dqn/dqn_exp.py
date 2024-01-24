@@ -55,11 +55,12 @@ def compute_solutions(config):
     solutions = []
     for i, n in enumerate(networks_exp):
         solution = {'network_id': n["network_id"],
-                    'moves': [*moves[i,:].tolist()]}
+                    'moves': [n['starting_node'], *moves[i,:].tolist()]}
         score = estimate_solution_score(Network(**n), solution['moves'], n_steps=10)
         assert score > -100_000, "invalid move sequence"
+        print(f"Network {n['network_id']} solved with score {score}")
         solutions.append(solution)
-    
+
 
 
     # save solutions as json

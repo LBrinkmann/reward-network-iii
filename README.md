@@ -17,21 +17,33 @@ docker compose up streamlit
 ### Generate Networks
 
 ```bash
-docker compose run common python common/generate/generation.py -i data/23_11_13/networks.yml -o data/23_11_13/networks.json
+docker compose run all python common/generate/generation.py -i data/23_11_13/networks.yml -o data/23_11_13/networks.json
 ```
 
 ```bash
-docker compose run common python common/generate/generation.py -i data/23_11_30/networks.yml -o data/23_11_30/networks.json
+docker compose run all python common/generate/generation.py -i data/23_11_30/networks.yml -o data/23_11_30/networks.json
 ```
 
 ### Generate Solutions
 
 ```bash
-docker compose run common python common/solve/rule_based.py -c data/23_11_13/solution.yml -n data/23_11_13/networks.json -o data/23_11_13/solution
+docker compose run all python common/solve/rule_based.py -c data/23_11_13/solution.yml -n data/23_11_13/networks.json -o data/23_11_13/solution
 ```
 
 ```bash
-docker compose run common python common/solve/rule_based.py -c data/23_11_30/solution.yml -n data/23_11_30/networks.json -o data/23_11_30/solution
+docker compose run all python common/solve/rule_based.py -c data/23_11_30/solution.yml -n data/23_11_30/networks.json -o data/23_11_30/solution
+```
+
+### Train DQN Agent
+
+```bash
+docker compose run all python algorithm/dqn/dqn_agent.py --config algorithm/params/seed_0.yml
+```
+
+### Apply DQN Agent
+
+```bash
+docker compose run all python algorithm/dqn/dqn_exp.py --config algorithm/params/seed_0.yml
 ```
 
 ### Setup Environment for analysis
@@ -41,7 +53,7 @@ python3.10 -m venv .venv
 . .venv/bin/activate
 pip install --upgrade pip
 pip install wheel
-pip install -e ".[viz,dev]"
+pip install -e ".[viz,dev,backend]"
 ```
 
 ## Deployments
