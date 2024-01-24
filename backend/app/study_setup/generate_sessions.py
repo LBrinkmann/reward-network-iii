@@ -251,7 +251,10 @@ def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, s
         net, _ = get_net_solution()
         solution = None
     else:
-        solution_type = "myopic" if simulated_subject else "loss"
+        if simulated_subject:
+            solution_type = "myopic"
+        else:
+            solution_type = f"machine_{machine_idx}"
         net, moves = get_net_solution(solution_type)
         solution = Solution(
             moves=moves,
@@ -314,9 +317,10 @@ def add_demonstration_trail(trials, is_human, simulated_subject, network_idx, co
         net, moves = get_net_solution(solution_type)
         solution = Solution(
             moves=moves,
-            score=estimate_solution_score(net, moves),
+            score=estimate_solution_score(net, moves, n_steps=MAX_STEPS),
             solution_type=solution_type,
         )
+        assert solution.score > -100_000, "invalid move sequence"
     # demonstration trial
     dem_trial = Trial(
         id=len(trials),
