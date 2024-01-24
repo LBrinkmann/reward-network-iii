@@ -1,20 +1,20 @@
-session_id,trial_id,text,session_idx,ws_idx
-6568f8ff464e933804a0fb63,6,pay attention to the options of the areas you'll be able to choose from before you choose which spot to go to,0,0
-6568f8ff464e933804a0fb63,12,trying to always go for green and keeping notice of the paths you can choose,0,1
-6568f8ff464e933804a0fb64,6,Trying the options with the highest points first and then going back and choosing those options with neutral or lesser point values is most effective. I think moving quickly is most important.,1,0
-6568f8ff464e933804a0fb64,12,Finding two moves which have the highest point values and moving back between them.,1,1
-6568f8ff464e933804a0fb65,6,"if i follow green only or pink, it creates a pattern that i can use",2,0
-6568f8ff464e933804a0fb65,12,"keep making my pattern
-",2,1
-6568f8ff464e933804a0fb67,6,No risks - just go with what works,3,0
-6568f8ff464e933804a0fb67,12,Only take risks when there's no choice but a negative result,3,1
-6568f8ff464e933804a0fb68,6,I'm not sure if this is a strategy I would do but I noticed that I can memorize how some letters connected to others so that I can collect points in a loop.,4,0
-6568f8ff464e933804a0fb68,12,"I think if I stick with the letters I know and avoid red shaded lines, I can maximize my points, since I do not have many turns to experiment.",4,1
-6568f8ff464e933804a0fb69,6,I thought that clicking the green circle as much as possible would result in the most points. ,5,0
-6568f8ff464e933804a0fb69,12,I think that by choosing options that are spread apart that it opens up more opportunities for green circles. ,5,1
-6568f8ff464e933804a0fb6a,6,to maximize the amount of times you pick a gain over a loss,6,0
-6568f8ff464e933804a0fb6a,12,When you decide to take the paths that guarantee gains you earn more points. Minimizing the amount of risk you take,6,1
-6568f8ff464e933804a0fb6b,6,clicking the green arrows seemed most successful,7,0
-6568f8ff464e933804a0fb6b,12,going back and forth between the arrows that would give me points for the green values,7,1
-6568f8ff464e933804a0fb6d,6,The place the point was directed,8,0
-6568f8ff464e933804a0fb6d,12,The direction it wad going ,8,1
+session_id,trial_id,written_strategy_idx,text
+6568f8ff464e933804a0fb63,6,0,pay attention to the options of the areas you'll be able to choose from before you choose which spot to go to
+6568f8ff464e933804a0fb63,12,1,trying to always go for green and keeping notice of the paths you can choose
+6568f8ff464e933804a0fb64,6,0,Trying the options with the highest points first and then going back and choosing those options with neutral or lesser point values is most effective. I think moving quickly is most important.
+6568f8ff464e933804a0fb64,12,1,Finding two moves which have the highest point values and moving back between them.
+6568f8ff464e933804a0fb65,6,0,"if i follow green only or pink, it creates a pattern that i can use"
+6568f8ff464e933804a0fb65,12,1,"keep making my pattern
+"
+6568f8ff464e933804a0fb67,6,0,No risks - just go with what works
+6568f8ff464e933804a0fb67,12,1,Only take risks when there's no choice but a negative result
+6568f8ff464e933804a0fb68,6,0,I'm not sure if this is a strategy I would do but I noticed that I can memorize how some letters connected to others so that I can collect points in a loop.
+6568f8ff464e933804a0fb68,12,1,"I think if I stick with the letters I know and avoid red shaded lines, I can maximize my points, since I do not have many turns to experiment."
+6568f8ff464e933804a0fb69,6,0,I thought that clicking the green circle as much as possible would result in the most points. 
+6568f8ff464e933804a0fb69,12,1,I think that by choosing options that are spread apart that it opens up more opportunities for green circles. 
+6568f8ff464e933804a0fb6a,6,0,to maximize the amount of times you pick a gain over a loss
+6568f8ff464e933804a0fb6a,12,1,When you decide to take the paths that guarantee gains you earn more points. Minimizing the amount of risk you take
+6568f8ff464e933804a0fb6b,6,0,clicking the green arrows seemed most successful
+6568f8ff464e933804a0fb6b,12,1,going back and forth between the arrows that would give me points for the green values
+6568f8ff464e933804a0fb6d,6,0,The place the point was directed
+6568f8ff464e933804a0fb6d,12,1,The direction it wad going 
