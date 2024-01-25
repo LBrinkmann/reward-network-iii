@@ -1,0 +1,10 @@
+session_id,session_name,condition,generation,within_generation_idx,started_at,time_spend,expired,replaced,ai_player,simulated_subject,advisor,player_score
+6568f8ff464e933804a0fb63,Gen 0 - None - 0 - Human,,0,0,2023-11-30T22:07:09.849000,546.17725,False,False,False,False,,1650
+6568f8ff464e933804a0fb64,Gen 0 - None - 1 - Human,,0,1,2023-11-30T22:12:07.883000,503.298188,False,False,False,False,,1650
+6568f8ff464e933804a0fb65,Gen 0 - None - 2 - Human,,0,2,2023-11-30T22:12:21.730000,1185.854972,False,False,False,False,,1425
+6568f8ff464e933804a0fb67,Gen 0 - None - 4 - Human,,0,4,2023-11-30T22:20:20.923000,671.933255,False,False,False,False,,1525
+6568f8ff464e933804a0fb68,Gen 0 - None - 5 - Human,,0,5,2023-11-30T22:21:33.792000,438.726918,False,False,False,False,,1400
+6568f8ff464e933804a0fb69,Gen 0 - None - 6 - Human,,0,6,2023-11-30T22:24:12.755000,415.48939,False,False,False,False,,1275
+6568f8ff464e933804a0fb6a,Gen 0 - None - 7 - Human,,0,7,2023-11-30T22:27:28.592000,493.630013,False,False,False,False,,1500
+6568f8ff464e933804a0fb6b,Gen 0 - None - 0 - Human,,0,0,2023-11-30T22:29:03.841000,411.627957,False,False,False,False,,1937
+6568f8ff464e933804a0fb6d,Gen 0 - None - 2 - Human,,0,2,2023-11-30T22:31:01.326000,641.607049,False,False,False,False,,1487
