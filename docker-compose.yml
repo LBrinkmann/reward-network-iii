@@ -101,11 +101,11 @@ services:
     depends_on:
       - frontend-prod
 
-  common: # backend
+  all: # backend
     build:
       context: .
       dockerfile: setup/docker/Dockerfile
-      target: base
+      target: all
     volumes:
       - .:/app/.
     depends_on:

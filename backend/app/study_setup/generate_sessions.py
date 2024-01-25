@@ -15,11 +15,8 @@ from utils.utils import estimate_solution_score, estimate_average_player_score
 
 network_data = None
 solutions = None
-solutions_myopic = None
-solutions_m1 = None
-solutions_m2 = None
-solutions_m3 = None
 machine_idx = 0
+MAX_STEPS = 10
 
 # load all ai solutions
 
@@ -41,36 +38,35 @@ def get_net_solution(solution_type="loss"):
     network = Network.parse_obj(network_raw)
 
     # get the solution for the network
-    if solution_type == "loss":
-        moves = [s for s in solutions if s["network_id"] == network.network_id]
-    elif solution_type == "machine_1":
-        moves = [s for s in solutions_m1 if s["network_id"]
-                 == network.network_id]
-    elif solution_type == "machine_2":
-        moves = [s for s in solutions_m2 if s["network_id"]
-                 == network.network_id]
-    elif solution_type == "machine_3":
-        moves = [s for s in solutions_m3 if s["network_id"]
-                 == network.network_id]
-    else:
-        moves = [s for s in solutions_myopic if s["network_id"]
-                 == network.network_id]
+    solution = solutions[solution_type][network.network_id]
 
     # for some reason the first move is always 0, so we need to replace it
-    moves[0]["moves"][0] = network.starting_node
+    solution["moves"][0] = network.starting_node
 
-    return network, moves[0]["moves"]
+    return network, solution["moves"]
 
 
 def reset_networks(config: ExperimentSettings):
-    global network_data, solutions, solutions_myopic, solutions_m1, solutions_m2, solutions_m3
+    global network_data, solutions
     # load all networks
     network_data = json.load(open(Path(config.networks_path) / "networks.json"))
     solutions = json.load(open(Path(config.networks_path) / "solution__take_loss.json"))
     solutions_myopic = json.load(open(Path(config.networks_path) / "solution__myopic.json"))
-    solutions_m1 = json.load(open(Path(config.networks_path) / "mode_nodes_more_steps_0.json"))
-    solutions_m2 = json.load(open(Path(config.networks_path) / "mode_nodes_more_steps_1.json"))
-    solutions_m3 = json.load(open(Path(config.networks_path) / "mode_nodes_more_steps_2.json"))
+    solutions_m1 = json.load(open(Path(config.networks_path) / "machine_solutions" / "0.json"))
+    solutions_m2 = json.load(open(Path(config.networks_path) / "machine_solutions" / "1.json"))
+    solutions_m3 = json.load(open(Path(config.networks_path) / "machine_solutions" / "2.json"))
+    solutions_dict = {s['network_id']: s for s in solutions}
+    solutions_myopic_dict = {s['network_id']: s for s in solutions_myopic}
+    solutions_m1_dict = {s['network_id']: s for s in solutions_m1}
+    solutions_m2_dict = {s['network_id']: s for s in solutions_m2}
+    solutions_m3_dict = {s['network_id']: s for s in solutions_m3}
+    solutions = {
+        "loss": solutions_dict,
+        "myopic": solutions_myopic_dict,
+        "machine_0": solutions_m1_dict,
+        "machine_1": solutions_m2_dict,
+        "machine_2": solutions_m3_dict,
+    }
     # randomize the order of the networks
     random.seed(config.seed)
     random.shuffle(network_data)
@@ -173,6 +169,8 @@ async def create_generation(
     experiment_num: int,
     config: ExperimentSettings,
 ) -> List[Session]:
+    global machine_idx
+    machine_idx = 0
     # compute conditions
     if generation == 0:
         if len(config.conditions) == 1:
@@ -253,13 +251,17 @@ def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, s
         net, _ = get_net_solution()
         solution = None
     else:
-        solution_type = "myopic" if simulated_subject else "loss"
+        if simulated_subject:
+            solution_type = "myopic"
+        else:
+            solution_type = f"machine_{machine_idx}"
         net, moves = get_net_solution(solution_type)
         solution = Solution(
             moves=moves,
-            score=estimate_solution_score(net, moves),
+            score=estimate_solution_score(net, moves, n_steps=MAX_STEPS),
             solution_type=solution_type,
         )
+        assert solution.score > -100_000, "invalid move sequence"
 
     n_trails = len([t for t in config.social_learning_trials if t in ['try_yourself']])
 
@@ -315,9 +317,10 @@ def add_demonstration_trail(trials, is_human, simulated_subject, network_idx, co
         net, moves = get_net_solution(solution_type)
         solution = Solution(
             moves=moves,
-            score=estimate_solution_score(net, moves),
+            score=estimate_solution_score(net, moves, n_steps=MAX_STEPS),
             solution_type=solution_type,
         )
+        assert solution.score > -100_000, "invalid move sequence"
     # demonstration trial
     dem_trial = Trial(
         id=len(trials),

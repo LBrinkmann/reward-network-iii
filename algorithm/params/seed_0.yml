@@ -6,7 +6,7 @@ observation_shape: "concatenated"
 train_data_name: "data/23_11_30/networks_train.json"
 test_data_name: "data/23_11_30/networks_train.json"
 exp_data_name: "data/23_11_30/networks.json"
-solutions_dir: "data/23_11_30/solutions/"
+solutions_dir: "data/23_11_30/machine_solutions/"
 save_dir: "data/23_11_30/model/"
 n_episodes: 5000
 n_networks: 1000

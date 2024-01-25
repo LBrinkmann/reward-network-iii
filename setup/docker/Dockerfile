@@ -37,3 +37,17 @@ RUN pip --no-cache-dir install -r requirements_backend.txt
 COPY backend/app .
 COPY data ./data
 CMD ["uvicorn", "server:api", "--host", "0.0.0.0", "--port", "5000"]
+
+
+# All
+
+FROM base as all
+
+COPY setup/requirements/requirements_backend.txt .
+RUN pip --no-cache-dir install -r requirements_backend.txt
+COPY setup/requirements/requirements_viz.txt .
+RUN pip --no-cache-dir install -r requirements_viz.txt
+COPY setup/requirements/requirements_train.txt .
+RUN pip --no-cache-dir install -r requirements_train.txt
+COPY setup/requirements/requirements_dev.txt .
+RUN pip --no-cache-dir install -r requirements_dev.txt
