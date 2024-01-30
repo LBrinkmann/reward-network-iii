@@ -52,3 +52,7 @@ class ExperimentSettings(Document):
     social_learning_trials: List[str] = ["try_yourself", "observation", "try_yourself"]
     # main experiment only (for testing)
     main_only: bool = False
+
+
+    class Settings:
+        indexes = ["experiment_type"]

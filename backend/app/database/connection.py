@@ -7,6 +7,7 @@ from pydantic import BaseSettings
 from models.config import ExperimentSettings
 from models.session import Session
 from models.subject import Subject
+import pymongo
 
 
 class DatabaseSettings(BaseSettings):

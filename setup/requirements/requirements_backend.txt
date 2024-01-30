@@ -1,9 +1,9 @@
-fastapi==0.99.1
+fastapi
 httpx
 motor
 pymongo
 pyvis
 uvicorn
-beanie
-pydantic==1.9.2
+beanie==1.25.0
+pydantic
 starlette_exporter
