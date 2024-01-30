@@ -11,6 +11,7 @@ class Session(Document):
     created_at: datetime.datetime = datetime.datetime.now()
     experiment_num: int
     experiment_type: str = "reward_network_iii"
+    priority: Optional[float] = 0
     condition: Optional[str] = None
     # id of the experiment settings (config) used for this session
     config_id: Optional[PydanticObjectId]
@@ -37,3 +38,15 @@ class Session(Document):
     class Config:
         # TODO: add example
         schema_extra = {"example": {}}
+
+    class Settings:
+        indexes = [
+            "subject_id",
+            "experiment_type",
+            ["available", "experiment_type"],
+            ["_id", "unfinished_parents"],
+            ["finished", "subject_id", "expired"],
+            "started_at",
+            ["finished", "replaced", "time_spent"],
+            ["expired", "replaced", "experiment_type"],
+        ]

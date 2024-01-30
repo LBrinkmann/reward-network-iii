@@ -35,12 +35,12 @@ async def create_sessions_network(experiment_type, experiment_num) -> Path:
         title = f"Session {s_num} in generation {g}\n"
         title += f"Current trial: {trial_num + 1} ({trial.trial_type})\n"
         first_trial = session.trials[0]
-        if trial_num > 0 and isinstance(first_trial.started_at, datetime):
+        if trial_num > 1 and isinstance(first_trial.started_at, datetime) and isinstance(trial.started_at, datetime):
             time_spent = trial.started_at - first_trial.started_at
             m = time_spent.total_seconds() / 60
             title += f"Time in the study: {round(m, 2)}  minutes\n"
         title += f"Created at: " f'{session.created_at.strftime("%m.%d.%Y %H:%M:%S")}\n'
-
+        
         if session.available:
             color = "#85D4E3"
         else:
@@ -99,4 +99,5 @@ async def create_sessions_network(experiment_type, experiment_num) -> Path:
     html = net.generate_html(str(file))
     with open(file, "w+") as out:
         out.write(html)
+    print(f"Created {file}", flush=True)
     return file

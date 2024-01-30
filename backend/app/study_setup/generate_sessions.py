@@ -109,7 +109,7 @@ async def generate_sessions(
     Generate one experiment.
     """
     # Set random seed
-    random.seed(config.seed)
+    # random.seed(config.seed)
 
     # create sessions for the first generation
     # the last `num_ai_players` sessions are for AI players
@@ -418,6 +418,7 @@ def create_trials(
         config_id=config.id,
         experiment_num=experiment_num,
         experiment_type=config.experiment_type,
+        priority=(random.random() + experiment_num * config.n_generations + generation),
         generation=generation,
         session_num_in_generation=session_idx,
         trials=trials,

@@ -17,7 +17,8 @@ def estimate_solution_score(
     # penalize for missing steps
     # NOTE: move 0 is always the start node, so we need to add 1
     # Penalty is -50 (updated 20/06/2023)
-    score -= (n_steps - (len(moves) - 1)) * 50
+    if len(moves) - 1 < n_steps:
+        score -= (n_steps - (len(moves) - 1)) * 50
 
     return score
 
