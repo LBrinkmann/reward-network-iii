@@ -17,7 +17,6 @@ async def get_current_trial(experiment_type: str, prolific_id: str) -> Union[Tri
     """
     Get current trial from the session.
     """
-    print("get_current_trial", flush=True)
     # find session and trial for the subject
     session = await get_session(prolific_id, experiment_type)
     
@@ -28,7 +27,6 @@ async def get_current_trial(experiment_type: str, prolific_id: str) -> Union[Tri
     trial = await prepare_trial(session)
 
     await session.save()
-    print("trial: ", trial, flush=True)
     return trial
 
 @session_router.post('/{prolific_id}/{trial_id}')

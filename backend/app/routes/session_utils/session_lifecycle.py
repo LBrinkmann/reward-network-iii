@@ -41,8 +41,15 @@ async def get_session(prolific_id, experiment_type=None) -> Union[Session, Sessi
     # get session for the subject
     session = await Session.find_one(Session.subject_id == subject.id)
     if session is None:
-        # this happens when all available sessions are taken
-        return SessionError(message="No available sessions")
+        print("Find session for the subject", flush=True)
+        # try to initialize session for the subject
+        await initialize_session(subject, experiment_type=experiment_type)
+        # get session for the subject
+        session = await Session.find_one(Session.subject_id == subject.id)
+        if session is None:
+            print("No available sessions", flush=True)
+            # this happens when all available sessions are taken
+            return SessionError(message="No available sessions")
 
     # this will happen only for a new subject
     if subject.session_id is None:
@@ -59,11 +66,37 @@ async def initialize_session(subject: Subject, experiment_type: str):
     # Check and remove expired sessions
     await replace_stale_session(config)
 
-    # assign subject to any available session
+    # res = await Session.find_one(
+    #     Session.available == True,
+    #     # select session for this experiment
+    #     Session.experiment_type == config.experiment_type).sort(
+    #         [("priority", -1)]).update(
+    #             Set({Session.available: False,
+    #                  Session.subject_id: subject.id,
+    #                  Session.current_trial_num: 0,
+    #                  Session.started_at: datetime.now()}))
+    # res = await Session.update_one(
+    #     Session.available == True,
+    #     # select session for this experiment
+    #     Session.experiment_type == config.experiment_type,
+    #     pymongo_kwargs={"sort": [("priority", -1)]},
+    #     set={
+    #         Session.available: False,
+    #         Session.subject_id: subject.id,
+    #         Session.current_trial_num: 0,
+    #         Session.started_at: datetime.now(),  # save session start time
+    #     }
+    # )
+            
+            
+    # print(f"Session assigned to the subject, {res}", flush=True)
+
+    # # assign subject to any available session
     await Session.find_one(
         Session.available == True,
         # select session for this experiment
         Session.experiment_type == config.experiment_type,
+        pymongo_kwargs={"sort": [("priority", -1)]},
     ).update(
         Set(
             {
@@ -72,8 +105,17 @@ async def initialize_session(subject: Subject, experiment_type: str):
                 Session.current_trial_num: 0,
                 Session.started_at: datetime.now(),  # save session start time
             }
-        )
+        ),
+        pymongo_kwargs={"sort": [("priority", -1)]},
     )
+    session = await Session.find_one(Session.subject_id == subject.id)
+    if session is None:
+        # no available sessions
+        return
+    print(f"Session assigned to the subject, {session.priority}", flush=True)
+    # print(f"Other session, {sessions[0].priority}", flush=True)
+    
+
 
 
 async def update_session(session):

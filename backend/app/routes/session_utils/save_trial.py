@@ -14,6 +14,8 @@ from models.trial import (
 )
 from utils.utils import estimate_solution_score
 
+MAX_STEPS = 10
+
 
 async def save_trial(body, session, trial, trial_type):
     # save trial results
@@ -37,7 +39,7 @@ async def save_trial(body, session, trial, trial_type):
         save_empty_trial(trial)
 
     if trial.solution is not None:
-        score = estimate_solution_score(trial.network, trial.solution.moves, 10)
+        score = estimate_solution_score(trial.network, trial.solution.moves, MAX_STEPS)
         assert score > -100_000, "invalid move sequence"
     # update session with the trial
     session.trials[session.current_trial_num] = trial
@@ -50,7 +52,7 @@ def save_individual_demonstration_trial(trial: Trial, body: Solution):
     trial.solution = Solution(
         moves=body.moves,
         correctRepeats=body.correctRepeats,
-        score=estimate_solution_score(trial.network, body.moves),
+        score=estimate_solution_score(trial.network, body.moves, MAX_STEPS),
         trial_id=trial.id,
         finished_at=datetime.now(),
     )

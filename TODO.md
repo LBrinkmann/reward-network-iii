@@ -19,3 +19,4 @@
 # For next pilot
 
 * [ ]: Check if correct repeats is correctly recorded
+* [ ]: Check order of sessions

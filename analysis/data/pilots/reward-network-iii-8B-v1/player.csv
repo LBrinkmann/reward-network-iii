@@ -1,27 +1,27 @@
-session_id,session_name,condition,generation,within_generation_idx,started_at,time_spend,expired,replaced,ai_player,simulated_subject,advisor,player_score
-6568f759464e933804a0fb42,Gen 0 - None - 0 - AI,,0,0,,0.0,False,False,True,True,,1850
-6568f759464e933804a0fb43,Gen 0 - None - 1 - AI,,0,1,,0.0,False,False,True,True,,1500
-6568f759464e933804a0fb44,Gen 0 - None - 2 - AI,,0,2,,0.0,False,False,True,True,,1725
-6568f759464e933804a0fb45,Gen 0 - None - 3 - AI,,0,3,,0.0,False,False,True,True,,1875
-6568f759464e933804a0fb46,Gen 0 - None - 4 - AI,,0,4,,0.0,False,False,True,True,,1500
-6568f759464e933804a0fb47,Gen 0 - w_ai - 5 - AI,w_ai,0,5,,0.0,False,False,True,False,,2750
-6568f759464e933804a0fb48,Gen 0 - w_ai - 6 - AI,w_ai,0,6,,0.0,False,False,True,False,,2750
-6568f759464e933804a0fb49,Gen 0 - w_ai - 7 - AI,w_ai,0,7,,0.0,False,False,True,False,,2275
-6568f759464e933804a0fb4a,Gen 1 - w_ai - 0 - Human,w_ai,1,0,2023-11-30T21:05:19.830000,908.541807,False,False,False,False,6568f759464e933804a0fb47,2075
-6568f759464e933804a0fb4b,Gen 1 - w_ai - 1 - Human,w_ai,1,1,2023-11-30T21:15:01.588000,1145.617316,False,False,False,False,6568f759464e933804a0fb48,1687
-6568f759464e933804a0fb4c,Gen 1 - w_ai - 2 - Human,w_ai,1,2,2023-11-30T21:17:08.874000,916.737142,False,False,False,False,6568f759464e933804a0fb48,1362
-6568f759464e933804a0fb4d,Gen 1 - w_ai - 3 - Human,w_ai,1,3,2023-11-30T21:17:47.752000,694.976434,False,False,False,False,6568f759464e933804a0fb48,1187
-6568f759464e933804a0fb4e,Gen 1 - w_ai - 4 - Human,w_ai,1,4,2023-11-30T21:18:06.675000,890.553767,False,False,False,False,6568f759464e933804a0fb47,2312
-6568f759464e933804a0fb4f,Gen 1 - w_ai - 5 - Human,w_ai,1,5,2023-11-30T21:19:46.008000,808.056432,False,False,False,False,6568f759464e933804a0fb47,1500
-6568f759464e933804a0fb50,Gen 1 - w_ai - 6 - Human,w_ai,1,6,2023-11-30T21:20:35.510000,602.615145,False,False,False,False,6568f759464e933804a0fb48,2750
-6568f759464e933804a0fb51,Gen 1 - w_ai - 7 - Human,w_ai,1,7,2023-11-30T21:20:54.376000,693.00855,False,False,False,False,6568f759464e933804a0fb48,2425
-6568f75a464e933804a0fb52,Gen 0 - None - 0 - AI,,0,0,,0.0,False,False,True,True,,1600
-6568f75a464e933804a0fb53,Gen 0 - None - 1 - AI,,0,1,,0.0,False,False,True,True,,1425
-6568f75a464e933804a0fb54,Gen 0 - None - 2 - AI,,0,2,,0.0,False,False,True,True,,1850
-6568f75a464e933804a0fb55,Gen 0 - None - 3 - AI,,0,3,,0.0,False,False,True,True,,1675
-6568f75a464e933804a0fb56,Gen 0 - None - 4 - AI,,0,4,,0.0,False,False,True,True,,1500
-6568f75a464e933804a0fb57,Gen 0 - w_ai - 5 - AI,w_ai,0,5,,0.0,False,False,True,False,,2750
-6568f75b464e933804a0fb58,Gen 0 - w_ai - 6 - AI,w_ai,0,6,,0.0,False,False,True,False,,2275
-6568f75b464e933804a0fb59,Gen 0 - w_ai - 7 - AI,w_ai,0,7,,0.0,False,False,True,False,,2425
-6568f75b464e933804a0fb5a,Gen 1 - w_ai - 0 - Human,w_ai,1,0,2023-11-30T21:22:32.665000,780.118606,False,False,False,False,6568f75a464e933804a0fb57,2750
-6568f75b464e933804a0fb5b,Gen 1 - w_ai - 1 - Human,w_ai,1,1,2023-11-30T21:23:42.104000,1219.482063,False,False,False,False,6568f75a464e933804a0fb57,2750
+session_id,session_name,replication_idx,condition,generation,within_generation_idx,started_at,time_spend,expired,replaced,ai_player,simulated_subject,advisor,player_score
+6568f759464e933804a0fb42,Rep 0 - Gen 0 - None - 0 - AI,0,,0,0,,0.0,False,False,True,True,,1850
+6568f759464e933804a0fb43,Rep 0 - Gen 0 - None - 1 - AI,0,,0,1,,0.0,False,False,True,True,,1500
+6568f759464e933804a0fb44,Rep 0 - Gen 0 - None - 2 - AI,0,,0,2,,0.0,False,False,True,True,,1725
+6568f759464e933804a0fb45,Rep 0 - Gen 0 - None - 3 - AI,0,,0,3,,0.0,False,False,True,True,,1875
+6568f759464e933804a0fb46,Rep 0 - Gen 0 - None - 4 - AI,0,,0,4,,0.0,False,False,True,True,,1500
+6568f759464e933804a0fb47,Rep 0 - Gen 0 - w_ai - 5 - AI,0,w_ai,0,5,,0.0,False,False,True,False,,2750
+6568f759464e933804a0fb48,Rep 0 - Gen 0 - w_ai - 6 - AI,0,w_ai,0,6,,0.0,False,False,True,False,,2750
+6568f759464e933804a0fb49,Rep 0 - Gen 0 - w_ai - 7 - AI,0,w_ai,0,7,,0.0,False,False,True,False,,2275
+6568f759464e933804a0fb4a,Rep 0 - Gen 1 - w_ai - 0 - Human,0,w_ai,1,0,2023-11-30T21:05:19.830000,908.541807,False,False,False,False,6568f759464e933804a0fb47,2075
+6568f759464e933804a0fb4b,Rep 0 - Gen 1 - w_ai - 1 - Human,0,w_ai,1,1,2023-11-30T21:15:01.588000,1145.617316,False,False,False,False,6568f759464e933804a0fb48,1687
+6568f759464e933804a0fb4c,Rep 0 - Gen 1 - w_ai - 2 - Human,0,w_ai,1,2,2023-11-30T21:17:08.874000,916.737142,False,False,False,False,6568f759464e933804a0fb48,1362
+6568f759464e933804a0fb4d,Rep 0 - Gen 1 - w_ai - 3 - Human,0,w_ai,1,3,2023-11-30T21:17:47.752000,694.976434,False,False,False,False,6568f759464e933804a0fb48,1187
+6568f759464e933804a0fb4e,Rep 0 - Gen 1 - w_ai - 4 - Human,0,w_ai,1,4,2023-11-30T21:18:06.675000,890.553767,False,False,False,False,6568f759464e933804a0fb47,2312
+6568f759464e933804a0fb4f,Rep 0 - Gen 1 - w_ai - 5 - Human,0,w_ai,1,5,2023-11-30T21:19:46.008000,808.056432,False,False,False,False,6568f759464e933804a0fb47,1500
+6568f759464e933804a0fb50,Rep 0 - Gen 1 - w_ai - 6 - Human,0,w_ai,1,6,2023-11-30T21:20:35.510000,602.615145,False,False,False,False,6568f759464e933804a0fb48,2750
+6568f759464e933804a0fb51,Rep 0 - Gen 1 - w_ai - 7 - Human,0,w_ai,1,7,2023-11-30T21:20:54.376000,693.00855,False,False,False,False,6568f759464e933804a0fb48,2425
+6568f75a464e933804a0fb52,Rep 1 - Gen 0 - None - 0 - AI,1,,0,0,,0.0,False,False,True,True,,1600
+6568f75a464e933804a0fb53,Rep 1 - Gen 0 - None - 1 - AI,1,,0,1,,0.0,False,False,True,True,,1425
+6568f75a464e933804a0fb54,Rep 1 - Gen 0 - None - 2 - AI,1,,0,2,,0.0,False,False,True,True,,1850
+6568f75a464e933804a0fb55,Rep 1 - Gen 0 - None - 3 - AI,1,,0,3,,0.0,False,False,True,True,,1675
+6568f75a464e933804a0fb56,Rep 1 - Gen 0 - None - 4 - AI,1,,0,4,,0.0,False,False,True,True,,1500
+6568f75a464e933804a0fb57,Rep 1 - Gen 0 - w_ai - 5 - AI,1,w_ai,0,5,,0.0,False,False,True,False,,2750
+6568f75b464e933804a0fb58,Rep 1 - Gen 0 - w_ai - 6 - AI,1,w_ai,0,6,,0.0,False,False,True,False,,2275
+6568f75b464e933804a0fb59,Rep 1 - Gen 0 - w_ai - 7 - AI,1,w_ai,0,7,,0.0,False,False,True,False,,2425
+6568f75b464e933804a0fb5a,Rep 1 - Gen 1 - w_ai - 0 - Human,1,w_ai,1,0,2023-11-30T21:22:32.665000,780.118606,False,False,False,False,6568f75a464e933804a0fb57,2750
+6568f75b464e933804a0fb5b,Rep 1 - Gen 1 - w_ai - 1 - Human,1,w_ai,1,1,2023-11-30T21:23:42.104000,1219.482063,False,False,False,False,6568f75a464e933804a0fb57,2750
