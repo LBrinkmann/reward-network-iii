@@ -1,5 +1,5 @@
 numpy
-pydantic==1.9.2
+pydantic
 python-dotenv
 pyyaml
 stringcase

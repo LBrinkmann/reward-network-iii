@@ -5,6 +5,7 @@ from fastapi.security import HTTPBasicCredentials
 from fastapi import Query
 
 from models.config import ExperimentSettings
+from models.session import Session
 from routes.security_utils import get_user
 from study_setup.generate_sessions import generate_experiment_sessions
 
@@ -27,10 +28,15 @@ async def update_config(new_config: ExperimentSettings,
         ExperimentSettings.experiment_type == new_config.experiment_type)
 
     # check the experiment type
-    if config is not None and new_config.rewrite_previous_data == False:
-        return {
-            "error": "Experiment type was not changed and rewrite_previous_data"
-                     " is False."}
+    if config is not None:
+        if new_config.rewrite_previous_data == False:
+            return {
+                "error": "Experiment type was not changed and rewrite_previous_data"
+                        " is False."}
+        else:
+            # delete previous config
+            await Session.find(Session.experiment_type == new_config.experiment_type).delete_many()
+            await config.delete()
 
     # update config and make it inactive
 

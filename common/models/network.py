@@ -70,7 +70,7 @@ class Edge(BaseModel):
             )
         return n
 
-    @root_validator()
+    @root_validator(skip_on_failure=True)
     def validate_no_self_connection(cls, values: Dict[str, Any]) -> Dict[str, Any]:
         if values.get("source_num") == values.get("target_num"):
             raise ValueError("source_num must be different from target_num")

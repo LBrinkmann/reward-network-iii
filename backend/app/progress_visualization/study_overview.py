@@ -31,7 +31,7 @@ async def create_sessions_network(experiment_type, experiment_num) -> Path:
             percentage = round((trial_num + 1) / len(session.trials) * 100)
             label = f"{percentage}%"
         else:
-            label = " "
+            label = f" "
         title = f"Session {s_num} in generation {g}\n"
         title += f"Current trial: {trial_num + 1} ({trial.trial_type})\n"
         first_trial = session.trials[0]
@@ -83,7 +83,8 @@ async def create_sessions_network(experiment_type, experiment_num) -> Path:
             title=title,
         )
         adv = session.advise_ids
-        if adv is not None:
+        # print(session, flush=True)
+        if adv is not None and not session.expired:
             for a in adv:
                 advise_session = await Session.find_one(Session.id == a)
                 if session.available & advise_session.available:

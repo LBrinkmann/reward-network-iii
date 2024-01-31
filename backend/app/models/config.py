@@ -52,6 +52,8 @@ class ExperimentSettings(Document):
     social_learning_trials: List[str] = ["try_yourself", "observation", "try_yourself"]
     # main experiment only (for testing)
     main_only: bool = False
+    # minutes before session is considered expired
+    session_timeout: Optional[float] = None
 
 
     class Settings:
