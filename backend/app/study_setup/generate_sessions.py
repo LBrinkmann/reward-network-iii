@@ -431,6 +431,7 @@ def create_trials(
     )
     if is_ai:
         session.average_score = estimate_average_player_score(session)
-        global machine_idx
-        machine_idx += 1
+        if not simulated_subject:
+            global machine_idx
+            machine_idx = (machine_idx + 1) #% 3
     return session
