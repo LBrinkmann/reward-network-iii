@@ -68,7 +68,6 @@ def reset_networks(config: ExperimentSettings):
         "machine_2": solutions_m3_dict,
     }
     # randomize the order of the networks
-    random.seed(config.seed)
     random.shuffle(network_data)
     print("Networks loaded", len(network_data), flush=True)
 
@@ -108,9 +107,6 @@ async def generate_sessions(
     """
     Generate one experiment.
     """
-    # Set random seed
-    # random.seed(config.seed)
-
     # create sessions for the first generation
     # the last `num_ai_players` sessions are for AI players
 
@@ -362,6 +358,10 @@ def create_trials(
     :param redirect_url: URL to redirect to after the experiment is finished
     """
     assert config.n_demonstration_trials > 0, "n_demonstration_trials must be > 0"
+    
+    global network_data
+    if network_data is None:
+        reset_networks(config)
 
     is_ai = (generation == 0) and (
         (condition == "w_ai") or config.simulate_humans)
@@ -418,7 +418,8 @@ def create_trials(
         config_id=config.id,
         experiment_num=experiment_num,
         experiment_type=config.experiment_type,
-        priority=(random.random() + experiment_num * config.n_generations + generation),
+        priority=-(experiment_num * config.n_generations + generation + random.random()),
+        # priority=-(experiment_num * 0 + generation + random.random()),
         generation=generation,
         session_num_in_generation=session_idx,
         trials=trials,
