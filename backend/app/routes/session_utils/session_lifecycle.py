@@ -1,8 +1,10 @@
 from datetime import datetime, timedelta
 from typing import Union
 
+from beanie import PydanticObjectId
 from beanie.odm.operators.find.comparison import In
 from beanie.odm.operators.update.general import Set
+from beanie.odm.queries.update import UpdateResponse
 
 from models.config import ExperimentSettings
 from models.session import Session
@@ -66,37 +68,11 @@ async def initialize_session(subject: Subject, experiment_type: str):
     # Check and remove expired sessions
     await replace_stale_session(config)
 
-    # res = await Session.find_one(
-    #     Session.available == True,
-    #     # select session for this experiment
-    #     Session.experiment_type == config.experiment_type).sort(
-    #         [("priority", -1)]).update(
-    #             Set({Session.available: False,
-    #                  Session.subject_id: subject.id,
-    #                  Session.current_trial_num: 0,
-    #                  Session.started_at: datetime.now()}))
-    # res = await Session.update_one(
-    #     Session.available == True,
-    #     # select session for this experiment
-    #     Session.experiment_type == config.experiment_type,
-    #     pymongo_kwargs={"sort": [("priority", -1)]},
-    #     set={
-    #         Session.available: False,
-    #         Session.subject_id: subject.id,
-    #         Session.current_trial_num: 0,
-    #         Session.started_at: datetime.now(),  # save session start time
-    #     }
-    # )
-            
-            
-    # print(f"Session assigned to the subject, {res}", flush=True)
-
-    # # assign subject to any available session
-    await Session.find_one(
+    # # # assign subject to any available session
+    session = await Session.find_one(
         Session.available == True,
         # select session for this experiment
         Session.experiment_type == config.experiment_type,
-        pymongo_kwargs={"sort": [("priority", -1)]},
     ).update(
         Set(
             {
@@ -106,9 +82,11 @@ async def initialize_session(subject: Subject, experiment_type: str):
                 Session.started_at: datetime.now(),  # save session start time
             }
         ),
-        pymongo_kwargs={"sort": [("priority", -1)]},
+        response_type=UpdateResponse.NEW_DOCUMENT,
+        sort = [("priority", -1)]
     )
-    session = await Session.find_one(Session.subject_id == subject.id)
+    
+    # session = await Session.find_one(Session.subject_id == subject.id)
     if session is None:
         # no available sessions
         return
@@ -174,7 +152,7 @@ async def update_availability_status_child_sessions(session: Session):
     ).update(Set({Session.available: True}))
 
 
-async def replace_stale_session(exp_config: ExperimentSettings, time_delta: int = 30):
+async def replace_stale_session(exp_config: ExperimentSettings, time_delta: float = 30):
     """
     Replace the unfinished session so as not to break the social learning chains
 
@@ -185,19 +163,23 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: int 
     time_delta : int
         Time in minutes after which the session is considered expired
     """
+    if exp_config.session_timeout is not None:
+        time_delta = exp_config.session_timeout
+    
     # get all expired sessions (sessions that were started long ago)
-    await Session.find(
+    res = await Session.find(
         Session.finished == False,  # session is not finished
         Session.subject_id != None,  # session is assigned to subject
         # there can be old expired and already replaces sessions
-        Session.expired == False
-    ).find(
+        Session.expired == False,
+    # ).find(
         # find all sessions older than the specified time delta
         Session.started_at
         < datetime.now() - timedelta(minutes=time_delta)
     ).update(
         Set({Session.expired: True})
     )
+    # print(res, flush=True)
 
     # mark as expired finished but not replaced sessions
     await Session.find(
@@ -206,39 +188,51 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: int 
     ).find(Session.time_spent > timedelta(minutes=time_delta)).update(
         Set({Session.expired: True})
     )
+        
+    while True:
+        # get all newly expired sessions
+        expired_session = await Session.find_one(
+            # session is marked as expired
+            Session.expired == True,
+            # session has not yet been replaced
+            Session.replaced == False,
+            Session.experiment_type == exp_config.experiment_type,
+        ).update(
+            Set({Session.replaced: True}),
+            response_type=UpdateResponse.NEW_DOCUMENT
+        )
 
-    # get all newly expired sessions
-    new_expired = await Session.find(
-        # session is marked as expired
-        Session.expired == True,
-        # session has not yet been replaced
-        Session.replaced == False,
-        Session.experiment_type == exp_config.experiment_type,
-    ).to_list()
-
-    # nothing to replace
-    if len(new_expired) == 0:
-        return
-
-    # make empty duplicates of the expired sessions
-    for s in new_expired:
+        if expired_session is None:
+            break
+        
+        assert expired_session.expired == True, "Session is not expired"
+        assert expired_session.replaced == True, "Session is not marked as replaced"
+        
+        
+        old_session_copy = expired_session.copy()
+        del old_session_copy.id
+        await old_session_copy.insert()
+        
+        print(f"Session {expired_session.id} is expired", flush=True)
+        print(f'Saved copy of the session {old_session_copy.id}', flush=True)
+        
+        # make empty duplicates of the expired sessions
         # create an empty session to replace the expired one
         new_s = create_trials(
-            experiment_num=s.experiment_num,
-            generation=s.generation,
-            session_idx=s.session_num_in_generation,
-            condition=s.condition,
+            experiment_num=expired_session.experiment_num,
+            generation=expired_session.generation,
+            session_idx=expired_session.session_num_in_generation,
+            condition=expired_session.condition,
             config=exp_config,
         )
-        new_s.advise_ids = s.advise_ids
-        new_s.child_ids = s.child_ids
+        new_s.advise_ids = expired_session.advise_ids
+        new_s.child_ids = expired_session.child_ids
         new_s.unfinished_parents = 0
         new_s.available = True
-        new_s.id = s.id  # copy id
-        await new_s.replace()
+        new_s.is_replacement = True
+        new_s.id = expired_session.id  # copy id
 
-        # mark the session as expired and delete id
-        s.expired = True
-        s.replaced = True
-        del s.id
-        await s.save()
+        # save new session
+        await new_s.replace()
+        print(f"Session {new_s.id} is created", flush=True)
+        

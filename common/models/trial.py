@@ -13,16 +13,16 @@ from pydantic import BaseModel
 class Solution(BaseModel):
     moves: List[int]
     correctRepeats: Optional[List[bool]] = None
-    score: Optional[int]  # solution score
-    trial_id: Optional[int]  # trial number in session
-    finished_at: Optional[datetime.datetime]
-    solution_type: Optional[Literal["myopic", "loss", "machine_0", "machine_1", "machine_2"]]
+    score: Optional[int] = None # solution score
+    trial_id: Optional[int] = None # trial number in session
+    finished_at: Optional[datetime.datetime] = None
+    solution_type: Optional[Literal["myopic", "loss", "machine_0", "machine_1", "machine_2"]] = None
 
 
 class Advisor(BaseModel):
     advisor_id: PydanticObjectId  # advisor id
-    solution: Optional[Solution]
-    written_strategy: Optional[str]
+    solution: Optional[Solution] = None
+    written_strategy: Optional[str] = None
 
 
 class AdvisorSelection(BaseModel):
@@ -32,14 +32,14 @@ class AdvisorSelection(BaseModel):
 
 class WrittenStrategy(BaseModel):
     strategy: str
-    trial_id: Optional[int]  # trial number in session
-    finished_at: Optional[datetime.datetime]
+    trial_id: Optional[int] = None # trial number in session
+    finished_at: Optional[datetime.datetime] = None
 
 
 class PostSurvey(BaseModel):
     questions: Dict[str, str]
-    trial_id: Optional[int]  # trial number in session
-    finished_at: Optional[datetime.datetime]
+    trial_id: Optional[int] = None  # trial number in session
+    finished_at: Optional[datetime.datetime] = None
 
 
 class Trial(BaseModel):
@@ -71,24 +71,24 @@ class Trial(BaseModel):
             "written_strategy",
             "written_strategy_start",
         ]
-    ]
+    ] = None
     finished: Optional[bool] = False
-    started_at: Optional[datetime.datetime]
-    finished_at: Optional[datetime.datetime]
-    network: Optional[Network]
-    solution: Optional[Solution]
+    started_at: Optional[datetime.datetime] = None
+    finished_at: Optional[datetime.datetime] = None
+    network: Optional[Network] = None
+    solution: Optional[Solution] = None
     # social learning trial related field
-    advisor: Optional[Advisor]
+    advisor: Optional[Advisor] = None
     # social learning selection trial relevant field
-    advisor_selection: Optional[AdvisorSelection]
+    advisor_selection: Optional[AdvisorSelection] = None
     # demonstration trial relevant field
     selected_by_children: Optional[List[PydanticObjectId]] = []
     # written strategy trial relevant field
-    written_strategy: Optional[WrittenStrategy]
+    written_strategy: Optional[WrittenStrategy] = None
     # post survey trial relevant field
-    post_survey: Optional[PostSurvey]
+    post_survey: Optional[PostSurvey] = None
     # redirect url with the confirmation code
-    redirect_url: Optional[str]
+    redirect_url: Optional[str] = None
     is_practice: Optional[bool] = False
     trial_title: Optional[str] = ""
     # relevant for the social learning loop to determine if the trial is the last in the example
