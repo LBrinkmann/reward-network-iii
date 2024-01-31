@@ -45,7 +45,7 @@ services:
       context: .
       dockerfile: setup/docker/Dockerfile-frontend-dev
     ports:
-      - "9000:9000" # app
+      - "9090:9000" # app
       - "6006:6006" # storybook
     volumes:
       - ./frontend/static:/frontend/static
