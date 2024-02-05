@@ -200,6 +200,8 @@ if __name__ == "__main__":
     with open(args.networks) as json_file:
         networks = json.load(json_file)
 
+    total_scores = []
+
     for strategy in ["myopic", "take_loss", "random"]:
         A = RuleAgent(networks, strategy, solve_params)
         A.solve()
@@ -209,3 +211,21 @@ if __name__ == "__main__":
 
         with open(filename, "w", encoding="utf-8") as f:
             f.write(solutions)
+
+        total_scores.append(A.solutions.groupby(['network_id','strategy'])["reward"].sum().reset_index())
+
+    total_scores = pd.concat(total_scores)
+
+    total_scores = total_scores.pivot(index='network_id', columns='strategy', values='reward').reset_index()
+
+
+    total_scores['valid'] = total_scores.apply(lambda x: x['myopic'] <= x['take_loss'], axis=1)
+
+    # save valid networks
+    valid_network_ids = total_scores[total_scores['valid']]['network_id'].tolist()
+    valid_networks = [network for network in networks if network['network_id'] in valid_network_ids]
+
+    with open(f"{args.output}__valid_networks.json", "w", encoding="utf-8") as f:
+        f.write(json.dumps(valid_networks))
+
+    print(f"{len(valid_networks)} valid networks out of {len(networks)}")
