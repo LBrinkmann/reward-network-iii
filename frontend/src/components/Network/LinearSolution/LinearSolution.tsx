@@ -82,7 +82,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
       <Box>
         {showStepsLabel && (
           <Typography variant="h6" align="left">
-            Past Moves
+            Moves
           </Typography>
         )}
         <svg width={size.width} height={size.height + gap / 2}>
