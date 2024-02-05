@@ -491,11 +491,13 @@ def train_agent(config=None):
     # set seed
     th.manual_seed(config.seed)
 
+    n_networks = config.n_networks
+
     # ---------Start analysis------------------------------
     # initialize environment(s)
-    env = Reward_Network(networks_train, network_batch=config.network_batch, config=config, device=DEVICE)
+    env = Reward_Network(networks_train[:n_networks], network_batch=config.network_batch, config=config, device=DEVICE)
 
-    env_test = Reward_Network(networks_test, network_batch=None, config=config, device=DEVICE)
+    env_test = Reward_Network(networks_test[:n_networks], network_batch=None, config=config, device=DEVICE)
 
 
     # initialize Agent(s)

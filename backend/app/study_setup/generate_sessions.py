@@ -49,7 +49,7 @@ def get_net_solution(solution_type="loss"):
 def reset_networks(config: ExperimentSettings):
     global network_data, solutions
     # load all networks
-    network_data = json.load(open(Path(config.networks_path) / "networks.json"))
+    network_data = json.load(open(Path(config.networks_path) / "solution__valid_networks.json"))
     solutions = json.load(open(Path(config.networks_path) / "solution__take_loss.json"))
     solutions_myopic = json.load(open(Path(config.networks_path) / "solution__myopic.json"))
     solutions_m1 = json.load(open(Path(config.networks_path) / "machine_solutions" / "0.json"))
@@ -358,7 +358,7 @@ def create_trials(
     :param redirect_url: URL to redirect to after the experiment is finished
     """
     assert config.n_demonstration_trials > 0, "n_demonstration_trials must be > 0"
-    
+
     global network_data
     if network_data is None:
         reset_networks(config)
