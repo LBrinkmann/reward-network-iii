@@ -3,11 +3,11 @@ tags: [mode_nodes_more_steps, slow_decay]
 model_type: "RNN"
 observation_type: "no_level_loss_counter"
 observation_shape: "concatenated"
-train_data_name: "data/23_11_30/networks_train.json"
-test_data_name: "data/23_11_30/networks_train.json"
-exp_data_name: "data/23_11_30/networks.json"
-solutions_dir: "data/23_11_30/machine_solutions/"
-save_dir: "data/23_11_30/model/"
+train_data_name: "data/24_02_04/networks_train.json"
+test_data_name: "data/24_02_04/networks_train.json"
+exp_data_name: "data/24_02_04/networks.json"
+solutions_dir: "data/24_02_04/machine_solutions/"
+save_dir: "data/24_02_04/model/"
 n_episodes: 5000
 n_networks: 1000
 network_batch: 100
