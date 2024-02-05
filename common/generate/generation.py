@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 from common.models.network import Network, Node, Edge
 from common.models.environment import Environment
 
-
 def load_yaml(filename):
     with open(filename) as f:
         data = yaml.safe_load(f)
@@ -139,6 +138,8 @@ class NetworkGenerator:
                     f"counter {c}, nodes are {list(c.keys())} "
                     f"(n={len(list(c.keys()))})"
                 )
+
+
 
         return self.networks
 
