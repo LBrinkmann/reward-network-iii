@@ -127,7 +127,10 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
           justifyContent="space-around"
           alignItems="center"
         >
-          <Grid item sx={{ marginTop: "20px", marginBottom: "50px", width: "100%" }}>
+          <Grid
+            item
+            sx={{ marginTop: "20px", marginBottom: "50px", width: "100%" }}
+          >
             {showLinearNetwork && (
               <LinearSolution
                 edges={networkState.network.edges}
@@ -167,10 +170,14 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
               blur={networkState.tutorialOptions.comment}
             />
           </Grid>
-          <Grid item sx={{ marginTop: "20px", marginBottom: "50px", width: "100%" }}>
+          <Grid
+            item
+            sx={{ marginTop: "20px", marginBottom: "50px", width: "100%" }}
+          >
             {networkState.wrongRepeat && (
               <Typography variant="h6" align="center">
-                You chose the wrong path. Please select the correct path, highlighted here. You will not earn points for this choice.
+                You chose the wrong path. Please select the correct path,
+                highlighted here. You will not earn points for this choice.
               </Typography>
             )}
           </Grid>
@@ -195,7 +202,14 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
 };
 const FlashingReward: FC = () => {
   const allRewards = [-50, 0, 100, 200, 400];
-  const colors = ["#c51b7d", "#e9a3c9", "#e6f5d0", "#a1d76a", "#4d9221"];
+  const colors = [
+    "#c51b7d",
+    "#e9a3c9",
+    "#e6f5d0",
+    "#a1d76a",
+    "#4d9221",
+    "#bfbfbf",
+  ];
   const { networkState } = useNetworkContext();
   const [show, setShow] = React.useState(false);
   useEffect(() => {
@@ -219,7 +233,7 @@ const FlashingReward: FC = () => {
     color = "white";
     text = "";
   } else if (networkState.trialType === "repeat") {
-    color = networkState.currentReward > 0 ? colors[2] : colors[0];
+    color = networkState.currentReward > 0 ? colors[5] : colors[5];
     text = networkState.currentReward > 0 ? "Correct" : "Wrong";
   } else {
     color = colors[allRewards.indexOf(networkState.currentReward)];
