@@ -5,10 +5,10 @@ from pydantic import BaseModel, validator, Extra
 class Level(BaseModel):
     idx: int
     color: str
-    is_start: Optional[bool]
-    n_nodes: Optional[int]
+    is_start: Optional[bool] = None
+    n_nodes: Optional[int] = None
     min_n_nodes: int = 1
-    max_n_nodes: Optional[int]
+    max_n_nodes: Optional[int] = None
 
     class Config:
         extra = Extra.forbid
