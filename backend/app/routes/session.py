@@ -19,14 +19,17 @@ async def get_current_trial(experiment_type: str, prolific_id: str) -> Union[Tri
     """
     # find session and trial for the subject
     session = await get_session(prolific_id, experiment_type)
-    
+
     # return error if session is not available
     if isinstance(session, SessionError):
         return session
 
     trial = await prepare_trial(session)
 
-    await session.save()
+    try:
+        await session.save()
+    except Exception as e:
+        print('save session', session, flush=True)
     return trial
 
 @session_router.post('/{prolific_id}/{trial_id}')

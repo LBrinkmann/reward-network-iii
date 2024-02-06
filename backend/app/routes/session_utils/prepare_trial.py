@@ -26,6 +26,5 @@ async def prepare_social_leaning_selection_trial(trial: Trial,
         # get advise
         adv = await Session.get(ad_id)
 
-
         trial.advisor_selection.advisor_ids.append(ad_id)
         trial.advisor_selection.scores.append(adv.average_score)
