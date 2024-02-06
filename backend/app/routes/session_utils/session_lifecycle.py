@@ -3,7 +3,9 @@ from typing import Union
 
 from beanie import PydanticObjectId
 from beanie.odm.operators.find.comparison import In
+from beanie.odm.operators.find.array import Size
 from beanie.odm.operators.update.general import Set
+from beanie.odm.operators.update.array import AddToSet
 from beanie.odm.queries.update import UpdateResponse
 
 from models.config import ExperimentSettings
@@ -41,7 +43,11 @@ async def get_session(prolific_id, experiment_type=None) -> Union[Session, Sessi
         subject = subjects_with_id[0]
 
     # get session for the subject
-    session = await Session.find_one(Session.subject_id == subject.id)
+    try:
+        session = await Session.find_one(Session.subject_id == subject.id)
+    except Exception as e:
+        print(f"Error when loading session {subject.id}", flush=True)
+        raise e
     if session is None:
         print("Find session for the subject", flush=True)
         # try to initialize session for the subject
@@ -64,7 +70,7 @@ async def get_session(prolific_id, experiment_type=None) -> Union[Session, Sessi
 async def initialize_session(subject: Subject, experiment_type: str):
     # find an active configuration
     config = await ExperimentSettings.find_one(ExperimentSettings.experiment_type == experiment_type)
-    
+
     # Check and remove expired sessions
     await replace_stale_session(config)
 
@@ -85,14 +91,14 @@ async def initialize_session(subject: Subject, experiment_type: str):
         response_type=UpdateResponse.NEW_DOCUMENT,
         sort = [("priority", -1)]
     )
-    
+
     # session = await Session.find_one(Session.subject_id == subject.id)
     if session is None:
         # no available sessions
         return
     print(f"Session assigned to the subject, {session.priority}", flush=True)
     # print(f"Other session, {sessions[0].priority}", flush=True)
-    
+
 
 
 
@@ -135,10 +141,10 @@ async def end_session(session):
     if not session.finished:
         return
     # update child sessions
-    await update_availability_status_child_sessions(session)
+    await update_availability_status_child_sessions(session, config)
 
 
-async def update_availability_status_child_sessions(session: Session):
+async def update_availability_status_child_sessions(session: Session, exp_config: ExperimentSettings):
     """Update child sessions availability status"""
 
     # update `unfinished_parents` value for child sessions
@@ -146,9 +152,14 @@ async def update_availability_status_child_sessions(session: Session):
         {Session.unfinished_parents: -1}
     )
 
+    # add finished parent to the list of finished parents
+    await Session.find(In(Session.id, session.child_ids)).update(
+        AddToSet({Session.finished_parents: session.id})
+    )
+
     # update child sessions status if all parent sessions are finished
     await Session.find(
-        In(Session.id, session.child_ids), Session.unfinished_parents == 0
+        In(Session.id, session.child_ids), Size(Session.finished_parents) == exp_config.n_advise_per_session
     ).update(Set({Session.available: True}))
 
 
@@ -165,7 +176,7 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: floa
     """
     if exp_config.session_timeout is not None:
         time_delta = exp_config.session_timeout
-    
+
     # get all expired sessions (sessions that were started long ago)
     res = await Session.find(
         Session.finished == False,  # session is not finished
@@ -188,7 +199,7 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: floa
     ).find(Session.time_spent > timedelta(minutes=time_delta)).update(
         Set({Session.expired: True})
     )
-        
+
     while True:
         # get all newly expired sessions
         expired_session = await Session.find_one(
@@ -204,18 +215,18 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: floa
 
         if expired_session is None:
             break
-        
+
         assert expired_session.expired == True, "Session is not expired"
         assert expired_session.replaced == True, "Session is not marked as replaced"
-        
-        
+
+
         old_session_copy = expired_session.copy()
         del old_session_copy.id
         await old_session_copy.insert()
-        
+
         print(f"Session {expired_session.id} is expired", flush=True)
         print(f'Saved copy of the session {old_session_copy.id}', flush=True)
-        
+
         # make empty duplicates of the expired sessions
         # create an empty session to replace the expired one
         new_s = create_trials(
@@ -235,4 +246,4 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: floa
         # save new session
         await new_s.replace()
         print(f"Session {new_s.id} is created", flush=True)
-        
+

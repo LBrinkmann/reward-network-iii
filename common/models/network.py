@@ -100,4 +100,4 @@ class Network(BaseModel):
     nodes: List[Node]
     edges: List[Edge]
     starting_node: int
-    max_reward: Optional[int]
+    max_reward: Optional[int] = None

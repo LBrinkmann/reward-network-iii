@@ -26,6 +26,7 @@ class Session(Document):
     advise_ids: List[PydanticObjectId] = []
     child_ids: List[PydanticObjectId] = []
     unfinished_parents: Optional[int] = 0
+    finished_parents: List[PydanticObjectId] = []
     finished: Optional[bool] = False
     finished_at: Optional[datetime.datetime] = None
     available: Optional[bool] = False  # available for subject to play
