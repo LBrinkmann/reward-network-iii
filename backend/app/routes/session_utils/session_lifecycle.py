@@ -159,7 +159,7 @@ async def update_availability_status_child_sessions(session: Session, exp_config
 
     # update child sessions status if all parent sessions are finished
     await Session.find(
-        In(Session.id, session.child_ids), Size(Session.finished_parents) == exp_config.n_advise_per_session
+        In(Session.id, session.child_ids), Size(Session.finished_parents, exp_config.n_advise_per_session)
     ).update(Set({Session.available: True}))
 
 
