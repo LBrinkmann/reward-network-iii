@@ -1,0 +1,39 @@
+session_id,trial_id,written_strategy_idx,text
+65c1039b6bfe110d744f1888,6,0,If I can find a loop then I can just repeatedly go around that loop
+65c1039b6bfe110d744f1888,22,1,Find a loop with 400 points in both directions.
+65c1039b6bfe110d744f1889,6,0,choose as many green options as possible
+65c1039b6bfe110d744f1889,22,1,three losses followed by greens
+65c1039c6bfe110d744f188d,6,0,"Choosing green colours where available, and choosing a neutral option otherwise."
+65c1039c6bfe110d744f188d,22,1,"Choose 3 pink ones first, and then follow a recurring pattern of dark green ones."
+65c1039c6bfe110d744f1890,6,0,"follow the light pink lines so its neutral, dont lose points, if there is no green"
+65c1039c6bfe110d744f1890,22,1,"again, following the light pink arrows when green not available and going back and forth"
+65c1039c6bfe110d744f1891,6,0,I was trying to choose the highest points at the begging then I could lose some points later on. I like starting with huge win at the beginning this is my approach 
+65c1039c6bfe110d744f1891,22,1,Following the user strategy which is losing the first 3 points then keep moving between the two points with the green arrow that gives the 400 points back and forth
+65c1039c6bfe110d744f1894,6,0,quick thinking and staying alert
+65c1039c6bfe110d744f1894,22,1,copying the teacher and not trying to do something different
+65c1039c6bfe110d744f1895,6,0,Trying to get in a loop of high reward nodes 
+65c1039c6bfe110d744f1895,22,1,Taking a loss at first to find a loop between two max value nodes 
+65c1039d6bfe110d744f1898,6,0,Losing points can be worth doing in order to gain more
+65c1039d6bfe110d744f1898,22,1,"Repetition is key, it's okay to lose points at the beginning"
+65c1039d6bfe110d744f1899,6,0,"Choosing the lines that were green, even if just a lighter shade, or choosing the least pink option to minimise the loss."
+65c1039d6bfe110d744f1899,22,1,"Choosing 3x -50 point options, and then going between the same two dark green options gave  the highest payoff"
+65c1039d6bfe110d744f189c,6,0,ticking the green circles but not sure
+65c1039d6bfe110d744f189c,22,1,i have not a clue - i do not understand this game
+65c1039d6bfe110d744f189d,6,0,Avoid the higher loss circles
+65c1039d6bfe110d744f189d,22,1,Start with the high loss circles and then move back and forth between the green circles
+65c1039e6bfe110d744f18a0,6,0,take a neutral rather then negative option where possible
+65c1039e6bfe110d744f18a0,22,1,I have no idea what I am doing
+65c1039e6bfe110d744f18a1,6,0,Following the most prominent green lines 
+65c1039e6bfe110d744f18a1,22,1,Taking some losses at the start overall maximises gains later on
+65c1039e6bfe110d744f18a4,6,0,avoid the minus arrows UNLESS by so doing they lead you to the green 200 or 400 arrows - but then you run the risk of not being able to move on - so better overall to minimise the risk of loss and go 
+65c1039e6bfe110d744f18a4,22,1,It seems to be that if you go for the low scoring ones to begin with then high scoring tracks open up
+65c1039e6bfe110d744f18a5,6,0,I will try and use the most cost effective way to make the complete network.
+65c1039e6bfe110d744f18a5,22,1,I took the three biggest losses in my first three turns. This seemed to open up bigger gains that I could use to maximise my score.
+65c1039e6bfe110d744f18a8,6,0,Trying to minimise the amount of points lost by choosing the green or failing that the lightest pink colour nodes. Sometimes you end up going in circles but that doesn't seem to be a problem?
+65c1039e6bfe110d744f18a8,22,1,If you move to the darkest pink circle first then jump the next and then a third one that seems to unlock a path to the dark green nodes that you can then hop back and forth between to max your score.
+65c1039e6bfe110d744f18a9,6,0,Getting into a routine of green arrows so you can do it quickly
+65c1039e6bfe110d744f18a9,22,1,Go for minuses in the beginning until you find the sweet spot where you can go back and forth on maximum green
+65c1039f6bfe110d744f18ac,6,0,Nothing noted that was obvious.
+65c1039f6bfe110d744f18ac,22,1,Watching carefully the sequence.
+65c10bfa6bfe110d744f18c9,6,0,Going between the highest scoring letters only
+65c10bfa6bfe110d744f18c9,22,1,You might need to choose to letters with low/negative points in order to get to the letters with maximum points. By only moving to green letters you might not get any deductions but you can't maximise

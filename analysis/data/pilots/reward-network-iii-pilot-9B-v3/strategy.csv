@@ -1,0 +1,23 @@
+session_id,trial_id,written_strategy_idx,text
+65bb905ffa589ac7c2fb00be,6,0,repeating closed (circular) network connections with positive points and choosing the way to the most connected points
+65bb905ffa589ac7c2fb00be,22,1,repeating the positive loops as many times as possible while starting from a negative point direction
+65bb905ffa589ac7c2fb00bf,6,0,"at first, I tried to just go for green arrows but quickly realized this would not allow me to solve the circle. I need to strategically lose points to ensure I finish the network"
+65bb905ffa589ac7c2fb00bf,22,1,Taking loses early on allows you to reveal the winning combinations
+65bb905ffa589ac7c2fb00c0,6,0,Avoid pink and go for green.
+65bb905ffa589ac7c2fb00c0,22,1,Try to locate the darker green routes.
+65bb905ffa589ac7c2fb00c1,6,0,the best strategy is to keep practising
+65bb905ffa589ac7c2fb00c1,22,1,always go for gains.think of a positive network
+65bb905ffa589ac7c2fb00c2,6,0,clicking the choice that gave the most points
+65bb905ffa589ac7c2fb00c2,22,1,sometimes starting on a loss meant bigger gains 
+65bb905ffa589ac7c2fb00c3,6,0,Follow networks that are more green colored for more points
+65bb905ffa589ac7c2fb00c3,22,1,repeating and going back and forwards on the same networks that were green
+65bb905ffa589ac7c2fb00c4,6,0,Continuously using a known path that only produces positive points as there is little time therefore trying to figure out the the network with the most points is not efficient.
+65bb905ffa589ac7c2fb00c4,22,1,Following the path with the least points eventually leads to a continuous network where you can follow a path with the most points.
+65bb905ffa589ac7c2fb00c5,6,0,checking the colour for each move to maximise points and avoid the lines with negative out comes
+65bb905ffa589ac7c2fb00c5,22,1,Choosing the path with points or neutral outcomes and avoiding the path with negative outcomes
+65bb9061fa589ac7c2fb00d1,6,0,I would try and go for the steps that were green and avoid the pink and red. 
+65bb9061fa589ac7c2fb00d1,22,1,You have to do the first three moves to lose points to get in a good place where you can just make moves to get the full points
+65bb9062fa589ac7c2fb00d5,6,0,"I aimed to go for green as much as possible, the darker the better, and avoid the pinks"
+65bb9062fa589ac7c2fb00d5,22,1,Trying to get two dark green arrows that you can just keep jumping between 
+65bb9887fa589ac7c2fb00e0,6,0,repeating closed (circular) network connections with positive points and choosing the way to the most connected points
+65bb9887fa589ac7c2fb00e0,22,1,repeating the positive loops as many times as possible while starting from a negative point direction

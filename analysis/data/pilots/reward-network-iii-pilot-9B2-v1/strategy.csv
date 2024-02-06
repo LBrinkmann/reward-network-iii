@@ -1,0 +1,45 @@
+session_id,trial_id,written_strategy_idx,text
+65bbd8cefa589ac7c2fb00ea,6,0,"GOing around in a circle that is all positive points, not necessarily going for a new path"
+65bbd8cefa589ac7c2fb00ea,22,1,Choosing new paths until you find the most lucrative ones and then cycling between them
+65bbd8cefa589ac7c2fb00eb,6,0,I don't feel I was very successful at this task. I noticed focussing on the highest point option I could choose but I think it is more successful not to repeat nodes already visited
+65bbd8cefa589ac7c2fb00eb,22,1,Finding a loop of highly positive connections with the least possible connections needed to start the loop.
+65bbd8cefa589ac7c2fb00ed,6,0,always go for the lightest colour pink or any green (dark green the most) to avoid major loss
+65bbd8cefa589ac7c2fb00ed,22,1,getting 3 losses to find a string of dark greens seems to work best
+65bbd8cffa589ac7c2fb00ee,6,0,"To be honest, I am not completely sure as 30 seconds is too little time to figure out realistically in my case what is worth the trouble, network links wise..."
+65bbd8cffa589ac7c2fb00ee,22,1,"Apparently it was selecting very specific points on the network and taking a loss to make double the win...Only my opinion as I don't get what the whole point of this is so far but continuing to play,"
+65bbd8cffa589ac7c2fb00ef,6,0,losing point could help sometimes
+65bbd8cffa589ac7c2fb00ef,22,1,just take the highest score
+65bbd8cffa589ac7c2fb00f0,6,0,"Avoid dark pink, if there is no green try and go for the neutral"
+65bbd8cffa589ac7c2fb00f0,22,1,II observe that if you start with the negative amounts eventually only gren amountse show 
+65bbd8cffa589ac7c2fb00f1,6,0,"Just following the greenest coloured lines and if not available, then lightest pink ones."
+65bbd8cffa589ac7c2fb00f1,22,1,To get onto the dark greens as quickly as possible
+65bbd8d1fa589ac7c2fb00fa,6,0,Pressing all the circles that were green
+65bbd8d1fa589ac7c2fb00fa,22,1,Choosing a neutral colour then choosing a green one
+65bbd8d1fa589ac7c2fb00fb,6,0,the colour options were helpful
+65bbd8d1fa589ac7c2fb00fb,22,1,the colour scheme is helpful
+65bbd8d1fa589ac7c2fb00fc,6,0,Finding a move that scores 200 points and redoing it.
+65bbd8d1fa589ac7c2fb00fc,22,1,Repeating patterns of moves that score high points.
+65bbd8d1fa589ac7c2fb00fe,6,0,"just pick the one that reduces the least points, if you find two nodes that give positive points and go back and forth keep going between those two"
+65bbd8d1fa589ac7c2fb00fe,22,1,find a path that cycles and gives maximum points on each path
+65bbd8d1fa589ac7c2fb00ff,6,0,Following the green buttons.
+65bbd8d1fa589ac7c2fb00ff,22,1,It was successful to firts loose and then gain.
+65bbd8d1fa589ac7c2fb0100,6,0,working out what the higher colours were so as to gain as many points
+65bbd8d1fa589ac7c2fb0100,22,1,darker green is always better
+65bbd8d1fa589ac7c2fb0101,6,0,I have to determine the right direction of the arrow to score as many points as possible
+65bbd8d1fa589ac7c2fb0101,22,1,I need to perform movements quickly and as accurately as possible to achieve as much as possible
+65bbd8d3fa589ac7c2fb010b,6,0,I'm not sure I've worked out a strategy yet...
+65bbd8d3fa589ac7c2fb010b,22,1,Repeating the same pattern 
+65bbd8d3fa589ac7c2fb010c,6,0,"Avoiding revisting a circle OR, if that is unavoidable, exiting through a different route."
+65bbd8d3fa589ac7c2fb010c,22,1,Look for the arrow each time that results in the highest gain or the lowest loss.
+65bbd8d3fa589ac7c2fb010e,6,0,"Well, I focussed on 1) possible moves, 2) colours, working backwards from the colours with the highest points, to the colours with the lowest points. I did not spot the most successful pattern yet."
+65bbd8d3fa589ac7c2fb010e,22,1,"I tried to copy my chosen player's exact strategy to the best of my ability, and I noticed that it was successful."
+65bbd8d3fa589ac7c2fb010f,6,0,shorter jumps work higher with points
+65bbd8d3fa589ac7c2fb010f,22,1,choosing the biggest losses for 3 turns then clicking on the highest points availible
+65bbd8d4fa589ac7c2fb0111,6,0,going round in a circle
+65bbd8d4fa589ac7c2fb0111,22,1,dont know really cant seem to catch the pattern
+65bbe106fa589ac7c2fb0127,6,0,trying to see what gives rewards
+65bbe106fa589ac7c2fb0127,22,1,follow the green ones
+65bbe10bfa589ac7c2fb0128,6,0,trying to see what gives rewards
+65bbe10bfa589ac7c2fb0128,22,1,follow the green ones
+65bbe24afa589ac7c2fb012a,6,0,I have to determine the right direction of the arrow to score as many points as possible
+65bbe24afa589ac7c2fb012a,22,1,I need to perform movements quickly and as accurately as possible to achieve as much as possible

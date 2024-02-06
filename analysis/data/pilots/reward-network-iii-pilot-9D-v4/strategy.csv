@@ -1,0 +1,109 @@
+session_id,trial_id,written_strategy_idx,text
+65ba9808fa589ac7c2fb001e,6,0,Following green arrows
+65ba9808fa589ac7c2fb001e,12,1,Following the green arrows
+65ba9808fa589ac7c2fb001f,6,0,Longer lines were more successful 
+65ba9808fa589ac7c2fb001f,12,1,Green lines were more points 
+65ba9808fa589ac7c2fb0020,6,0,Look at the green lines and try and plan a route using only the green lines as much as possible.
+65ba9808fa589ac7c2fb0020,12,1,Try to follow the green lines and look at planning route back to area where the possibility of more green lines exist. 
+65ba9808fa589ac7c2fb0021,6,0,Follow the darker green lines wherever possible and avoid the red ones.
+65ba9808fa589ac7c2fb0021,12,1,Avoid the pink ones wherever possible.
+65ba9808fa589ac7c2fb0022,6,0,i wasnt really able to observe anything. apart from picking the option that was more towards the green end of the spectrum to get more points
+65ba9808fa589ac7c2fb0022,12,1,that you may have to lose some points in order to beat the network
+65ba9808fa589ac7c2fb0023,6,0,Positive moves trying to avoid dark red circles.
+65ba9808fa589ac7c2fb0023,12,1,moving to the darkest green first the lighter green
+65ba9809fa589ac7c2fb0024,6,0,Follow the green arrows.
+65ba9809fa589ac7c2fb0024,12,1,Follow the green arrows.
+65ba9809fa589ac7c2fb0025,6,0,green was more points lilac was neutral and purple deducted points
+65ba9809fa589ac7c2fb0025,12,1,"the darker the green, more points, lilac didnt gain any and purple deducted points
+"
+65ba9809fa589ac7c2fb0026,6,0,always aiming for the green nodes or if none available hopefully a pink one that does not decrease
+65ba9809fa589ac7c2fb0026,22,2,Usually copying the stragey of the previous player will work but it cana be difficult to remember 
+65ba9809fa589ac7c2fb0027,6,0,Not to back track on yourself. 
+65ba9809fa589ac7c2fb0027,22,2,Repeating yourself over letters with gains. 
+65ba9809fa589ac7c2fb0028,6,0,just looking for green arrows
+65ba9809fa589ac7c2fb0028,22,2,following which ever green line is darkest
+65ba9809fa589ac7c2fb0029,6,0,Go through as many nodes as possible to find the paths and then try to find a loop that lead to positive gains
+65ba9809fa589ac7c2fb0029,22,2,Finding loops that gave positive gains
+65ba9809fa589ac7c2fb002a,6,0,"Follow green arrows over the pink ones, stick to a repeat of back and forth"
+65ba9809fa589ac7c2fb002a,22,2,Stick to green and a loop of back and forth between nodes
+65ba9809fa589ac7c2fb002b,6,0,"I did wonder if going for opposite sides notwithstanding would work, as opposed to just going for the highest payment each time.  It's unclear to me what would be more successful a strategy."
+65ba9809fa589ac7c2fb002b,22,2,Kind of think I need to find 2 points in the network which have green high paying lines between them then repeat.  Not to focus on getting to all points.
+65ba9809fa589ac7c2fb002c,6,0,First check which path give more points or lesser penalty points. Otherwise just pick any of the path.
+65ba9809fa589ac7c2fb002c,22,2,Its the same strategy. Pick the one that give points and leave the one that deduct points albeit I wont be able to connect all the network
+65ba9809fa589ac7c2fb002d,6,0,"Sometimes there was a loop, which I could see would earn me points overall.  It might not have been the best decision, but it's less risky and guarantees points."
+65ba9809fa589ac7c2fb002d,22,2,"Again, I think identifying higher point loops."
+65ba980bfa589ac7c2fb002e,6,0,Trying to get to different circles even if it reduces points slightly.
+65ba980bfa589ac7c2fb002e,12,1,Going back and forth between circles for simplicity to gain as many points as possible.
+65ba980bfa589ac7c2fb002f,6,0,follow the lines that bring most points
+65ba980bfa589ac7c2fb002f,12,1,memorize colours and follow that
+65ba980bfa589ac7c2fb0030,6,0,I tried to move via positive or neutral pathways
+65ba980bfa589ac7c2fb0030,12,1,Avoiding negative pathways and repeating moves
+65ba980bfa589ac7c2fb0031,6,0,"Each node always links to the same nodes, and so returning to the nodes with green arrows is good"
+65ba980bfa589ac7c2fb0031,12,1,"Once a profitable route is found, repeat it"
+65ba980bfa589ac7c2fb0032,6,0,Avoid the negative points unless there is no other option
+65ba980bfa589ac7c2fb0032,12,1,"Backtracking to a previous position to avoid a new position on a minus point is a good option, sometimes you can repeat the same steps in a cycle to avoid any negative points at all"
+65ba980bfa589ac7c2fb0033,6,0,Going for the darker green arrows
+65ba980bfa589ac7c2fb0033,12,1,Finding a loop of green arrows
+65ba980bfa589ac7c2fb0034,6,0,When I go with the green arrow I gain points
+65ba980bfa589ac7c2fb0034,12,1,When I follow the green lines I gain more points
+65ba980bfa589ac7c2fb0035,6,0,"Following the green lines as much as possible, and the darker = more points"
+65ba980bfa589ac7c2fb0035,12,1,"Always following the green where possible, darker = more points"
+65ba980cfa589ac7c2fb0036,6,0,Try to only pick the higher scoring lines
+65ba980cfa589ac7c2fb0036,22,2,"If there is a green line then allows follow that, over any other colour"
+65ba980cfa589ac7c2fb0037,6,0,"I was not taking risks of losing points, but I was rather making less but safe points. I do not know if that was successful though"
+65ba980cfa589ac7c2fb0037,22,2,"Most of the time, repeating the last player's moves seemed a good strategy"
+65ba980cfa589ac7c2fb0038,6,0,"I'm not sure I understand the task! Um, remember that pink is low points and green is high so you save time by not having to check it??"
+65ba980cfa589ac7c2fb0038,22,2,To copy whatever player 3 did!
+65ba980cfa589ac7c2fb0039,6,0,following the green lines 
+65ba980cfa589ac7c2fb0039,22,2,following the dark green circle
+65ba980cfa589ac7c2fb003a,6,0,To keep going back and forth from the letters i knew would provide me with points
+65ba980cfa589ac7c2fb003a,22,2,to go for the letters that had the highest point output
+65ba980cfa589ac7c2fb003b,6,0,Click green and the lowest lost point purple
+65ba980cfa589ac7c2fb003b,22,2,"try to press big minus once ,hoping for more green arrows later"
+65ba980cfa589ac7c2fb003c,6,0,choosing the route with the most points. 
+65ba980cfa589ac7c2fb003c,22,2,choosing the option with the most points. 
+65ba980cfa589ac7c2fb003d,6,0,clicking on the nodes that are highlighted green
+65ba980cfa589ac7c2fb003d,22,2,i didnt see much of a pattern
+65ba980efa589ac7c2fb003e,6,0,"10 moves isn't a lot (you can't make much use of any info you get) so it seems OK just to make higher-scoring moves early and not click negative ones, even if that means you see less of the network."
+65ba980efa589ac7c2fb003e,12,1,"Finding a 'loop' of only positive scores seems good. There is always the possibility I am missing a better 'loop' in unexplored nodes, but hard to test that in just 10 moves."
+65ba980efa589ac7c2fb003f,6,0,I just tried to follow green lines
+65ba980efa589ac7c2fb003f,12,1,Trying to follow only green lines
+65ba980efa589ac7c2fb0040,6,0,Following the highest point lines
+65ba980efa589ac7c2fb0040,12,1,follow all the green lines and repeat.
+65ba980efa589ac7c2fb0041,6,0,I clicked on the arrow with the colour that gave the most points. 
+65ba980efa589ac7c2fb0041,12,1,i clicked on the arrow with the colour representing the highest number of points
+65ba980efa589ac7c2fb0042,6,0,to follow green arrow
+65ba980efa589ac7c2fb0042,12,1,i just follow green line
+65ba980efa589ac7c2fb0043,6,0,"To be honest I'm still getting used to it, but I was keeping an eye on the green lines, especially the darker ones and possible moves."
+65ba980efa589ac7c2fb0043,12,1,"Following the green lines mainly, but also being willing to take risks and lose points by clicking on some of the other colour to open up higher scoring paths"
+65ba980efa589ac7c2fb0044,6,0,"I got  fare amount of points for my route, and replicated it"
+65ba980efa589ac7c2fb0044,12,1,"same as first time, try to get around 1500 - repeat route"
+65ba980efa589ac7c2fb0045,6,0,"If I can find a loop that stays with just green nodes, this might be a good strategy."
+65ba980efa589ac7c2fb0045,12,1,It might be beneficial to go to a node that isn't immediately the best to then try to find a high scoring 400 pt node.
+65ba980efa589ac7c2fb0046,6,0,The darker the green the more points I gain.
+65ba980efa589ac7c2fb0046,22,2,Sometimes losing points opens paths to allow you to gain bigger points.
+65ba980efa589ac7c2fb0047,6,0,Getting into a loop with only positive points
+65ba980efa589ac7c2fb0047,22,2,"Maximising the 200 and 400 points, and getting into a positive loop if possible"
+65ba980efa589ac7c2fb0048,6,0,Go with the green letters.
+65ba980efa589ac7c2fb0048,22,2,Try and copy the other players route
+65ba980ffa589ac7c2fb0049,6,0,to minimise the negetetive points as much as possible
+65ba980ffa589ac7c2fb0049,22,2,to minimise going to negative points
+65ba980ffa589ac7c2fb004a,6,0,Taking a loss to move to a position that may open up more options.
+65ba980ffa589ac7c2fb004a,22,2,Following a clear path initially creates a successful route.
+65ba980ffa589ac7c2fb004b,6,0,Try and get through as many nodes as possible and hit the ones with the most points.
+65ba980ffa589ac7c2fb004b,22,2,aim for the green or neutral nodes
+65ba980ffa589ac7c2fb004c,6,0,I tried to go for the most points
+65ba980ffa589ac7c2fb004c,22,2,went for greens and i did not really have a strategy.
+65ba980ffa589ac7c2fb004d,6,0,"Avoiding the darker purple routes 
+"
+65ba980ffa589ac7c2fb004d,22,2,"Similar to my original thoughts, trying to avoid pain worked better than trying to score highly in each scenario"
+65ba9811fa589ac7c2fb004e,6,0,quickly identify which tones of colour give the highest score
+65ba9811fa589ac7c2fb004e,12,1,quickly identifying a loop so you already know where to go
+65ba9811fa589ac7c2fb0051,6,0,the game seems simple but a bit tricky. it is also very fun and challenging as a game should be
+65ba9811fa589ac7c2fb0051,12,1,"wow I think the game is now very simple, interesting and not as much challenging as I thought"
+65ba9811fa589ac7c2fb0053,6,0,I found it quite hard to work it out as it was unclear if i had to use all the letters to make the 10 moves and maximise points. knowing what i do now I would try to not duplicate letters
+65ba9811fa589ac7c2fb0053,12,1,Follow the dark green or light green arrows and if you have not got those options follow neutral lines
+65bb6f09fa589ac7c2fb0085,6,0,Picking the path that gave me the most number of points.
+65bb6f09fa589ac7c2fb0085,12,1,Pick the path to the next node that gives the most number of points. Aim for a closed/circular route comprising 200-plus-point paths only.
+65bb81d4fa589ac7c2fb0093,6,0,Go with the green letters.
+65bb81d4fa589ac7c2fb0093,22,2,Try and copy the other players route
