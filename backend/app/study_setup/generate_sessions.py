@@ -151,6 +151,8 @@ async def create_connections(gen0, gen1, n_advise_per_session):
             # record children of the session
             gen0[i].child_ids.append(s_n_1.id)
             await gen0[i].save()
+            if gen0[i].ai_player:
+                s_n_1.finished_parents.append(gen0[i].id)
 
         s_n_1.advise_ids = advise_ids
 
