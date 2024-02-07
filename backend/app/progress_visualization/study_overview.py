@@ -83,7 +83,6 @@ async def create_sessions_network(experiment_type, experiment_num) -> Path:
             title=title,
         )
         adv = session.advise_ids
-        # print(session, flush=True)
         if adv is not None and not session.expired:
             for a in adv:
                 advise_session = await Session.find_one(Session.id == a)
@@ -92,11 +91,13 @@ async def create_sessions_network(experiment_type, experiment_num) -> Path:
                 else:
                     opacity = 0.5
                 net.add_edge(str(advise_session.id), str(session.id), opacity=opacity)
+                
     net.set_options(open(ROOT / "graph_settings.json").read())
     path = ROOT / "tmp"
     path.mkdir(exist_ok=True)
     file = path / f"study_{experiment_type}_{experiment_num}_overview.html"
-
+    with open(path / f"study_{experiment_type}_{experiment_num}_overview.json", "w+") as out:
+        out.write(str(net))
     html = net.generate_html(str(file))
     with open(file, "w+") as out:
         out.write(html)
