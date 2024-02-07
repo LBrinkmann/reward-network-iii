@@ -14,7 +14,10 @@ from models.trial import SessionError
 from models.subject import Subject
 from study_setup.generate_sessions import create_trials
 from utils.utils import estimate_average_player_score
+from models.trial import Solution, Trial
 
+# This is hard coded, but it should be a parameter of the experiment
+MAX_STEPS = 10
 
 async def get_session(prolific_id, experiment_type=None) -> Union[Session, SessionError]:
     """Get session for the subject"""
@@ -71,8 +74,9 @@ async def initialize_session(subject: Subject, experiment_type: str):
     # find an active configuration
     config = await ExperimentSettings.find_one(ExperimentSettings.experiment_type == experiment_type)
 
-    # Check and remove expired sessions
-    await replace_stale_session(config)
+    # Check and replace expired sessions
+    await expire_stale_session(config)
+    await replace_expired_sessions(config)
 
     # # # assign subject to any available session
     session = await Session.find_one(
@@ -120,28 +124,49 @@ async def update_session(session):
         await session.save()
 
 
+
+def check_moves_complete(solution: Solution) -> bool:
+    """Check if the moves are complete"""
+    return len(solution.moves) == MAX_STEPS
+
+
+def check_solution_complete(trial: Trial) -> bool:
+    """Check if the solution is complete"""
+    return trial.solution is not None and check_moves_complete(trial.solution)
+
+
+def check_all_demonstration_trials_complete(session: Session) -> bool:
+    """Check if all demonstration trials are complete"""
+    return all(
+        check_solution_complete(trial)
+        for trial in session.trials
+        if trial.trial_type == "demonstration"
+    )
+
+
 async def end_session(session):
+    config = await ExperimentSettings.find_one(ExperimentSettings.experiment_type == session.experiment_type)
+    
     session.finished_at = datetime.now()
-    session.finished = True
-    session.average_score = estimate_average_player_score(session)
     session.time_spent = session.finished_at - session.started_at
+    session.finished = True
+    
+    session.expired = session.time_spent > timedelta(minutes=config.session_timeout)
+    if not session.expired:
+        session.completed = check_all_demonstration_trials_complete(session)
+        # if session is not completed then it needs to be replaced (so we set it as expired)
+        session.expired = not session.completed
+        session.average_score = estimate_average_player_score(session)
     # save session
     await session.save()
 
-    # Ensure that the expired but finished sessions are removed from the
-    # session tree
-    config = await ExperimentSettings.find_one(ExperimentSettings.experiment_type == session.experiment_type)
-    # Check and remove expired sessions
-    await replace_stale_session(config)
+    # Replace expired sessions
+    await replace_expired_sessions(config)
 
-    # get the updated version of the session
-    session = await Session.get(session.id)
-    # if session in not finished then it was expired and replaced
-    # no need to update availability status of child sessions
-    if not session.finished:
-        return
-    # update child sessions
-    await update_availability_status_child_sessions(session, config)
+    # Only update child sessions if the session is completed
+    if session.completed:
+        # update child sessions
+        await update_availability_status_child_sessions(session, config)
 
 
 async def update_availability_status_child_sessions(session: Session, exp_config: ExperimentSettings):
@@ -163,7 +188,7 @@ async def update_availability_status_child_sessions(session: Session, exp_config
     ).update(Set({Session.available: True}))
 
 
-async def replace_stale_session(exp_config: ExperimentSettings, time_delta: float = 30):
+async def expire_stale_session(exp_config: ExperimentSettings):
     """
     Replace the unfinished session so as not to break the social learning chains
 
@@ -171,11 +196,8 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: floa
     ----------
     exp_config: ExperimentSettings
         Experiment settings
-    time_delta : int
-        Time in minutes after which the session is considered expired
     """
-    if exp_config.session_timeout is not None:
-        time_delta = exp_config.session_timeout
+    time_delta = exp_config.session_timeout
 
     # get all expired sessions (sessions that were started long ago)
     res = await Session.find(
@@ -200,6 +222,12 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: floa
         Set({Session.expired: True})
     )
 
+
+async def replace_expired_sessions(exp_config: ExperimentSettings):
+    """
+    Replace expired sessions with new ones
+    """
+    
     while True:
         # get all newly expired sessions
         expired_session = await Session.find_one(

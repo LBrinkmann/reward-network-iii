@@ -28,6 +28,7 @@ class Session(Document):
     unfinished_parents: Optional[int] = 0
     finished_parents: List[PydanticObjectId] = []
     finished: Optional[bool] = False
+    completed: Optional[bool] = False
     finished_at: Optional[datetime.datetime] = None
     available: Optional[bool] = False  # available for subject to play
     started_at: Optional[datetime.datetime] = None # when the first trial was started

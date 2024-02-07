@@ -428,6 +428,7 @@ def create_trials(
         available=(generation == 0) and is_human,
         ai_player=is_ai,
         finished=is_ai,
+        completed=is_ai,
         condition=condition,
         simulated_subject=simulated_subject,
     )

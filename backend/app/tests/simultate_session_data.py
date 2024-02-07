@@ -55,6 +55,7 @@ async def simulate_data(generation, config):
 
             s.trials = trials
             s.finished = True
+            s.completed = True
             s.available = False
             s.unfinished_parents = 0
             s.average_score = estimate_average_player_score(s)
