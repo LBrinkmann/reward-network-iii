@@ -74,6 +74,8 @@ async def initialize_session(subject: Subject, experiment_type: str):
     # find an active configuration
     config = await ExperimentSettings.find_one(ExperimentSettings.experiment_type == experiment_type)
 
+    assert config is not None, "Experiment settings are not found"
+
     # Check and replace expired sessions
     await expire_stale_session(config)
     await replace_expired_sessions(config)
@@ -127,7 +129,7 @@ async def update_session(session):
 
 def check_moves_complete(solution: Solution) -> bool:
     """Check if the moves are complete"""
-    return len(solution.moves) == MAX_STEPS
+    return len(solution.moves) == (MAX_STEPS + 1) # +1 for the initial state
 
 
 def check_solution_complete(trial: Trial) -> bool:
@@ -152,16 +154,18 @@ async def end_session(session):
     session.finished = True
     
     session.expired = session.time_spent > timedelta(minutes=config.session_timeout)
+    
     if not session.expired:
         session.completed = check_all_demonstration_trials_complete(session)
         # if session is not completed then it needs to be replaced (so we set it as expired)
         session.expired = not session.completed
         session.average_score = estimate_average_player_score(session)
+
     # save session
     await session.save()
 
-    # Replace expired sessions
-    await replace_expired_sessions(config)
+    # # Replace expired sessions
+    # await replace_expired_sessions(config)
 
     # Only update child sessions if the session is completed
     if session.completed:
