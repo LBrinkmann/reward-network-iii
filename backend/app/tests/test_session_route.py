@@ -46,7 +46,7 @@ async def test_one_subject_gen_1(
     await one_subject(default_client, e_config, 0, generation)
 
     session = await Session.find_one(
-        Session.generation == generation, Session.finished == True
+        Session.generation == generation, Session.finished == True, Session.completed == True
     )
     assert session is not None
 
@@ -354,6 +354,7 @@ async def test_replace_stale_session(
     session = await get_session("test-2")
     session_id = session.id
     session.finished = True
+    session.completed = True
     session.time_spent = timedelta(minutes=15)
     await session.save()
     await replace_stale_session(e_config, 10)

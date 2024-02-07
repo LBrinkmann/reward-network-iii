@@ -13,13 +13,13 @@ results_router = APIRouter(tags=["Results"])
 @results_router.get('/sessions')
 async def get_results(
         experiment_type: str = None,
-        finished: bool = None,
+        completed: bool = None,
         user: HTTPBasicCredentials = Depends(get_user)) -> List[Session]:
     search_criteria = []
     if experiment_type is not None:
         search_criteria.append({'experiment_type': experiment_type})
-    if finished is not None:
-        search_criteria.append({'finished': finished})
+    if completed is not None:
+        search_criteria.append({'completed': completed})
 
     if len(search_criteria) == 0:
         sessions = await Session.find().to_list()

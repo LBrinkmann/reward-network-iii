@@ -44,7 +44,7 @@ async def create_sessions_network(experiment_type, experiment_num) -> Path:
         if session.available:
             color = "#85D4E3"
         else:
-            if session.finished:
+            if session.completed:
                 color = "#81A88D"
             elif subject_in_the_session:
                 color = "#F5A45D"  # '#FAD77B'
