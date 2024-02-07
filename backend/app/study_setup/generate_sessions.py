@@ -83,9 +83,9 @@ async def generate_experiment_sessions(config: ExperimentSettings):
     ).first_or_none()
 
     if sessions is None:
-        reset_networks(config)
         # if the database is empty, generate sessions
         for replication in range(config.n_session_tree_replications):
+            reset_networks(config)
             await generate_sessions(experiment_num=replication, config=config)
 
     # update all child sessions to have the correct number of finished parents
