@@ -144,9 +144,11 @@ const ConsentForm: React.FC<ConsentFormProps> = ({
                 This document has informed you about participation in the
                 “Reward Network” study. The study will take approximately 15
                 minutes. You will receive compensation of £2.25 for your
-                participation in the study, plus a bonus (£0.50 on average) that
+                participation in the study, plus a bonus (£0.70 on average) that
                 is dependent on your own performance and the performance of
-                participants who learned from your solutions in the task. If you
+                participants who learned from your solutions in the task. The study has
+                to be completed within 30 minutes and no bonus will be paid if
+                you do not complete the study within this time frame. If you
                 decide to terminate your participation before the end of the
                 study, you will receive no compensation.
               </Typography>

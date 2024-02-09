@@ -2,7 +2,7 @@
 
 ## Exp
 
-92 valid networks out of 100
+1013 valid networks out of 1100
 
 ## Test
 

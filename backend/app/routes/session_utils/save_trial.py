@@ -14,6 +14,7 @@ from models.trial import (
 )
 from utils.utils import estimate_solution_score
 
+# This is hard coded, but it should be a parameter of the experiment
 MAX_STEPS = 10
 
 
