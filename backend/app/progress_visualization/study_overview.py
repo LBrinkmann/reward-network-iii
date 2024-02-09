@@ -34,13 +34,14 @@ async def create_sessions_network(experiment_type, experiment_num) -> Path:
             label = f" "
         title = f"Session {s_num} in generation {g}\n"
         title += f"Current trial: {trial_num + 1} ({trial.trial_type})\n"
+        title += f"Session id: {session.id}\n"
         first_trial = session.trials[0]
         if trial_num > 1 and isinstance(first_trial.started_at, datetime) and isinstance(trial.started_at, datetime):
             time_spent = trial.started_at - first_trial.started_at
             m = time_spent.total_seconds() / 60
             title += f"Time in the study: {round(m, 2)}  minutes\n"
         title += f"Created at: " f'{session.created_at.strftime("%m.%d.%Y %H:%M:%S")}\n'
-        
+
         if session.available:
             color = "#85D4E3"
         else:
@@ -62,8 +63,8 @@ async def create_sessions_network(experiment_type, experiment_num) -> Path:
             else:
                 color = "#FAD77B"
                 label = "AI"
-                
-            
+
+
 
         if color_conditions:
             if session.condition == "wo_ai":
@@ -82,16 +83,18 @@ async def create_sessions_network(experiment_type, experiment_num) -> Path:
             color=color,
             title=title,
         )
-        adv = session.advise_ids
-        if adv is not None and not session.expired:
-            for a in adv:
-                advise_session = await Session.find_one(Session.id == a)
-                if session.available & advise_session.available:
-                    opacity = 1
-                else:
-                    opacity = 0.5
-                net.add_edge(str(advise_session.id), str(session.id), opacity=opacity)
-                
+
+    for session in sessions:
+        for child in session.child_ids:
+            child_session = await Session.find_one(Session.id == child, Session.expired == False)
+            if child_session is None:
+                continue
+            if session.available & child_session.available:
+                opacity = 1
+            else:
+                opacity = 0.5
+            net.add_edge(str(session.id), str(child_session.id), opacity=opacity)
+
     net.set_options(open(ROOT / "graph_settings.json").read())
     path = ROOT / "tmp"
     path.mkdir(exist_ok=True)

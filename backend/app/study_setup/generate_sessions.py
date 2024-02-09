@@ -88,11 +88,10 @@ async def generate_experiment_sessions(config: ExperimentSettings):
             reset_networks(config)
             await generate_sessions(experiment_num=replication, config=config)
 
-    # update all child sessions to have the correct number of finished parents
-    # especially relevant for the AI player parents
+    # set all sessions of the first generation to available
     await Session.find(
         Session.experiment_type == config.experiment_type,
-        Session.unfinished_parents == 0,
+        Session.generation == 0,
         Session.finished == False,
         Session.replaced == False,
         Session.expired == False,
@@ -147,18 +146,18 @@ async def create_connections(gen0, gen1, n_advise_per_session):
         advise_src = random.sample(range(len(gen0)), n_advise_per_session)
         advise_ids = []
         for i in advise_src:
-            advise_ids.append(gen0[i].id)
+            # advise_ids.append(gen0[i].id)
             # record children of the session
             gen0[i].child_ids.append(s_n_1.id)
             await gen0[i].save()
             if gen0[i].ai_player:
-                s_n_1.finished_parents.append(gen0[i].id)
+                advise_ids.append(gen0[i].id)
 
         s_n_1.advise_ids = advise_ids
 
         # remove AI from the count of unfinished parents
-        n_ai_advisors = sum([1 for i in advise_src if gen0[i].ai_player])
-        s_n_1.unfinished_parents = len(advise_ids) - n_ai_advisors
+        # n_ai_advisors = sum([1 for i in advise_src if gen0[i].ai_player])
+        # s_n_1.unfinished_parents = len(advise_ids) - n_ai_advisors
         await s_n_1.save()
 
 
