@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import random
 from models.session import Session
 from models.trial import AdvisorSelection, Trial
 
@@ -17,7 +17,9 @@ async def prepare_trial(session: Session):
 async def prepare_social_leaning_selection_trial(trial: Trial,
                                                  session: Session):
     """ Prepare social leaning selection trials """
-    subject_id = session.subject_id
+    # randomly shuffle advise_ids
+    random.shuffle(session.advise_ids)
+    await session.save()
 
     # initialize advisor selection
     trial.advisor_selection = AdvisorSelection(advisor_ids=[], scores=[])

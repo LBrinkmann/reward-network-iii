@@ -25,8 +25,6 @@ class Session(Document):
     current_trial_num: Optional[int] = 0
     advise_ids: List[PydanticObjectId] = []
     child_ids: List[PydanticObjectId] = []
-    unfinished_parents: Optional[int] = 0
-    finished_parents: List[PydanticObjectId] = []
     finished: Optional[bool] = False
     completed: Optional[bool] = False
     finished_at: Optional[datetime.datetime] = None
@@ -34,7 +32,7 @@ class Session(Document):
     started_at: Optional[datetime.datetime] = None # when the first trial was started
     expired: Optional[bool] = False  # if the session is expired
     replaced: Optional[bool] = False  # if the session was replaced
-    is_replacement: Optional[bool] = False  # if the session is a replacement
+    is_replacement_for: Optional[PydanticObjectId] = None  # id of the session that was replaced
     # time spent on the session after the session was finished
     time_spent: Optional[datetime.timedelta] = datetime.timedelta(0)
 
@@ -47,7 +45,7 @@ class Session(Document):
             "subject_id",
             "experiment_type",
             ["available", "experiment_type"],
-            ["_id", "unfinished_parents"],
+            # ["_id", "unfinished_parents"],
             ["finished", "subject_id", "expired"],
             "started_at",
             ["finished", "replaced", "time_spent"],
