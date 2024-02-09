@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta
 from typing import Union
 
-from beanie import PydanticObjectId
 from beanie.odm.operators.find.comparison import In
 from beanie.odm.operators.find.array import Size
 from beanie.odm.operators.update.general import Set
-from beanie.odm.operators.update.array import AddToSet
+from beanie.odm.operators.update.array import AddToSet, Pull, Push
 from beanie.odm.queries.update import UpdateResponse
 
 from models.config import ExperimentSettings
@@ -14,7 +13,10 @@ from models.trial import SessionError
 from models.subject import Subject
 from study_setup.generate_sessions import create_trials
 from utils.utils import estimate_average_player_score
+from models.trial import Solution, Trial
 
+# This is hard coded, but it should be a parameter of the experiment
+MAX_STEPS = 10
 
 async def get_session(prolific_id, experiment_type=None) -> Union[Session, SessionError]:
     """Get session for the subject"""
@@ -71,8 +73,11 @@ async def initialize_session(subject: Subject, experiment_type: str):
     # find an active configuration
     config = await ExperimentSettings.find_one(ExperimentSettings.experiment_type == experiment_type)
 
-    # Check and remove expired sessions
-    await replace_stale_session(config)
+    assert config is not None, "Experiment settings are not found"
+
+    # Check and replace expired sessions
+    await expire_stale_session(config)
+    await replace_expired_sessions(config)
 
     # # # assign subject to any available session
     session = await Session.find_one(
@@ -105,11 +110,11 @@ async def initialize_session(subject: Subject, experiment_type: str):
 async def update_session(session):
     # if this is the last trial minus debriefing trial
     if (session.current_trial_num + 1) == (len(session.trials) - 1):
-        await end_session(session)
         # increase trial index by 1 to show debriefing trial
         session.current_trial_num += 1
         # save session
         await session.save()
+        await end_session(session.id, session.experiment_type)
     elif (session.current_trial_num + 1) == len(session.trials):
         pass
     else:
@@ -120,50 +125,74 @@ async def update_session(session):
         await session.save()
 
 
-async def end_session(session):
+
+def check_moves_complete(solution: Solution) -> bool:
+    """Check if the moves are complete"""
+    return len(solution.moves) == (MAX_STEPS + 1) # +1 for the initial state
+
+
+def check_solution_complete(trial: Trial) -> bool:
+    """Check if the solution is complete"""
+    return trial.solution is not None and check_moves_complete(trial.solution)
+
+
+def check_all_demonstration_trials_complete(session: Session) -> bool:
+    """Check if all demonstration trials are complete"""
+    return all(
+        check_solution_complete(trial)
+        for trial in session.trials
+        if trial.trial_type == "demonstration"
+    )
+
+
+async def end_session(session_id, experiment_type):
+    config = await ExperimentSettings.find_one(ExperimentSettings.experiment_type == experiment_type)
+
+    session = await Session.find_one(
+        Session.id == session_id,
+    ).update(
+        Set({Session.finished: True}),
+        response_type=UpdateResponse.NEW_DOCUMENT
+    )
+
     session.finished_at = datetime.now()
-    session.finished = True
-    session.average_score = estimate_average_player_score(session)
     session.time_spent = session.finished_at - session.started_at
+    timed_out = session.time_spent > timedelta(minutes=config.session_timeout)
+
+    if not session.expired and not timed_out:
+        session.completed = check_all_demonstration_trials_complete(session)
+        # if session is not completed then it needs to be replaced (so we set it as expired)
+        session.expired = not session.completed
+        session.average_score = estimate_average_player_score(session)
+    else:
+        session.expired = True
+        session.completed = False
+
     # save session
     await session.save()
 
-    # Ensure that the expired but finished sessions are removed from the
-    # session tree
-    config = await ExperimentSettings.find_one(ExperimentSettings.experiment_type == session.experiment_type)
-    # Check and remove expired sessions
-    await replace_stale_session(config)
-
-    # get the updated version of the session
-    session = await Session.get(session.id)
-    # if session in not finished then it was expired and replaced
-    # no need to update availability status of child sessions
-    if not session.finished:
-        return
-    # update child sessions
-    await update_availability_status_child_sessions(session, config)
+    # Only update child sessions if the session is completed
+    if session.completed:
+        # update child sessions
+        await update_availability_status_child_sessions(session, config)
+    else:
+        await replace_expired_sessions(config)
 
 
 async def update_availability_status_child_sessions(session: Session, exp_config: ExperimentSettings):
     """Update child sessions availability status"""
-
-    # update `unfinished_parents` value for child sessions
-    await Session.find(In(Session.id, session.child_ids)).inc(
-        {Session.unfinished_parents: -1}
-    )
-
     # add finished parent to the list of finished parents
     await Session.find(In(Session.id, session.child_ids)).update(
-        AddToSet({Session.finished_parents: session.id})
+        AddToSet({Session.advise_ids: session.id})
     )
 
     # update child sessions status if all parent sessions are finished
     await Session.find(
-        In(Session.id, session.child_ids), Size(Session.finished_parents, exp_config.n_advise_per_session)
+        In(Session.id, session.child_ids), Size(Session.advise_ids, exp_config.n_advise_per_session)
     ).update(Set({Session.available: True}))
 
 
-async def replace_stale_session(exp_config: ExperimentSettings, time_delta: float = 30):
+async def expire_stale_session(exp_config: ExperimentSettings):
     """
     Replace the unfinished session so as not to break the social learning chains
 
@@ -171,37 +200,29 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: floa
     ----------
     exp_config: ExperimentSettings
         Experiment settings
-    time_delta : int
-        Time in minutes after which the session is considered expired
     """
-    if exp_config.session_timeout is not None:
-        time_delta = exp_config.session_timeout
+    time_delta = exp_config.session_timeout
 
     # get all expired sessions (sessions that were started long ago)
-    res = await Session.find(
+    await Session.find(
         Session.finished == False,  # session is not finished
         Session.subject_id != None,  # session is assigned to subject
         # there can be old expired and already replaces sessions
         Session.expired == False,
-    # ).find(
-        # find all sessions older than the specified time delta
         Session.started_at
-        < datetime.now() - timedelta(minutes=time_delta)
+        < datetime.now() - timedelta(minutes=time_delta),
+        Session.experiment_type == exp_config.experiment_type,
     ).update(
         Set({Session.expired: True})
     )
-    # print(res, flush=True)
 
-    # mark as expired finished but not replaced sessions
-    await Session.find(
-        Session.finished == True,  # session is finished
-        Session.replaced == False,  # session is not replaced
-    ).find(Session.time_spent > timedelta(minutes=time_delta)).update(
-        Set({Session.expired: True})
-    )
+async def replace_expired_sessions(exp_config: ExperimentSettings):
+    """
+    Replace expired sessions with new ones
+    """
 
     while True:
-        # get all newly expired sessions
+        # get one newly expired sessions
         expired_session = await Session.find_one(
             # session is marked as expired
             Session.expired == True,
@@ -219,14 +240,6 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: floa
         assert expired_session.expired == True, "Session is not expired"
         assert expired_session.replaced == True, "Session is not marked as replaced"
 
-
-        old_session_copy = expired_session.copy()
-        del old_session_copy.id
-        await old_session_copy.insert()
-
-        print(f"Session {expired_session.id} is expired", flush=True)
-        print(f'Saved copy of the session {old_session_copy.id}', flush=True)
-
         # make empty duplicates of the expired sessions
         # create an empty session to replace the expired one
         new_s = create_trials(
@@ -238,12 +251,27 @@ async def replace_stale_session(exp_config: ExperimentSettings, time_delta: floa
         )
         new_s.advise_ids = expired_session.advise_ids
         new_s.child_ids = expired_session.child_ids
-        new_s.unfinished_parents = 0
+        new_s.available = False
+        new_s.is_replacement_for = expired_session.id
+
+        await new_s.save()
+
+        await Session.find(Session.id == expired_session.id).update(
+            Set({Session.child_ids: []})
+        )
+
+        # update parent session
+        await Session.find(In(Session.id, new_s.advise_ids)).update(
+            Pull({Session.child_ids: expired_session.id})
+        )
+
+        # update parent session
+        await Session.find(In(Session.id, new_s.advise_ids)).update(
+            Push({Session.child_ids: new_s.id})
+        )
+
         new_s.available = True
-        new_s.is_replacement = True
-        new_s.id = expired_session.id  # copy id
+        await new_s.save()
 
-        # save new session
-        await new_s.replace()
+        # await update_child_session(new_s, expired_session)
         print(f"Session {new_s.id} is created", flush=True)
-

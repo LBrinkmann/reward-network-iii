@@ -23,8 +23,7 @@ services:
       BACKEND_USER: "admin"
       BACKEND_PASSWORD: "admin"
     # start-reload.sh is a version of start.sh for development with live auto-reload
-    command:
-      [
+    command: [
         "uvicorn",
         "server:api",
         "--host",
@@ -33,7 +32,7 @@ services:
         "5000",
         # "--reload",
         "--workers",
-        "16"
+        "16",
       ]
     ports:
       - "5050:5000"
