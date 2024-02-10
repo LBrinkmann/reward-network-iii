@@ -307,7 +307,8 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
   }
 
   const possibleMoves = selectPossibleMoves(state.network.edges, nextNode);
-  const collectReward = state.trialType === "observation" ? false : true;
+  //   const collectReward = state.trialType === "observation" ? false : true;
+  const collectReward = true;
 
   const animatedMoves =
     state.trialType === "observation"
@@ -316,11 +317,12 @@ const nextNodeReducer = (state: NetworkState, action: any) => {
   const highlightedMoves = possibleMoves.filter(
     (move) => !animatedMoves.includes(move)
   );
-  console.log("highlightedMoves", highlightedMoves);
-  console.log("animatedMoves", animatedMoves);
-  console.log("possibleMoves", possibleMoves);
-  console.log("nextNode", nextNode);
-  console.log(state.step);
+  //   console.log("highlightedMoves", highlightedMoves);
+  //   console.log("animatedMoves", animatedMoves);
+  //   console.log("possibleMoves", possibleMoves);
+  //   console.log("nextNode", nextNode);
+  //   console.log("collectReward", collectReward);
+  //   console.log(state.step);
 
   return {
     ...state,
