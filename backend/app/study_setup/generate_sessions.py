@@ -154,10 +154,7 @@ async def create_connections(gen0, gen1, n_advise_per_session):
                 advise_ids.append(gen0[i].id)
 
         s_n_1.advise_ids = advise_ids
-
-        # remove AI from the count of unfinished parents
-        # n_ai_advisors = sum([1 for i in advise_src if gen0[i].ai_player])
-        # s_n_1.unfinished_parents = len(advise_ids) - n_ai_advisors
+        s_n_1.available = s_n_1.available or len(advise_ids) >= n_advise_per_session
         await s_n_1.save()
 
 

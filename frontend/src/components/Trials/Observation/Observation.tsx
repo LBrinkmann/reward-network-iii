@@ -50,7 +50,7 @@ const Observation: FC<IObservation> = (props) => {
       <NetworkTrial
         showComment={false}
         teacherId={teacherId}
-        isTimerPaused={true}
+        isTimerPaused={false}
         playerTotalPoints={playerTotalPoints}
         showTotalPoints={false}
         allowNodeClick={false}
