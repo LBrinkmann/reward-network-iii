@@ -15,7 +15,6 @@ from utils.utils import estimate_solution_score, estimate_average_player_score
 
 network_data = None
 solutions = None
-machine_idx = 0
 MAX_STEPS = 10
 
 # load all ai solutions
@@ -112,11 +111,13 @@ async def generate_sessions(
     previous_sessions = None
 
     for generation in range(config.n_generations):
+        print(f"Generating generation {generation}", flush=True)
         sessions = await create_generation(
             generation=generation,
             experiment_num=experiment_num,
             config=config,
         )
+        print(f"Generation {generation} created", flush=True)
         if previous_sessions is not None:
             for condition in config.conditions:
                 possible_parents = [
@@ -163,22 +164,37 @@ async def create_generation(
     experiment_num: int,
     config: ExperimentSettings,
 ) -> List[Session]:
-    global machine_idx
-    machine_idx = 0
+    machines = []
     # compute conditions
     if generation == 0:
         if len(config.conditions) == 1:
-            conditions = [None] * (
-                config.n_sessions_per_generation - config.n_ai_players
-            )
-            conditions += [config.conditions[0]] * config.n_ai_players
-        elif len(config.conditions) == 2:
+            conditions = [config.conditions[0]] * config.n_sessions_per_generation
+            if config.conditions[0] == "w_ai":
+                machines = list(range(config.n_ai_players))
+                machines + [None] * (config.n_sessions_per_generation - config.n_ai_players)
+            else:
+                machines = [None] * config.n_sessions_per_generation
+        elif len(config.conditions) == 2 and config.shared_first_generation:
             conditions = [config.conditions[0]] * config.n_ai_players
+            machines = list(range(config.n_ai_players)) if config.conditions[0] == "w_ai" else [None] * config.n_ai_players
             conditions += [None] * (
                 (config.n_sessions_per_generation // len(config.conditions))
                 - config.n_ai_players
             )
+            machines += [None] * (
+                (config.n_sessions_per_generation // len(config.conditions))
+                - config.n_ai_players
+            )
             conditions += [config.conditions[1]] * config.n_ai_players
+            machines += list(range(config.n_ai_players)) if config.conditions[1] == "w_ai" else [None] * config.n_ai_players
+        elif len(config.conditions) == 2 and not config.shared_first_generation:
+            conditions = [
+                c for c in config.conditions for _ in range(config.n_sessions_per_generation // len(config.conditions))
+            ]
+            machines = list(range(config.n_ai_players)) if config.conditions[0] == "w_ai" else [None] * config.n_ai_players
+            machines += [None] * (config.n_sessions_per_generation - config.n_ai_players)
+            machines += list(range(config.n_ai_players)) if config.conditions[1] == "w_ai" else [None] * config.n_ai_players
+            machines += [None] * (config.n_sessions_per_generation - config.n_ai_players)
         else:
             raise Exception("Only 1 or 2 conditions are supported")
     else:
@@ -191,15 +207,17 @@ async def create_generation(
         conditions = [
             c for c in config.conditions for _ in range(n_sessions_per_condition)
         ]
+        machines = [None] * config.n_sessions_per_generation
 
     sessions = []
-    for session_idx, condition in enumerate(conditions):
+    for session_idx, (condition, machine_idx) in enumerate(zip(conditions, machines)):
         session = create_trials(
             experiment_num=experiment_num,
             generation=generation,
             condition=condition,
             config=config,
             session_idx=session_idx,
+            machine_idx=machine_idx,
         )
         # save session
         await session.save()
@@ -240,7 +258,7 @@ def add_written_strategy_trail(trials, written_strategy=None):
 def add_social_learning_selection_trail(trials, block_idx, config):
     return [*trials, Trial(id=len(trials), trial_type="social_learning_selection", social_learning_block_idx=block_idx, trial_title=f"Learning Phase | Select Teacher")]
 
-def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, simulated_subject, config):
+def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, simulated_subject, machine_idx, config: ExperimentSettings):
     if is_human:
         net, _ = get_net_solution()
         solution = None
@@ -261,6 +279,8 @@ def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, s
 
     for iii in range(n_trails):
         title_postfix = "" if n_trails == 1 else f" | Trial {iii+1} of {n_trails}"
+        total_networks = config.n_social_learning_blocks * config.n_social_learning_networks_per_block
+        total_network_idx = block_idx * config.n_social_learning_networks_per_block + network_idx
         trial = Trial(
             trial_type="individual",
             id=len(trials),
@@ -269,7 +289,7 @@ def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, s
             solution=solution,
             social_learning_block_idx=block_idx,
             block_network_idx=network_idx,
-            trial_title=f"Learning Phase | Network {network_idx + 1}{title_postfix}"
+            trial_title=f"Learning Phase | Network {total_network_idx + 1} of {total_networks}{title_postfix}"
         )
         # update the starting node
         trial.network.nodes[
@@ -279,13 +299,15 @@ def add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, s
     return trials
 
 
-def add_social_learning_network(trials, block_idx, network_idx, config):
+def add_social_learning_network(trials, block_idx, network_idx, config: ExperimentSettings):
     trial_type_titles = {
         "repeat": "Repeat the Teacher's Solution",
         "try_yourself": "Try Yourself",
         "observation": "Observe the Teacher's Solution",
     }
     for i, trial_type in enumerate(config.social_learning_trials):
+        total_networks = config.n_social_learning_blocks * config.n_social_learning_networks_per_block
+        total_network_idx = block_idx * config.n_social_learning_networks_per_block + network_idx
         trials.append(
             Trial(
                 id=len(trials),
@@ -294,12 +316,12 @@ def add_social_learning_network(trials, block_idx, network_idx, config):
                 social_learning_block_idx=block_idx,
                 block_network_idx=network_idx,
                 last_trial_for_current_example=(i == len(config.social_learning_trials) - 1),
-                trial_title=f"Learning Phase | Network {network_idx + 1} | {trial_type_titles[trial_type]}",
+                trial_title=f"Learning Phase | Network {total_network_idx + 1} of {total_networks} | {trial_type_titles[trial_type]}",
             )
         )
     return trials
 
-def add_demonstration_trail(trials, is_human, simulated_subject, network_idx, config):
+def add_demonstration_trail(trials, is_human, simulated_subject, network_idx, machine_idx, config: ExperimentSettings):
     if is_human:
         net, _ = get_net_solution()
         solution = None
@@ -322,7 +344,7 @@ def add_demonstration_trail(trials, is_human, simulated_subject, network_idx, co
         network=net,
         solution=solution,
         block_network_idx=network_idx,
-        trial_title=f"Demonstration Phase | Network {network_idx + 1} of {config.n_demonstration_trials}",
+        trial_title=f"Teaching Phase | Network {network_idx + 1} of {config.n_demonstration_trials}",
     )
     # update the starting node
     dem_trial.network.nodes[dem_trial.network.starting_node].starting_node = True
@@ -349,7 +371,8 @@ def create_trials(
     session_idx: int,
     condition: str,
     generation: int,
-    config: ExperimentSettings,
+    machine_idx: int = None,
+    config: ExperimentSettings = None,
 ) -> Session:
     """
     Generate one session.
@@ -360,11 +383,9 @@ def create_trials(
     global network_data
     if network_data is None:
         reset_networks(config)
-
-    is_ai = (generation == 0) and (
-        (condition == "w_ai") or config.simulate_humans)
+    is_ai = ((generation == 0) and config.simulate_humans) or machine_idx is not None
     is_human = not is_ai
-    simulated_subject = is_ai and not (condition)
+    simulated_subject = is_ai and machine_idx is None
 
     trials = []
 
@@ -397,16 +418,16 @@ def create_trials(
         # run social learning blocks
         for network_idx in range(config.n_social_learning_networks_per_block):
             if generation == 0:
-                trials = add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, simulated_subject, config)
+                trials = add_social_learning_network_gen0(trials, block_idx, network_idx, is_human, simulated_subject, machine_idx, config)
             else:
                 trials = add_social_learning_network(trials, block_idx, network_idx, config)
 
     trials = add_written_strategy_trail(trials, None if is_human else WrittenStrategy(strategy=""))
     if is_human:
-        trials = add_instruction_trail(trials, "demonstration", "Demonstration Phase")
+        trials = add_instruction_trail(trials, "demonstration", "Teaching Phase")
 
     for network_idx in range(config.n_demonstration_trials):
-        trials = add_demonstration_trail(trials, is_human, simulated_subject, network_idx, config)
+        trials = add_demonstration_trail(trials, is_human, simulated_subject, network_idx, machine_idx, config)
 
     if is_human:
         trials = add_exit_trails(trials, config)
@@ -430,7 +451,4 @@ def create_trials(
     )
     if is_ai:
         session.average_score = estimate_average_player_score(session)
-        if not simulated_subject:
-            global machine_idx
-            machine_idx = (machine_idx + 1) #% 3
     return session
