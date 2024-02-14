@@ -54,6 +54,8 @@ class ExperimentSettings(Document):
     main_only: bool = False
     # minutes before session is considered expired
     session_timeout: Optional[float] = None
+    # shared first generation
+    shared_first_generation: bool = False
 
 
     class Settings:
