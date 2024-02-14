@@ -18,6 +18,11 @@ export const NETWORK_ACTIONS = {
 };
 
 const nextTutorialStepReducer = (state: NetworkState, action: any) => {
+  console.log(
+    "nextTutorialStepReducer",
+    state.moves.length,
+    state.tutorialStep
+  );
   if (!state.isPractice) return state;
 
   if (state.tutorialOptions.start) {

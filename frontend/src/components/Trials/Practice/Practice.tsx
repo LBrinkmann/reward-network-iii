@@ -22,7 +22,7 @@ const Practice: FC<IPractice> = ({ onLastTutorialStep }) => {
   }, [networkState.tutorialOptions]);
 
   useEffect(() => {
-    if (networkState.tutorialStep > 11) {
+    if (networkState.tutorialStep > 12) {
       // wait for 3 seconds and end the practice
       const timer = setTimeout(() => {
         onLastTutorialStep();

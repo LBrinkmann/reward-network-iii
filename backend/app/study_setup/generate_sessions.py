@@ -171,7 +171,7 @@ async def create_generation(
             conditions = [config.conditions[0]] * config.n_sessions_per_generation
             if config.conditions[0] == "w_ai":
                 machines = list(range(config.n_ai_players))
-                machines + [None] * (config.n_sessions_per_generation - config.n_ai_players)
+                machines += [None] * (config.n_sessions_per_generation - config.n_ai_players)
             else:
                 machines = [None] * config.n_sessions_per_generation
         elif len(config.conditions) == 2 and config.shared_first_generation:

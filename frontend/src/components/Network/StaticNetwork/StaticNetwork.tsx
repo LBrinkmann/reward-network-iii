@@ -138,7 +138,9 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
                 isValidMove={allowedMoves.includes(node.node_num)}
                 key={"node-" + idx}
                 showTutorial={showNodeTutorial && isActive}
-                onTutorialClose={props.onTutorialClose}
+                onTutorialClose={
+                  node.node_num != 4 ? props.onTutorialClose : null
+                }
                 nextNodeColor={setNextNodeColor(node.node_num)}
               />
             );
