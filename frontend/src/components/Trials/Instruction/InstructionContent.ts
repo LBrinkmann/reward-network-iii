@@ -13,15 +13,15 @@ const instructions = {
   pre_social_learning: [
     "In this learning stage, there will be four networks. For each network, the following will happen:",
     "First, you will see a demonstration by the selected player.",
-    "Second, you will repeat the moves from the demonstration on the same network.Here, you can earn points by correctly repeating the demonstrated moves. These points will be converted into a bonus payment for you.",
-    "Third, you will have to solve the same network. However, this time, the number of points you earn will depend not on correctly repeating the demonstrated moves, but solely on the moves you choose to make. Your moves could be the same as the demonstrated ones, or different). These points will also be converted into a bonus payment for you.",
+    "Second, you will repeat the moves from the demonstration on the same network. Here, you can earn points by correctly repeating the demonstrated moves. These points will be converted into a bonus payment for you.",
+    "Third, you will have to solve the same network. However, this time, the number of points you earn will depend not on correctly repeating the demonstrated moves, but solely on the moves you choose to make. Your moves could be the same as the demonstrated ones, or different. These points will also be converted into a bonus payment for you.",
   ],
   pre_social_learning_gen0: [
     "Now the main task begins. You will have to navigate through four different networks.",
     "All points you collect will be converted into your bonus payment. Try to maximize your points!",
   ],
   demonstration: [
-    "Well done! You now enter the final part of the experiment, the “teaching phase”",
+    "Well done! You now enter the final part of the experiment, the “teaching phase”.",
     "You will navigate through four different networks. Your solution might be shown to other players to learn from. Note that, every point you earn in the networks will be converted into a bonus payment for you. Additionally, you will receive more bonus payment if future players, who learn from your moves during this teaching phase, perform well.",
     "So remember what you have learned and try to maximise your bonus payment!"
   ],
