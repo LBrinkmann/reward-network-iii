@@ -22,9 +22,9 @@ const Header: FC<IHeader> = (props) => {
 
 
     return (
-        <Box sx={{flexGrow: 1, height: 80}}>
+        <Box sx={{flexGrow: 1, height: 60}}>
             <AppBar position="static">
-                <Toolbar>
+                <Toolbar variant='dense'>
                     <Typography variant="h6" sx={{flexGrow: 1}}>
                         {title}
                     </Typography>
