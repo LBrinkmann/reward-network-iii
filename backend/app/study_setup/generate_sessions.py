@@ -130,6 +130,7 @@ async def generate_sessions(
                     for s in sessions
                     if (s.condition == condition) or (s.condition is None)
                 ]
+                print(f"Creating connections from {len(possible_parents)} parents to {len(possible_children)}", flush=True)
                 await create_connections(
                     possible_parents,
                     possible_children,

@@ -62,15 +62,13 @@ const Welcome: FC = () => {
         <Grid container direction="row">
           <Grid item xs={6}>
             <Typography variant="body1" align="justify" paragraph>
-              You will be working on a task where your goal is to navigate through
-              a series of networks like the one depicted on the right. Depending
-              on the moves you choose, you can earn more or less points. These
-              points will be converted into bonus payments, so your decisions in
-              the main task will have real financial consequences for you.
+              Our experiment involves networks like the one depicted on the right. Depending
+              on the moves you choose to navigate through the networks, you can earn more or less points. These
+              points will be converted into bonus payments -- so your decisions in
+              this experiment will have real financial consequences for you.
             </Typography>
             <Typography variant="body1" align="justify" paragraph>
-              To prepare you for the main task, we will now explain the networks
-              in more detail.
+              We will now explain the network task in more detail. 
             </Typography>
           </Grid>
           <Grid item xs={6}>
