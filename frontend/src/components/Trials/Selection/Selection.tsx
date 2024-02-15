@@ -23,7 +23,7 @@ const Selection: React.FC<SocialLearningSelectionProps> = (props) => {
     >
       <Grid item sx={{ p: 1 }} xs={8}>
         <Typography variant="h5" align="center">
-          Select a player to learn from
+          Learning Opportunity
         </Typography>
         <Typography variant="h6" align="center">
           You can choose one of the below players to learn from. Their average

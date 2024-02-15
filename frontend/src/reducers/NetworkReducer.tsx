@@ -94,6 +94,7 @@ const nextTutorialStepReducer = (state: NetworkState, action: any) => {
       tutorialStep: state.tutorialStep + 1,
       tutorialOptions: {
         ...networkInitialState.tutorialOptions,
+        time: true,
       },
     };
   } else if (state.tutorialOptions.linearSolution && state.moves.length === 7) {
@@ -123,7 +124,7 @@ const nextTutorialStepReducer = (state: NetworkState, action: any) => {
       tutorialStep: state.tutorialStep + 1,
       tutorialOptions: {
         ...networkInitialState.tutorialOptions,
-        time: true,
+        points: true,
       },
     };
   }
@@ -135,7 +136,6 @@ const nextTutorialStepReducer = (state: NetworkState, action: any) => {
       tutorialOptions: {
         ...networkInitialState.tutorialOptions,
         totalScore: true,
-        points: true,
       },
     };
   }
