@@ -44,7 +44,7 @@ const Observation: FC<IObservation> = (props) => {
 
   return (
     <>
-      <Typography variant="h3" align="center">
+      <Typography variant="h5" align="center">
         Watch player {teacherId} solving the task
       </Typography>
       <NetworkTrial

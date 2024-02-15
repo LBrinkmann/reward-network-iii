@@ -129,7 +129,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         >
           <Grid
             item
-            sx={{ marginTop: "20px", marginBottom: "50px", width: "100%" }}
+            sx={{ marginTop: "10px", marginBottom: "0px", width: "100%" }}
           >
             {showLinearNetwork && (
               <LinearSolution
