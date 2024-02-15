@@ -28,7 +28,7 @@ const Debriefing: React.FC<DebriefingProps> = (props: DebriefingProps) => {
                         <Typography variant="body1" paragraph>
                             Thank you for participating in the experiment. In this study, we are interested in the
                             impact of superior AI solutions on the evolution of performance in the task you took part
-                            in. As we informed you in the beginning, some (rare) participants had the chance to learn
+                            in. As we informed you in the beginning, some participants had the chance to learn
                             from AI solutions, not only human solutions. We built the networks in such a way that a
                             certain strategy (taking an early loss) is very valuable, but not easily discoverable for
                             humans. Yet AI has no problem discovering and transmitting this solution. By splitting the
