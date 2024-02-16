@@ -9,3 +9,54 @@ include:
   - project: "mpib/chm/common/deploy-pipeline"
     ref: "1.8.5"
     file: "python-app.yml"
+
+deploy-dev:
+    - source deploy-pipeline/aws_config.sh
+    - deploy-pipeline/deployment_vars.pl
+    - if [ -n "${HELM_DRYRUN+empty}" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
+    - helm upgrade
+      --install
+      --namespace ${NAMESPACE}
+      $DRYRUN
+      "${APP_NAME}-${CI_COMMIT_REF_SLUG}"
+      deploy-pipeline/charts/web-service
+      --set dockersecret=${DOCKERCFG}
+      --set app_name="${APP_NAME}-${CI_COMMIT_REF_SLUG}"
+      --set app_image="${CI_REGISTRY}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
+      --set main_url="${MAIN_URL}"
+      --set web_port="${WEB_PORT}"
+      --set replica_count="${REPLICA_COUNT}"
+      --set resources.limits.memory=2048Mi
+      $( [ -n "${STICKY_SESSION+empty}" ] && echo "--set sticky_session=${STICKY_SESSION}" )
+      --values /tmp/deployment_vars.yml
+      --atomic
+    - echo "The experiment has been deployed to ${MAIN_URL}."
+    - DYNAMIC_ENVIRONMENT_URL=https://${MAIN_URL}
+    - echo "DYNAMIC_ENVIRONMENT_URL=$DYNAMIC_ENVIRONMENT_URL" >> deploy.env
+
+deploy-prod:
+    - source deploy-pipeline/aws_config.sh
+    - deploy-pipeline/deployment_vars.pl
+    - if [ -n "${HELM_DRYRUN+empty}" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
+    - helm upgrade
+      --install
+      --namespace ${NAMESPACE}
+      $DRYRUN
+      "${APP_NAME}-${CI_COMMIT_REF_SLUG}"
+      deploy-pipeline/charts/web-service
+      --set dockersecret=${DOCKERCFG}
+      --set app_name="${APP_NAME}-${CI_COMMIT_REF_SLUG}"
+      --set app_image="${CI_REGISTRY}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
+      --set main_url="${MAIN_URL}"
+      --set web_port="${WEB_PORT}"
+      --set replica_count="${REPLICA_COUNT}"
+      --set resources.limits.memory=2048Mi
+      $( [ -n "${STICKY_SESSION+empty}" ] && echo "--set sticky_session=${STICKY_SESSION}" )
+      --values /tmp/deployment_vars.yml
+      --atomic
+    - echo "The experiment has been deployed to ${MAIN_URL}."
+    - DYNAMIC_ENVIRONMENT_URL=https://${MAIN_URL}
+    - echo "DYNAMIC_ENVIRONMENT_URL=$DYNAMIC_ENVIRONMENT_URL" >> deploy.env
+
+
+
