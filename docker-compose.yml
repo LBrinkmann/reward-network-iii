@@ -30,9 +30,9 @@ services:
         "0.0.0.0",
         "--port",
         "5000",
-        # "--reload",
-        "--workers",
-        "16",
+        "--reload",
+        # "--workers",
+        # "16",
       ]
     ports:
       - "5050:5000"
