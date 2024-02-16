@@ -12,48 +12,50 @@ include:
 
 deploy-dev:
   script:
-    - source deploy-pipeline/aws_config.sh
+    - deploy-pipeline/docker_login.sh
+    - deploy-pipeline/aws_config.sh
     - deploy-pipeline/deployment_vars.pl
-    - if [ -n "${HELM_DRYRUN+empty}" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
+    - if [ -n "$HELM_DRYRUN" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
     - helm upgrade
       --install
-      --namespace ${NAMESPACE}
+      --namespace mcu
       $DRYRUN
-      "${APP_NAME}-${CI_COMMIT_REF_SLUG}"
+      "${APP_NAME}-${CI_COMMIT_REF_NAME}"
       deploy-pipeline/charts/web-service
       --set dockersecret=${DOCKERCFG}
-      --set app_name="${APP_NAME}-${CI_COMMIT_REF_SLUG}"
-      --set app_image="${CI_REGISTRY}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
+      --set app_name="${APP_NAME}-${CI_COMMIT_REF_NAME}"
+      --set app_image="${REGISTRY_URL}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
       --set main_url="${MAIN_URL}"
       --set web_port="${WEB_PORT}"
       --set replica_count="${REPLICA_COUNT}"
-      --set resources.limits.memory=2048Mi
-      $( [ -n "${STICKY_SESSION+empty}" ] && echo "--set sticky_session=${STICKY_SESSION}" )
+      --set sticky_session="${STICKY_SESSION}"
+        --set resources.limits.memory=2048Mi
       --values /tmp/deployment_vars.yml
       --atomic
     - echo "The experiment has been deployed to ${MAIN_URL}."
     - DYNAMIC_ENVIRONMENT_URL=https://${MAIN_URL}
     - echo "DYNAMIC_ENVIRONMENT_URL=$DYNAMIC_ENVIRONMENT_URL" >> deploy.env
-
+      
 deploy-prod:
   script:
-    - source deploy-pipeline/aws_config.sh
+    - deploy-pipeline/docker_login.sh
+    - deploy-pipeline/aws_config.sh
     - deploy-pipeline/deployment_vars.pl
-    - if [ -n "${HELM_DRYRUN+empty}" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
+    - if [ -n "$HELM_DRYRUN" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
     - helm upgrade
       --install
-      --namespace ${NAMESPACE}
+      --namespace mcu
       $DRYRUN
-      "${APP_NAME}-${CI_COMMIT_REF_SLUG}"
+      "${APP_NAME}-${CI_COMMIT_REF_NAME}"
       deploy-pipeline/charts/web-service
       --set dockersecret=${DOCKERCFG}
-      --set app_name="${APP_NAME}-${CI_COMMIT_REF_SLUG}"
-      --set app_image="${CI_REGISTRY}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
+      --set app_name="${APP_NAME}-${CI_COMMIT_REF_NAME}"
+      --set app_image="${REGISTRY_URL}/${DOCKER_REGISTRY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}"
       --set main_url="${MAIN_URL}"
       --set web_port="${WEB_PORT}"
       --set replica_count="${REPLICA_COUNT}"
-      --set resources.limits.memory=2048Mi
-      $( [ -n "${STICKY_SESSION+empty}" ] && echo "--set sticky_session=${STICKY_SESSION}" )
+      --set sticky_session="${STICKY_SESSION}"
+        --set resources.limits.memory=2048Mi
       --values /tmp/deployment_vars.yml
       --atomic
     - echo "The experiment has been deployed to ${MAIN_URL}."
