@@ -22,7 +22,7 @@ const instructions = {
   ],
   demonstration: [
     "Well done! You now enter the final part of the experiment, the “teaching phase”.",
-    "You will navigate through four different networks. Your solution might be shown to other players to learn from. Note that, every point you earn in the networks will be converted into a bonus payment for you. Additionally, you will receive more bonus payment if future players, who learn from your moves during this teaching phase, perform well.",
+    "You will navigate through four different networks. Your solution might be shown to other players to learn from. Note that every point you earn in the networks will be converted into a bonus payment for you. Additionally, you will receive more bonus payment if future players, who learn from your moves during this teaching phase, perform well.",
     "So remember what you have learned and try to maximise your bonus payment!"
   ],
   written_strategy: ["Please write down your strategy in solving the task."],
