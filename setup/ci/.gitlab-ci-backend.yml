@@ -11,6 +11,7 @@ include:
     file: "python-app.yml"
 
 deploy-dev:
+  script:
     - source deploy-pipeline/aws_config.sh
     - deploy-pipeline/deployment_vars.pl
     - if [ -n "${HELM_DRYRUN+empty}" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
@@ -35,6 +36,7 @@ deploy-dev:
     - echo "DYNAMIC_ENVIRONMENT_URL=$DYNAMIC_ENVIRONMENT_URL" >> deploy.env
 
 deploy-prod:
+  script:
     - source deploy-pipeline/aws_config.sh
     - deploy-pipeline/deployment_vars.pl
     - if [ -n "${HELM_DRYRUN+empty}" ]; then DRYRUN="--dry-run --debug"; else DRYRUN=""; fi
