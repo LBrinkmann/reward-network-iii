@@ -352,7 +352,7 @@ export const DemonstrationTrial: FC<ITrial> = (props) => {
       <>
         <Header title={props.data.trial_title} />
         <Typography variant="h5" align="center">
-          Show the next player how to gain the most points
+          Show the future players how to gain the most points
         </Typography>
         <NetworkTrial playerTotalPoints={sessionState.totalPoints} />
       </>
