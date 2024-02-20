@@ -55,7 +55,7 @@ deploy-prod:
       --set web_port="${WEB_PORT}"
       --set replica_count="${REPLICA_COUNT}"
       --set sticky_session="${STICKY_SESSION}"
-        --set resources.limits.memory=2048Mi
+        --set resources.limits.memory=4096Mi
       --values /tmp/deployment_vars.yml
       --atomic
     - echo "The experiment has been deployed to ${MAIN_URL}."
