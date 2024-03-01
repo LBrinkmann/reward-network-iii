@@ -25,3 +25,4 @@ temp/
 venv
 
 .idea
+.DS_Store
