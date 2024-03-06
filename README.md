@@ -53,7 +53,7 @@ python3.10 -m venv .venv
 . .venv/bin/activate
 pip install --upgrade pip
 pip install wheel
-pip install -e ".[viz,dev,backend]"
+pip install -e ".[viz,dev,backend,train]"
 ```
 
 ## Deployments
