@@ -1,4 +1,4 @@
-torch
-wandb
-einops
+torch==2.1.1
+wandb==0.16.1
+einops==0.7.0
 

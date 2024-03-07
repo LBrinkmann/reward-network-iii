@@ -406,7 +406,7 @@ class Agent:
 
         return td_est.mean().item(), loss
 
-    def solve_loop(self, episode: int, n_rounds: int, train_mode: bool, exp_mode: bool, env, logger, mem=None):
+    def solve_loop(self, episode: int, n_rounds: int, train_mode: bool, exp_mode: bool, env, logger, mem=None, exec_actions=None):
         """
         This function solves all networks in a loop over n_rounds
 
@@ -437,7 +437,12 @@ class Agent:
         for round_num in range(n_rounds):
             action, step_q_values = self.act(obs, greedy_only=not train_mode, first_call=round_num == 0, episode_number=episode)
 
-            next_obs, reward, level, is_done = env.step(action)
+            if exec_actions is not None:
+                exec_action = exec_actions[:,round_num]
+            else:
+                exec_action = action
+
+            next_obs, reward, level, is_done = env.step(exec_action)
 
             # remember transitions in memory if a mem object is passed during function call
             # (that is, if we are in dqn)
