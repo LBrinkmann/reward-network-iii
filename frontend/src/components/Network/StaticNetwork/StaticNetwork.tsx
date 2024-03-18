@@ -65,6 +65,7 @@ export interface StaticNetworkInterface {
   allRewards?: number[];
   colors?: string[];
   disableClick?: boolean;
+  svgRef?: React.RefObject<SVGSVGElement>;
 }
 
 const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
@@ -85,6 +86,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
     allRewards = [-50, 0, 100, 200, 400],
     colors = ["#c51b7d", "#e9a3c9", "#e6f5d0", "#a1d76a", "#4d9221"],
     disableClick = false,
+    svgRef = null,
   } = props;
 
   // Scale node coordinates
@@ -115,7 +117,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (props) => {
   );
 
   return (
-    <svg width={size} height={size}>
+    <svg width={size} height={size} ref={svgRef}>
       <defs>
         <filter id="static-network-blur" x="0" y="0">
           <feGaussianBlur in="SourceGraphic" stdDeviation="7" />

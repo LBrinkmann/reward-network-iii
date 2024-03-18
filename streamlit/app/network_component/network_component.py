@@ -1,5 +1,6 @@
 import math
 import os
+from typing import List
 
 import streamlit.components.v1 as components
 
@@ -27,6 +28,8 @@ def network_component(
     network: dict = None,
     max_step: int = 8,
     rerender_counter: int = 0,
+    moves: List[int] = None,
+    trial_name: str = None
 ):
     """Embeds a network component from Chromatic.
 
@@ -49,4 +52,6 @@ def network_component(
         maxMoves=max_step,
         showAllEdges=type == "legacy",
         rerenderCounter=rerender_counter,
+        moves=moves,
+        trial_name=trial_name
     )

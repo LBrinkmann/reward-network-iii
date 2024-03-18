@@ -38,6 +38,7 @@ interface LinearSolutionInterface {
   /** Rewards range */
   allRewards?: number[];
   showStepsLabel?: boolean;
+  svgRef?: React.RefObject<SVGSVGElement>;
 }
 
 export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
@@ -55,6 +56,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
     showTutorial = false,
     allRewards = [-50, 0, 100, 200, 400],
     showStepsLabel = true,
+    svgRef = null
   } = props;
 
   let colors = ["#c51b7d", "#e9a3c9", "#e6f5d0", "#a1d76a", "#4d9221"];
@@ -85,7 +87,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
             Moves
           </Typography>
         )}
-        <svg width={size.width} height={size.height + gap / 2}>
+        <svg width={size.width} height={size.height + gap / 2} ref={svgRef}>
           <g>
             {moves.map((move, idx) => {
               const node = nodes[move];
