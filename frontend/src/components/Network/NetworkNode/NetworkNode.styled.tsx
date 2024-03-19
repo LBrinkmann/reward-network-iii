@@ -35,7 +35,7 @@ const NetworkNodeStyled = styled("g")<NetworkNodeProps>`
   }};
 
   circle {
-    stroke-width: 1px;
+    stroke-width: 2px;
     stroke: rgba(30, 30, 30, 1);
 
     fill: ${({ status, wrongClick, nextNodeColor }) =>

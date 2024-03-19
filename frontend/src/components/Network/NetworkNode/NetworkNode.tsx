@@ -67,7 +67,7 @@ const NetworkNode: React.FC<NetworkNodeInterface> = (props) => {
     >
       <NetworkNodeStyled
         status={props.status}
-        fontSize={props.Radius}
+        fontSize={props.Radius*1.2}
         onClick={nodeClickHandler}
         wrongClick={wrongClick}
         nextNodeColor={props.nextNodeColor}
@@ -81,7 +81,7 @@ const NetworkNode: React.FC<NetworkNodeInterface> = (props) => {
         />
         <text
           x={props.x}
-          y={props.y + props.Radius * 0.35}
+          y={props.y + props.Radius * 0.40}
           textAnchor="middle"
           key={"state-name"}
         >

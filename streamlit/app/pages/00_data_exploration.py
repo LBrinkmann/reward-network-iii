@@ -46,15 +46,9 @@ if 'rerender_counter' not in st.session_state:
 # ------------------------------------------------------------------------------
 #                      sidebar: generate and download options
 # ------------------------------------------------------------------------------
-with st.sidebar:
-    st.write("## Select Condition")
 
-    possible_conditions = moves_df['condition'].unique()
-    
-    condition = st.selectbox("Select condition", possible_conditions)
-    
-    sel_moves_df = moves_df[moves_df['condition'] == condition]
-    
+sel_moves_df = moves_df.copy()
+with st.sidebar:
     st.write("## Select generation")
     
     possible_generations = sel_moves_df['generation'].unique()
@@ -62,14 +56,6 @@ with st.sidebar:
     generation = st.selectbox("Select generation", possible_generations)
     
     sel_moves_df = sel_moves_df[sel_moves_df['generation'] == generation]
-    
-    st.write("## Select Session")
-    
-    possible_sessions = sel_moves_df['session_name'].unique()
-    
-    session = st.selectbox("Select session", possible_sessions)
-    
-    sel_moves_df = sel_moves_df[sel_moves_df['session_name'] == session]    
     
     st.write("## Select Trial Type")
     
@@ -79,13 +65,38 @@ with st.sidebar:
     
     sel_moves_df = sel_moves_df[sel_moves_df['trial_type'] == trial_type]
     
-    st.write("Select trial id")
+    unique_networks_per_condition = sel_moves_df.groupby('condition')['network_id'].unique()
     
-    possible_trial_id = sel_moves_df['trial_id'].unique()
+    # select networks that are present in all conditions
+    common_networks = set(unique_networks_per_condition.iloc[0]).intersection(*unique_networks_per_condition.iloc[1:])
     
-    trial_id = st.selectbox("Select trial id", possible_trial_id)
+    st.write("## Select network")
     
-    sel_moves_df = sel_moves_df[sel_moves_df['trial_id'] == trial_id]
+    possible_networks = list(common_networks)
+    
+    network_id = st.selectbox("Select network", possible_networks)
+    
+    sel_moves_df = sel_moves_df[sel_moves_df['network_id'] == network_id]    
+      
+    st.write("## Select Condition")
+
+    possible_conditions = sel_moves_df['condition'].unique()
+    
+    condition = st.selectbox("Select condition", possible_conditions)
+    
+    sel_moves_df = sel_moves_df[sel_moves_df['condition'] == condition]
+    
+    st.write("## Select Session")
+    
+    possible_sessions = sel_moves_df['session_id'].unique()
+    
+    session = st.selectbox("Select session", possible_sessions)
+    
+    sel_moves_df = sel_moves_df[sel_moves_df['session_id'] == session]
+    
+    st.write("## Select move")
+    
+    st.session_state.move_id = st.slider("Select move", 0, 10, 0)
     
     
     network_id = sel_moves_df['network_id'].values[0]
@@ -95,11 +106,11 @@ with st.sidebar:
     cum_reward = sel_moves_df['reward'].cumsum().values
     moves = [int(m) for m in [source_num[0], *list(target_num)]]
     
-    trial_name = f"{condition}_{generation}_{session}_{trial_type}_{trial_id}"
+    trial_name = f"{generation}_{trial_type}_{condition}_{session}_{network_id}"
 
 if "networks" in st.session_state:
-    move_id = st.session_state.move_id
 
+    move_id = st.session_state.move_id
     with st.form("vizualization_form_wo_full", clear_on_submit=False):
         col1, col2, col3 = st.columns(3)
         with col1:
