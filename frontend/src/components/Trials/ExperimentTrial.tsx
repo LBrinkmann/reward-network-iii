@@ -22,7 +22,9 @@ import {
     nodes as practiceNodes,
 } from "./Practice/PracticeData";
 
-import {exampleData} from "./StaticExample";
+import {exampleData, advisor1, advisor2, advisor3, advisor4} from "./StaticExample";
+
+const advisor_trials = [advisor1, advisor2, advisor3, advisor4];
 
 const exampleData1 = exampleData[0];
 
@@ -42,7 +44,7 @@ import {
     WrittenStrategyTrial,
 } from "./Trials";
 import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
-import ErrorMessage from "./ErrorMessage";
+import {forEach} from "lodash";
 
 export const TRIAL_TYPE = {
     // before the experiment
@@ -161,6 +163,26 @@ const ExperimentTrial: FC = () => {
                             : 10 - networkState.step,
                 },
             });
+        }
+
+        if (sessionState.currentTrialType == TRIAL_TYPE.SOCIAL_LEARNING_SELECTION){
+            // find index of the selected advisor
+            let inx = 0;
+            advisor_trials.forEach((advisor, index) => {
+                if (advisor.advisor_id === sessionState.selectedAdvisor.advisorId) {
+                    inx = index;
+                }
+            });
+
+            console.log(advisor_trials[inx].advisor_id);
+            console.log(sessionState.selectedAdvisor.advisorId);
+
+            // iterate over all trials in advisor1.trials and add them to the exampleData1.trials
+            for (let i = 0; i < advisor_trials[inx].trials.length; i++) {
+                // @ts-ignore
+                exampleData1.trials.push(advisor1.trials[i] as unknown);
+            }
+
         }
     };
 
