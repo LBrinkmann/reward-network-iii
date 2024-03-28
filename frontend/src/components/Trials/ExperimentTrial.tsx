@@ -9,6 +9,7 @@ import {SESSION_ACTIONS} from "../../reducers/SessionReducer";
 import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
 import {useSearchParamsContext} from "../App";
 import {
+    Advisor,
     AdvisorSelection,
     SessionError,
     Trial,
@@ -142,7 +143,7 @@ const ExperimentTrial: FC = () => {
         }
     };
 
-    const onTrialEnd = () => {
+    const onTrialEnd = (result?: TrialSaved | TrialError | Advisor) => {
         if (
             [
                 TRIAL_TYPE.INDIVIDUAL,
@@ -166,21 +167,25 @@ const ExperimentTrial: FC = () => {
         }
 
         if (sessionState.currentTrialType == TRIAL_TYPE.SOCIAL_LEARNING_SELECTION){
+            console.log(result);
+            const selected_advisor = result as Advisor;
             // find index of the selected advisor
             let inx = 0;
-            advisor_trials.forEach((advisor, index) => {
-                if (advisor.advisor_id === sessionState.selectedAdvisor.advisorId) {
+            advisor_trials.forEach((a, index) => {
+                if (a.advisor_id === selected_advisor.advisor_id) {
                     inx = index;
                 }
             });
 
             console.log(advisor_trials[inx].advisor_id);
-            console.log(sessionState.selectedAdvisor.advisorId);
+            console.log(selected_advisor.advisor_id);
+            console.log(selected_advisor.advisor_id === advisor_trials[inx].advisor_id);
+            // console.log(sessionState.selectedAdvisor.advisorId);
 
             // iterate over all trials in advisor1.trials and add them to the exampleData1.trials
-            for (let i = 0; i < advisor_trials[inx].trials.length; i++) {
+            for (let t = 0; t < advisor_trials[inx].trials.length; t++) {
                 // @ts-ignore
-                exampleData1.trials.push(advisor1.trials[i] as unknown);
+                exampleData1.trials.push(advisor_trials[inx].trials[t] as unknown);
             }
 
         }
@@ -194,7 +199,7 @@ const ExperimentTrial: FC = () => {
     }, []);
 
     const submitResults = (result: postTrialType["trialResults"]) => {
-        onTrialEnd();
+        onTrialEnd(result as TrialSaved | TrialError | Advisor);
         onTrialStart(exampleData1.trials[trialId + 1] as unknown as Trial);
         setTrialId(trialId + 1);
         setIsDataReady(true);
