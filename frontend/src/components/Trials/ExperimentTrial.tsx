@@ -167,7 +167,6 @@ const ExperimentTrial: FC = () => {
         }
 
         if (sessionState.currentTrialType == TRIAL_TYPE.SOCIAL_LEARNING_SELECTION){
-            console.log(result);
             const selected_advisor = result as Advisor;
             // find index of the selected advisor
             let inx = 0;
@@ -177,9 +176,9 @@ const ExperimentTrial: FC = () => {
                 }
             });
 
-            console.log(advisor_trials[inx].advisor_id);
-            console.log(selected_advisor.advisor_id);
-            console.log(selected_advisor.advisor_id === advisor_trials[inx].advisor_id);
+            // console.log(advisor_trials[inx].advisor_id);
+            // console.log(selected_advisor.advisor_id);
+            // console.log(selected_advisor.advisor_id === advisor_trials[inx].advisor_id);
             // console.log(sessionState.selectedAdvisor.advisorId);
 
             // iterate over all trials in advisor1.trials and add them to the exampleData1.trials
@@ -193,7 +192,6 @@ const ExperimentTrial: FC = () => {
 
     // run the function once
     useEffect(() => {
-        // clear all the info in the local storage
         onTrialStart(exampleData1.trials[trialId] as unknown as Trial);
         setIsDataReady(true);
     }, []);

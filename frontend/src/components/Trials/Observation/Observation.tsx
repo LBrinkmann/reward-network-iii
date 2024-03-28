@@ -3,6 +3,8 @@ import NetworkTrial from "../NetworkTrial";
 import useNetworkContext from "../../../contexts/NetworkContext";
 import { NETWORK_ACTIONS } from "../../../reducers/NetworkReducer";
 import { Typography } from "@mui/material";
+import useSessionContext from "../../../contexts/SessionContext";
+import {TRIAL_TYPE} from "../ExperimentTrial";
 
 interface IObservation {
   solution: number[];
@@ -16,6 +18,7 @@ interface IObservation {
 
 const Observation: FC<IObservation> = (props) => {
   const { networkState, networkDispatcher } = useNetworkContext();
+  const { sessionState } = useSessionContext();
   const {
     solution,
     teacherId,
@@ -25,9 +28,11 @@ const Observation: FC<IObservation> = (props) => {
   } = props;
 
   useEffect(() => {
-    console.log("Observation: useEffect: step", networkState.step);
+    // console.log("Observation: useEffect: step", networkState.step);
     if (playAnimation) {
       setTimeout(() => {
+        // prevent affecting the next trial
+        if (sessionState.currentTrialType !== TRIAL_TYPE.OBSERVATION) return;
         networkDispatcher({
           type: NETWORK_ACTIONS.NEXT_NODE,
           payload: {
