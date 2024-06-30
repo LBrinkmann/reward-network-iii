@@ -44,66 +44,59 @@ if 'rerender_counter' not in st.session_state:
 #                      sidebar: generate and download options
 # ------------------------------------------------------------------------------
 
-sel_moves_df = moves_df.copy()
 with st.sidebar:
     st.write("## Select generation")
 
-    possible_generations = sel_moves_df['generation'].unique()
-
-    generation = st.selectbox("Select generation", possible_generations)
-
-    sel_moves_df = sel_moves_df[sel_moves_df['generation'] == generation]
-
-    st.write("## Select Trial Type")
-
-    possible_trial_types = sel_moves_df['trial_type'].unique()
-
-    trial_type = st.selectbox("Select trial type", possible_trial_types)
-
-    sel_moves_df = sel_moves_df[sel_moves_df['trial_type'] == trial_type]
-
-    unique_networks_per_condition = sel_moves_df.groupby('condition')['network_id'].unique()
-
-    # select networks that are present in all conditions
-    common_networks = set(unique_networks_per_condition.iloc[0]).intersection(*unique_networks_per_condition.iloc[1:])
-
     st.write("## Select network")
 
-    possible_networks = list(common_networks)
+    possible_networks = list(st.session_state.networks.keys())
 
     network_id = st.selectbox("Select network", possible_networks)
 
-    sel_moves_df = sel_moves_df[sel_moves_df['network_id'] == network_id]
+    agent_names = ["myopic", "take_loss"]
 
-    st.write("## Select Condition")
+    agent_name = st.selectbox("Select network", agent_names)
 
-    possible_conditions = sel_moves_df['condition'].unique()
 
-    condition = st.selectbox("Select condition", possible_conditions)
+    gen_params = {
+        "n_steps": 10,
+        "n_losses": 3,
+        "rewards": [-50, 0, 100, 200, 400],
+        "solution_columns": [
+            "network_id",
+            "strategy",
+            "step",
+            "source_node",
+            "current_node",
+            "reward",
+            "total_reward",
+        ]
+    }
 
-    sel_moves_df = sel_moves_df[sel_moves_df['condition'] == condition]
+    networks = [st.session_state.networks[network_id]]
 
-    st.write("## Select Session")
+    agent = RuleAgent(networks, agent_name, gen_params)
 
-    possible_sessions = sel_moves_df['session_id'].unique()
+    solutions = agent.solve()
 
-    session = st.selectbox("Select session", possible_sessions)
-
-    sel_moves_df = sel_moves_df[sel_moves_df['session_id'] == session]
 
     st.write("## Select move")
 
     st.session_state.move_id = st.slider("Select move", 0, 10, 0)
 
 
-    network_id = sel_moves_df['network_id'].values[0]
-    source_num = sel_moves_df['source_num'].values
-    target_num = sel_moves_df['target_num'].values
-    reward = sel_moves_df['reward'].values
-    cum_reward = sel_moves_df['reward'].cumsum().values
-    moves = [int(m) for m in [source_num[0], *list(target_num)]]
+    print(solutions)
+    st.write(solutions)
+    st.write(networks[0]['starting_node'])
 
-    trial_name = f"{generation}_{trial_type}_{condition}_{session}_{network_id}"
+
+    source_node = solutions['source_node'].values
+    current_node = solutions['current_node'].values
+    moves = [int(m) for m in [source_node[0], *list(current_node)]]
+
+    trial_name = f"{network_id}_{agent_name}"
+
+
 
 if "networks" in st.session_state:
 
