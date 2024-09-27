@@ -1,116 +1,73 @@
 # Reward Network III
 
-## Quick start
+Brief description of what the project does and its purpose.
 
-### Run the app locally
+## Table of Contents
 
-```bash
-docker compose up frontend backend
-```
+- [Installation](#installation)
+- [Usage](#usage)
+- [Features](#features)
+- [Contributing](#contributing)
+- [License](#license)
 
-### Run streamlit locally
+## Installation
 
-```bash
-docker compose up streamlit
-```
+### Docker
 
-### Generate Networks
-
-```bash
-docker compose run all python common/generate/generation.py -i data/23_11_13/networks.yml -o data/23_11_13/networks.json
-```
+Network generation, training of the algorithm, and running the backend can be done using Docker. To build the Docker image, run the following command:
 
 ```bash
-docker compose run all python common/generate/generation.py -i data/23_11_30/networks.yml -o data/23_11_30/networks.json
+docker compose build all
 ```
 
-### Generate Solutions
+### Python
 
-```bash
-docker compose run all python common/solve/rule_based.py -c data/23_11_13/solution.yml -n data/23_11_13/networks.json -o data/23_11_13/solution
-```
-
-```bash
-docker compose run all python common/solve/rule_based.py -c data/23_11_30/solution.yml -n data/23_11_30/networks.json -o data/23_11_30/solution
-```
-
-### Train DQN Agent
-
-```bash
-docker compose run all python algorithm/dqn/dqn_agent.py --config algorithm/params/seed_0.yml
-```
-
-### Apply DQN Agent
-
-```bash
-docker compose run all python algorithm/dqn/dqn_exp.py --config algorithm/params/seed_0.yml
-```
-
-### Setup Environment for analysis
+For running the descriptive analysis of the results, the following setup is required:
 
 ```bash
 python3.10 -m venv .venv
 . .venv/bin/activate
 pip install --upgrade pip
 pip install wheel
+pip install -e ".[viz]"
+```
+
+Or us the following command to install all dependencies:
+
+```bash
 pip install -e ".[viz,dev,backend,train]"
 ```
 
-## Deployments
+### R
 
-- Frontend
-  URL: [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
-- Backend
-  URL:
-  [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-iii-backend.eks-test-default.mpg-chm.com)
-- Streamlit
-  URL:
-  [https://rn-iii-te.eks-test-default.mpg-chm.com](https://rn-iii-te.eks-test-default.mpg-chm.com)
-
-## Endpoints
-
-### For participants
-
-https://rn-iii-frontend.eks-test-default.mpg-chm.com/<experiment_type>?PROLIFIC_PID=<prolific_pid>
-
-### Admin panel
-
-https://rn-iii-backend.eks-test-default.mpg-chm.com/progress/<experiment_type>/<tree_idx>
-
-### Links when the docker-compose.yml is running
-
-- React: http://localhost:9000/
-- Storybook: http://localhost:6006/
-- FastAPI: http://localhost:5000/
-- Swagger UI FastAPI: http://localhost:5000/docs
-
-### Run pytest
-
-Run all test
-
-```zsh
-
-docker compose run backend python -m pytest -vv -s
-
-```
-
-### `apiTypes.ts`
-
-`apiTypes.ts` file is generated in the `server.py` each time FastAPI server is
-restarted and then copied in frontend `src` folder.
-
-Useful commands to clean up the system:
+For the statistical analysis of the results, the following setup is required:
 
 ```bash
 
-docker system df # check disk usage
-docker system prune --all --force # clean up unused images and volumes
-docker system prune --volumes --force # clean up unused volumes
-
 ```
 
-## Backend-Frontend interaction scheme
+## Usage
 
-<p align="centre">
-<img alt="Backend-Frontend interaction" height="auto" src="docs/backend-frontend.png" width="50%"/>
-</p>
+### Train Algorithm
+
+To train the DQN agent on the generated networks (training dataset), run the following command:
+
+```bash
+docker compose run all python algorithm/dqn/dqn_agent.py --config algorithm/params/seed_0.yml
+```
+
+To apply the trained DQN agent on the generated networks (experiment dataset), run the following command:
+
+```bash
+docker compose run all python algorithm/dqn/dqn_exp.py --config algorithm/params/seed_0.yml
+```
+
+### Compute Machine-Human Agreement
+
+To compute the agreement between human and machine actions, run the following Notebook:
+
+[algorithm/compute_alignment.ipynb](algorithm/compute_alignment.ipynb)
+
+The results are stored in the following directory:
+
+`analysis/data/experiment/processed/moves_w_alignment.csv`
