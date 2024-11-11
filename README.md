@@ -46,7 +46,9 @@ For the statistical analysis of the results, the following setup is required:
 
 ```
 
-## Usage
+## Preparation of the Experiment
+
+### Generate Networks
 
 ### Train Algorithm
 
@@ -62,6 +64,24 @@ To apply the trained DQN agent on the generated networks (experiment dataset), r
 docker compose run all python algorithm/dqn/dqn_exp.py --config algorithm/params/seed_0.yml
 ```
 
+## Experiment
+
+### Computation of Bonus Payments
+
+To compute the bonus payments for the participants, run the following notebook:
+
+[analysis/compute_compensation.ipynb](analysis/compute_compensation.ipynb)
+
+## Descriptive Analysis
+
+### Algorithmic Learning Curve (figure 4)
+
+To compute the learning curve of the algorithm, run the following notebook:
+
+[analysis/algorithm.ipynb](analysis/algorithm.ipynb)
+
+## Quantitative Analysis
+
 ### Compute Machine-Human Agreement
 
 To compute the agreement between human and machine actions, run the following Notebook:
@@ -71,3 +91,9 @@ To compute the agreement between human and machine actions, run the following No
 The results are stored in the following directory:
 
 `analysis/data/experiment/processed/moves_w_alignment.csv`
+
+## Agent-Based Model
+
+To run the agent-based model, run the following notebook:
+
+[analysis/abm.ipynbb](analysis/abm.ipynb)
