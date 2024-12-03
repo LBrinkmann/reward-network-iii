@@ -1,6 +1,9 @@
 #R version: 4.3.2
 #packages used: lme4, ggplot2, Rmisc
 #install.packages(c("lme4", "ggplot2", "Rmisc"))
+library(lme4)
+library(ggplot2)
+library(Rmisc)
 
 ##########################################
 # Load data

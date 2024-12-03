@@ -23,3 +23,5 @@ venv
 .idea
 .DS_Store
 .vscode
+.Rproj.user
+.osfcli.config
