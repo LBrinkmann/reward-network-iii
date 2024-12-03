@@ -5,3 +5,4 @@ scipy==1.11.4
 seaborn==0.13.1
 streamlit==1.30.0
 aiohttp
+pydot==2.0.0

@@ -1,116 +1,84 @@
-# Reward Network III
+# Reward Networks
 
-## Quick start
+This repository contains the code for the project "Experimental Evidence for the Propagation and Preservation of Machine Discoveries in Human Populations" 
 
-### Run the app locally
+This repository allows to:
+- Train a machine player to solve reward networks
+- Run an online experiment where human participants solve reward networks task
+- Analyze the data from the experiment
+- Visualize the results
+
+This repository contains both the code and the experimental data.
+
+## Overview of Resources
+
+### Data
+
+The data is stored in the `data` directory. The data is structured as follows:
+- `data/networks_solutions_models` contains the networks, trained neural network models, and solutions for the networks (both, from the neural networks and three prototypical heuristic strategies).
+- `data/exp_raw` contains the raw data from the experiment as downloaded from the online experiment.
+- `data/exp_processed` contains the processed data from the experiment, including the alignment between human and machine actions and written strategies.
+- `data/exp_strategies_coded` contains the manually coded written strategies.
+- `data/abm` contains the data from the agent-based model (after running the corresponding notebook).
+
+### Algorithm
+
+The algorithm is implemented in the [algorithm](algorithm) directory. The algorithm trains a neural policy to solve reward networks tasks.
+
+### Online Experiment
+
+The online experiment is hosted on the [backend](backend) and [frontend](frontend) services. The frontend is a React application that allows participants to solve reward networks tasks. The backend is a Flask application that serves the frontend and stores the data from the experiment.
+
+### Visualizations
+
+The visualizations are stored in the `analysis/plots` directory. The corresponding notebooks are stored in the `analysis` directory.
+
+### Statistical Analysis
+
+The statistical analysis is stored in the `statistics` directory.
+
+## Installation
+
+### Docker
+
+Network generation, training of the algorithm, and running the backend can be done using Docker. To build the Docker image, run the following command:
 
 ```bash
-docker compose up frontend backend
+docker compose build all
 ```
 
-### Run streamlit locally
+### Python
 
-```bash
-docker compose up streamlit
-```
-
-### Generate Networks
-
-```bash
-docker compose run all python common/generate/generation.py -i data/23_11_13/networks.yml -o data/23_11_13/networks.json
-```
-
-```bash
-docker compose run all python common/generate/generation.py -i data/23_11_30/networks.yml -o data/23_11_30/networks.json
-```
-
-### Generate Solutions
-
-```bash
-docker compose run all python common/solve/rule_based.py -c data/23_11_13/solution.yml -n data/23_11_13/networks.json -o data/23_11_13/solution
-```
-
-```bash
-docker compose run all python common/solve/rule_based.py -c data/23_11_30/solution.yml -n data/23_11_30/networks.json -o data/23_11_30/solution
-```
-
-### Train DQN Agent
-
-```bash
-docker compose run all python algorithm/dqn/dqn_agent.py --config algorithm/params/seed_0.yml
-```
-
-### Apply DQN Agent
-
-```bash
-docker compose run all python algorithm/dqn/dqn_exp.py --config algorithm/params/seed_0.yml
-```
-
-### Setup Environment for analysis
+For running the descriptive analysis of the results, the following setup is required:
 
 ```bash
 python3.10 -m venv .venv
 . .venv/bin/activate
 pip install --upgrade pip
 pip install wheel
+pip install -e ".[viz]"
+```
+
+Or us the following command to install all dependencies:
+
+```bash
 pip install -e ".[viz,dev,backend,train]"
 ```
 
-## Deployments
+## Usage
 
-- Frontend
-  URL: [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
-- Backend
-  URL:
-  [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-iii-backend.eks-test-default.mpg-chm.com)
-- Streamlit
-  URL:
-  [https://rn-iii-te.eks-test-default.mpg-chm.com](https://rn-iii-te.eks-test-default.mpg-chm.com)
+### Training of the Machine Player
 
-## Endpoints
+See the respective [algorithm README](algorithm/README.md) for more details.
 
-### For participants
+### Run the experiment
 
-https://rn-iii-frontend.eks-test-default.mpg-chm.com/<experiment_type>?PROLIFIC_PID=<prolific_pid>
-
-### Admin panel
-
-https://rn-iii-backend.eks-test-default.mpg-chm.com/progress/<experiment_type>/<tree_idx>
-
-### Links when the docker-compose.yml is running
-
-- React: http://localhost:9000/
-- Storybook: http://localhost:6006/
-- FastAPI: http://localhost:5000/
-- Swagger UI FastAPI: http://localhost:5000/docs
-
-### Run pytest
-
-Run all test
-
-```zsh
-
-docker compose run backend python -m pytest -vv -s
-
-```
-
-### `apiTypes.ts`
-
-`apiTypes.ts` file is generated in the `server.py` each time FastAPI server is
-restarted and then copied in frontend `src` folder.
-
-Useful commands to clean up the system:
+Start the frontend and backend services using the following command:
 
 ```bash
-
-docker system df # check disk usage
-docker system prune --all --force # clean up unused images and volumes
-docker system prune --volumes --force # clean up unused volumes
-
+docker compose up frontend backend
 ```
 
-## Backend-Frontend interaction scheme
+### Visualizations of Experimental Data, Agent-Based Model, and Algorithmic Learning Curve
 
-<p align="centre">
-<img alt="Backend-Frontend interaction" height="auto" src="docs/backend-frontend.png" width="50%"/>
-</p>
+See the respective [analysis README](analysis/README.md) for more details.

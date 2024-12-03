@@ -127,6 +127,7 @@ class RuleAgent:
             self.environment = Reward_Network(network, self.params)
             self.environment.reset()
 
+            step_counter = 0
             while not self.environment.is_done:
                 obs = self.environment.observe()
                 a = self.select_action(
@@ -144,9 +145,12 @@ class RuleAgent:
                         "max_level": step["max_level"],
                         "reward": step["reward"],
                         "total_reward": step["total_reward"],
+                        "step": step_counter,
                     }
                 )
+                step_counter += 1
         self.solutions = pd.DataFrame.from_records(solutions)
+        return self.solutions
 
     def save_solutions_frontend(self):
         """
