@@ -18,6 +18,7 @@ The data is stored in the `data` directory. The data is structured as follows:
 - `data/networks_solutions_models` contains the networks, trained neural network models, and solutions for the networks (both, from the neural networks and three prototypical heuristic strategies).
 - `data/exp_raw` contains the raw data from the experiment as downloaded from the online experiment.
 - `data/exp_processed` contains the processed data from the experiment, including the alignment between human and machine actions and written strategies.
+- `data/exp_strategies_coded` contains the manually coded written strategies.
 - `data/abm` contains the data from the agent-based model (after running the corresponding notebook).
 
 ### Algorithm
